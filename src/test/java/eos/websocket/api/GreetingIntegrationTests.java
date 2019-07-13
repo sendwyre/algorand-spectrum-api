@@ -83,9 +83,7 @@ public class GreetingIntegrationTests {
                     }
                 });
                 try {
-                    String[] accounts = new String[] {"eostribe"};
-                    SubscribeRequest request = new SubscribeRequest();
-                    request.setAccounts(accounts);
+                    SubscribeRequest request = new SubscribeRequest("accountname");
                     session.send("/app/subscribe", request);
                 } catch (Throwable t) {
                     failure.set(t);

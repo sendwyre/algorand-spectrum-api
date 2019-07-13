@@ -15,17 +15,15 @@ import org.apache.kafka.clients.producer.Producer;
 public class ActionsController {
 
 
-    @MessageMapping("/app")
-    @SendTo("/subscribe")
+    @MessageMapping("/subscribe")
+    @SendTo("/topic/accounts")
     public AccountResponse setAccount(SubscribeRequest request) throws Exception {
-        Producer<Long, String> producer = KafkaService.createProducer();
+        Producer<String, String> producer = KafkaService.createProducer();
         long time = System.currentTimeMillis();
-        int sendMessageCount = 0;
         try {
-            for (long index = time; index < time + sendMessageCount; index++) {
-                final ProducerRecord<Long, String> record =
-                        new ProducerRecord<>("accounts", index,
-                                "Test " + index);
+                String accountName = request.getAccountName();
+                final ProducerRecord<String, String> record =
+                        new ProducerRecord<>("accounts", "account_name", accountName);
 
                 RecordMetadata metadata = producer.send(record).get();
 
@@ -35,13 +33,16 @@ public class ActionsController {
                         record.key(), record.value(), metadata.partition(),
                         metadata.offset(), elapsedTime);
 
-            }
-        } finally {
+        } catch(Exception ex) {
+            System.err.print(ex);
+            throw ex;
+        }
+        finally {
             producer.flush();
             producer.close();
         }
 
-        return new AccountResponse("Account response: " + HtmlUtils.htmlEscape(request.getAccounts()[1]));
+        return new AccountResponse("Account response: " + HtmlUtils.htmlEscape(request.getAccountName()));
     }
 
 }

@@ -2,18 +2,22 @@ package eos.websocket.api;
 
 public class SubscribeRequest {
 
-    private String[] accounts;
+    private String accountName;
     private String[] actionNames;
 
-    public SubscribeRequest() {
+    public SubscribeRequest() {}
+
+    public SubscribeRequest(String accountName) {
+        this.accountName = accountName;
+        this.actionNames = new String[0];
     }
 
-    public void setAccounts(String[] accounts) {
-        this.accounts = accounts;
+    public void setAccountName(String accountName) {
+        this.accountName = accountName;
     }
 
-    public String[] getAccounts() {
-        return accounts;
+    public String getAccountName() {
+        return accountName;
     }
 
     public void setActionNames(String[] actionNames) {
