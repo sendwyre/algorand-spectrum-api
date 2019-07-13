@@ -1,13 +1,13 @@
-package hello;
+package eos.websocket.api;
 
-public class Greeting {
+public class AccountResponse {
 
     private String content;
 
-    public Greeting() {
+    public AccountResponse() {
     }
 
-    public Greeting(String content) {
+    public AccountResponse(String content) {
         this.content = content;
     }
 

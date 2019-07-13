@@ -1,4 +1,4 @@
-package hello;
+package eos.websocket.api;
 
 import static org.junit.Assert.*;
 
@@ -66,12 +66,12 @@ public class GreetingIntegrationTests {
                 session.subscribe("/topic/greetings", new StompFrameHandler() {
                     @Override
                     public Type getPayloadType(StompHeaders headers) {
-                        return Greeting.class;
+                        return AccountResponse.class;
                     }
 
                     @Override
                     public void handleFrame(StompHeaders headers, Object payload) {
-                        Greeting greeting = (Greeting) payload;
+                        AccountResponse greeting = (AccountResponse) payload;
                         try {
                             assertEquals("Hello, Spring!", greeting.getContent());
                         } catch (Throwable t) {
@@ -83,7 +83,10 @@ public class GreetingIntegrationTests {
                     }
                 });
                 try {
-                    session.send("/app/hello", new HelloMessage("Spring"));
+                    String[] accounts = new String[] {"eostribe"};
+                    SubscribeRequest request = new SubscribeRequest();
+                    request.setAccounts(accounts);
+                    session.send("/app/subscribe", request);
                 } catch (Throwable t) {
                     failure.set(t);
                     latch.countDown();

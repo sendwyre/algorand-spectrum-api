@@ -43,6 +43,11 @@
             <artifactId>jquery</artifactId>
             <version>3.1.0</version>
         </dependency>
+        <dependency>
+            <groupId>org.apache.kafka</groupId>
+            <artifactId>kafka-clients</artifactId>
+            <version>0.10.2.0-cp1</version>
+        </dependency>
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
