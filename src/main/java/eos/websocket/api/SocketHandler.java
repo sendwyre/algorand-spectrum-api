@@ -1,5 +1,6 @@
 package eos.websocket.api;
 import com.google.gson.Gson;
+import org.apache.tomcat.util.json.JSONParser;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.*;
 import org.springframework.web.socket.config.annotation.EnableWebSocket;
@@ -8,6 +9,7 @@ import org.springframework.web.socket.handler.TextWebSocketHandler;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
+import org.json.JSONObject;
 import java.nio.CharBuffer;
 import java.util.List;
 import java.util.Map;
@@ -27,9 +29,10 @@ public class SocketHandler extends BinaryWebSocketHandler implements WebSocketHa
 
     @Override
     public void handleBinaryMessage(WebSocketSession session, BinaryMessage message) throws UnsupportedEncodingException {
-
         String mess = new String(message.getPayload().array(),"UTF-8");
+        JSONObject jsonObj = new JSONObject(mess);
         System.out.println(mess);
+
     }
 
     @Override
