@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/websocket-endpoint.iml" filepath="$PROJECT_DIR$/.idea/modules/websocket-endpoint.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/websocket-endpoint.main.iml" filepath="$PROJECT_DIR$/.idea/modules/websocket-endpoint.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/websocket-endpoint.test.iml" filepath="$PROJECT_DIR$/.idea/modules/websocket-endpoint.test.iml" />
+    </modules>
+  </component>
+</project>
