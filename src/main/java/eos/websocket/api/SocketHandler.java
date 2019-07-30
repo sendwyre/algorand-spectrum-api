@@ -6,6 +6,7 @@ import org.springframework.web.socket.config.annotation.EnableWebSocket;
 import org.springframework.web.socket.handler.BinaryWebSocketHandler;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
 import java.util.List;
@@ -17,17 +18,18 @@ import java.util.concurrent.CopyOnWriteArrayList;
 @EnableWebSocket
 public class SocketHandler extends BinaryWebSocketHandler implements WebSocketHandler{
 //    List sessions = new CopyOnWriteArrayList<>();
+    ByteBuffer buffer;
 
     @Override
     public void afterConnectionEstablished(WebSocketSession session) {
-        System.out.println(session.getAcceptedProtocol());
-        System.out.println(session.getTextMessageSizeLimit());
+
     }
 
     @Override
-    public void handleBinaryMessage(WebSocketSession session, BinaryMessage message){
+    public void handleBinaryMessage(WebSocketSession session, BinaryMessage message) throws UnsupportedEncodingException {
 
-        System.out.println(message.getPayload().toString());
+        String mess = new String(message.getPayload().array(),"UTF-8");
+        System.out.println(mess);
     }
 
     @Override
