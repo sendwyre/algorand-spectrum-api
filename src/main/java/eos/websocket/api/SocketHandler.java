@@ -1,38 +1,57 @@
 package eos.websocket.api;
-import com.google.gson.Gson;
-import org.apache.tomcat.util.json.JSONParser;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.*;
 import org.springframework.web.socket.config.annotation.EnableWebSocket;
 import org.springframework.web.socket.handler.BinaryWebSocketHandler;
-import org.springframework.web.socket.handler.TextWebSocketHandler;
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.nio.ByteBuffer;
 import org.json.JSONObject;
-import java.nio.CharBuffer;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 
 @Component
 @EnableWebSocket
 public class SocketHandler extends BinaryWebSocketHandler implements WebSocketHandler{
-//    List sessions = new CopyOnWriteArrayList<>();
-    ByteBuffer buffer;
+    private static final transient Logger logger = LoggerFactory.getLogger(SocketHandler.class);
 
+    private JSONObject jsonMessage;
+    private String messageType;
+    private JSONObject data;
+    TransactionProcessing tp;
     @Override
     public void afterConnectionEstablished(WebSocketSession session) {
 
     }
 
     @Override
-    public void handleBinaryMessage(WebSocketSession session, BinaryMessage message) throws UnsupportedEncodingException {
-        String mess = new String(message.getPayload().array(),"UTF-8");
-        JSONObject jsonObj = new JSONObject(mess);
-        System.out.println(mess);
-
+    public void handleBinaryMessage(WebSocketSession session, BinaryMessage binaryMessage) throws UnsupportedEncodingException {
+        String stringMessage = new String(binaryMessage.getPayload().array(),"UTF-8");
+        jsonMessage = new JSONObject(stringMessage);
+        messageType = jsonMessage.get("msgtype").toString();
+        switch (messageType){
+            case "ABI_UPDATED":
+                logger.debug("Message type: "+messageType);
+                break;
+            case "FORK":
+                logger.debug("Message type: "+messageType);
+                break;
+            case "BLOCK":
+                logger.debug("Message type: "+messageType);
+                break;
+            case "TX_TRACE":
+                logger.debug("Message type: "+messageType);
+                tp = new TransactionProcessing(jsonMessage.getJSONObject("data"));
+                tp.getActions();
+                tp.getTransaction();
+                break;
+            case "BLOCK_COMPLETED":
+                logger.debug("Message type: "+messageType);
+                break;
+            default:
+                logger.debug("Message type undefined: "+messageType);
+                break;
+        }
     }
 
     @Override
