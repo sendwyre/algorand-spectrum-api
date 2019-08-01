@@ -18,6 +18,7 @@ public class SocketHandler extends BinaryWebSocketHandler implements WebSocketHa
     private JSONObject jsonMessage;
     private String messageType;
     private JSONObject data;
+    private ElasticSearchPublisher elasticSearchPublisher = new ElasticSearchPublisher();
     TransactionProcessing tp;
     @Override
     public void afterConnectionEstablished(WebSocketSession session) {
@@ -42,11 +43,12 @@ public class SocketHandler extends BinaryWebSocketHandler implements WebSocketHa
             case "TX_TRACE":
                 logger.debug("Message type: "+messageType);
                 tp = new TransactionProcessing(jsonMessage.getJSONObject("data"));
-                tp.getActions();
+                elasticSearchPublisher.pubActions(tp.getActions());
                 tp.getTransaction();
                 break;
             case "BLOCK_COMPLETED":
                 logger.debug("Message type: "+messageType);
+
                 break;
             default:
                 logger.debug("Message type undefined: "+messageType);
