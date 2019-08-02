@@ -70,21 +70,15 @@ public class ElasticSearchPublisher {
 
                     }
                 })
-                .setBulkActions(20000)
+                .setBulkActions(40000)
                 .setGlobalType("_doc")
                 .setBulkSize(new ByteSizeValue(25, ByteSizeUnit.MB))
                 .setFlushInterval(TimeValue.timeValueSeconds(5))
-                .setConcurrentRequests(5)
+                .setConcurrentRequests(20)
                 .setBackoffPolicy(BackoffPolicy.exponentialBackoff(TimeValue.timeValueMillis(100), 3))
                 .build();
 
     }
-
-    public void pingElasticsearch(){
-
-
-    }
-
 
     public void pubActions(ArrayList<JSONObject> actions){
 

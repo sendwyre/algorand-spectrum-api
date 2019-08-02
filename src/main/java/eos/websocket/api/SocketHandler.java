@@ -1,17 +1,16 @@
 package eos.websocket.api;
 
-import org.apache.commons.lang3.ObjectUtils;
+
+import org.json.JSONException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.messaging.Message;
-import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.*;
 import org.springframework.web.socket.config.annotation.EnableWebSocket;
 import org.springframework.web.socket.handler.BinaryWebSocketHandler;
 
 import java.io.IOException;
-import java.io.PrintStream;
+
 import java.io.UnsupportedEncodingException;
 import java.net.UnknownHostException;
 
@@ -45,7 +44,7 @@ public class SocketHandler extends BinaryWebSocketHandler implements WebSocketHa
     }
 
     @Override
-    public void handleBinaryMessage(WebSocketSession session, BinaryMessage binaryMessage) throws IOException {
+    public void handleBinaryMessage(WebSocketSession session, BinaryMessage binaryMessage) throws UnsupportedEncodingException {
         String stringMessage = new String(binaryMessage.getPayload().array(),"UTF-8");
         jsonMessage = new JSONObject(stringMessage);
         messageType = jsonMessage.get("msgtype").toString();
@@ -61,20 +60,27 @@ public class SocketHandler extends BinaryWebSocketHandler implements WebSocketHa
                 break;
             case "TX_TRACE":
                 logger.debug("Message type: "+messageType);
-                tp = new TransactionProcessing(jsonMessage.getJSONObject("data"));
+                try {
+                    tp = new TransactionProcessing(jsonMessage.getJSONObject("data"));
 
-                elasticSearchPublisher.
-                        pubActions(tp.getActions());
-                elasticSearchPublisher.
-                        pubTransaction(tp.getTransaction());
+                    elasticSearchPublisher.
+                            pubActions(tp.getActions());
+                    elasticSearchPublisher.
+                            pubTransaction(tp.getTransaction());
 
-                blockNumber =  jsonMessage.
-                        getJSONObject("data").
-                        getString("block_num");
+                    blockNumber =  jsonMessage.
+                            getJSONObject("data").
+                            getString("block_num");
 
-                if (Integer.valueOf(blockNumber) % 100 == 0){
-                    session.sendMessage(new BinaryMessage(blockNumber.getBytes()));
-                    logger.info("acknowleged block number: "+blockNumber);
+                    if (Integer.valueOf(blockNumber) % 100 == 0){
+                        session.sendMessage(new BinaryMessage(blockNumber.getBytes()));
+                        logger.info("acknowleged block number: "+blockNumber);
+                }
+
+                } catch (JSONException e) {
+                     e.printStackTrace();
+                } catch (IOException e){
+                    e.printStackTrace();
                 }
 
                 break;
