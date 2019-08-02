@@ -26,7 +26,7 @@ public class TransactionProcessing {
             if (action instanceof JSONObject){
                 jsonAction = (JSONObject)action;
                 jsonAction.put("block_num",this.transactionMessage.get("block_num"));
-                jsonAction.put("bloc_timestamp",this.transactionMessage.get("block_timestamp"));
+                jsonAction.put("block_timestamp",this.transactionMessage.get("block_timestamp"));
                 jsonAction.put("trx",this.transactionMessage.getJSONObject("trace").get("id"));
                 /**
                  * converting act.data field to string
