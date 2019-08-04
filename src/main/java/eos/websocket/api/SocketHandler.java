@@ -23,10 +23,9 @@ public class SocketHandler extends BinaryWebSocketHandler implements WebSocketHa
     private static final transient Logger logger = LoggerFactory.getLogger(SocketHandler.class);
     private JSONObject jsonMessage;
     private String messageType;
-    private JSONObject data;
     private ElasticSearchPublisher elasticSearchPublisher;
     private String blockNumber;
-    private TransactionProcessing tp;
+    private TransactionProcessing transactionProcessing;
     {
         try {
             elasticSearchPublisher = new ElasticSearchPublisher();
@@ -34,8 +33,6 @@ public class SocketHandler extends BinaryWebSocketHandler implements WebSocketHa
             e.printStackTrace();
         }
     }
-
-
 
     @Override
     public void afterConnectionEstablished(WebSocketSession session) {
@@ -61,12 +58,11 @@ public class SocketHandler extends BinaryWebSocketHandler implements WebSocketHa
             case "TX_TRACE":
                 logger.debug("Message type: "+messageType);
                 try {
-                    tp = new TransactionProcessing(jsonMessage.getJSONObject("data"));
-
+                    transactionProcessing = new TransactionProcessing(jsonMessage.getJSONObject("data"));
                     elasticSearchPublisher.
-                            pubActions(tp.getActions());
+                            pubActions(transactionProcessing.getActions());
                     elasticSearchPublisher.
-                            pubTransaction(tp.getTransaction());
+                            pubTransaction(transactionProcessing.getTransaction());
 
                     blockNumber =  jsonMessage.
                             getJSONObject("data").

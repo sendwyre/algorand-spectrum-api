@@ -24,6 +24,4 @@ public class KafkaService {
                 StringSerializer.class.getName());
         return new KafkaProducer<>(props);
     }
-
-
 }

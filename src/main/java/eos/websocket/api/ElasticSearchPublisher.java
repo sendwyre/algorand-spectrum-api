@@ -38,7 +38,7 @@ public class ElasticSearchPublisher {
                 .put("cluster.name", "eostribe-es-02").build();
 //        this.client = new RestClient.builder();
         this.client = new PreBuiltTransportClient(settings)
-                .addTransportAddress(new TransportAddress(InetAddress.getByName("es-test.eostribe.io"), 9300))
+                .addTransportAddress(new TransportAddress(InetAddress.getByName("test.eostribe.io"), 9300))
                 .addTransportAddress(new TransportAddress(InetAddress.getByName("test2.eostribe.io"), 9300));
 
 
@@ -81,12 +81,9 @@ public class ElasticSearchPublisher {
     }
 
     public void pubActions(ArrayList<JSONObject> actions){
-
-        for (JSONObject action: actions
-             ) {
+        for (JSONObject action: actions) {
             bulkProcessor.add(new IndexRequest("test-mainet-actions").source(action.toString(), XContentType.JSON));
         }
-
     }
 
     public void pubTransaction(JSONObject transaction){

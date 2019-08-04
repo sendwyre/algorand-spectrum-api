@@ -2,9 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/websocket-endpoint.iml" filepath="$PROJECT_DIR$/.idea/modules/websocket-endpoint.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/websocket-endpoint.main.iml" filepath="$PROJECT_DIR$/.idea/modules/websocket-endpoint.main.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/websocket-endpoint.test.iml" filepath="$PROJECT_DIR$/.idea/modules/websocket-endpoint.test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/websocket-endpoint.iml" filepath="$PROJECT_DIR$/websocket-endpoint.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/websocket-endpoint_main.iml" filepath="$PROJECT_DIR$/.idea/modules/websocket-endpoint_main.iml" group="websocket-endpoint" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/websocket-endpoint_test.iml" filepath="$PROJECT_DIR$/.idea/modules/websocket-endpoint_test.iml" group="websocket-endpoint" />
     </modules>
   </component>
 </project>
