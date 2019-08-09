@@ -59,6 +59,7 @@ public class SocketHandler extends BinaryWebSocketHandler implements WebSocketHa
                 logger.debug("Message type: "+messageType);
                 try {
                     transactionProcessing = new TransactionProcessing(jsonMessage.getJSONObject("data"));
+
                     elasticSearchPublisher.
                             pubActions(transactionProcessing.getActions());
                     elasticSearchPublisher.
