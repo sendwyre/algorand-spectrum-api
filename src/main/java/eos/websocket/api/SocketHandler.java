@@ -4,6 +4,7 @@ package eos.websocket.api;
 import org.json.JSONException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.*;
 import org.springframework.web.socket.config.annotation.EnableWebSocket;
@@ -26,9 +27,18 @@ public class SocketHandler extends BinaryWebSocketHandler implements WebSocketHa
     private ElasticSearchPublisher elasticSearchPublisher;
     private String blockNumber;
     private TransactionProcessing transactionProcessing;
+    private String ES_CLUSTER_NAME;
+
+    @Autowired
+    public void setProperties(Properties properties) {
+        ES_CLUSTER_NAME = properties.getEsClusterName();
+
+    }
+
     {
         try {
             elasticSearchPublisher = new ElasticSearchPublisher();
+            logger.info(ES_CLUSTER_NAME);
         } catch (UnknownHostException e) {
             e.printStackTrace();
         }
