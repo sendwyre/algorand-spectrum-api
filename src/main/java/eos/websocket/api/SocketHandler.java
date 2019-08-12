@@ -22,23 +22,23 @@ import org.json.JSONObject;
 @EnableWebSocket
 public class SocketHandler extends BinaryWebSocketHandler implements WebSocketHandler{
     private static final transient Logger logger = LoggerFactory.getLogger(SocketHandler.class);
-    private JSONObject jsonMessage;
-    private String messageType;
+
     private ElasticSearchPublisher elasticSearchPublisher;
-    private String blockNumber;
-    private TransactionProcessing transactionProcessing;
+    private String ES_TRASNPORT_HOST1;
+    private String ES_TRASNPORT_HOST2;
     private String ES_CLUSTER_NAME;
 
     @Autowired
     public void setProperties(Properties properties) {
         ES_CLUSTER_NAME = properties.getEsClusterName();
-
+        ES_TRASNPORT_HOST1 = properties.getEsTransportHost1();
+        ES_TRASNPORT_HOST2 = properties.getEsTransportHost2();
     }
 
     {
         try {
             elasticSearchPublisher = new ElasticSearchPublisher();
-            logger.info(ES_CLUSTER_NAME);
+            logger.info("es cluser name is: "+ES_CLUSTER_NAME+" transport host 1 is: "+ES_TRASNPORT_HOST1);
         } catch (UnknownHostException e) {
             e.printStackTrace();
         }
@@ -53,35 +53,35 @@ public class SocketHandler extends BinaryWebSocketHandler implements WebSocketHa
     @Override
     public void handleBinaryMessage(WebSocketSession session, BinaryMessage binaryMessage) throws UnsupportedEncodingException {
         String stringMessage = new String(binaryMessage.getPayload().array(),"UTF-8");
-        jsonMessage = new JSONObject(stringMessage);
-        messageType = jsonMessage.get("msgtype").toString();
+        JSONObject jsonMessage = new JSONObject(stringMessage);
+        String messageType = jsonMessage.get("msgtype").toString();
         switch (messageType){
             case "ABI_UPDATED":
-                logger.debug("Message type: "+messageType);
+                logger.debug("Message type: "+ messageType);
                 break;
             case "FORK":
-                logger.debug("Message type: "+messageType);
+                logger.debug("Message type: "+ messageType);
                 break;
             case "BLOCK":
-                logger.debug("Message type: "+messageType);
+                logger.debug("Message type: "+ messageType);
                 break;
             case "TX_TRACE":
-                logger.debug("Message type: "+messageType);
+                logger.debug("Message type: "+ messageType);
                 try {
-                    transactionProcessing = new TransactionProcessing(jsonMessage.getJSONObject("data"));
+                    TransactionProcessing transactionProcessing = new TransactionProcessing(jsonMessage.getJSONObject("data"));
 
                     elasticSearchPublisher.
                             pubActions(transactionProcessing.getActions());
                     elasticSearchPublisher.
                             pubTransaction(transactionProcessing.getTransaction());
 
-                    blockNumber =  jsonMessage.
+                    String blockNumber = jsonMessage.
                             getJSONObject("data").
                             getString("block_num");
 
                     if (Integer.valueOf(blockNumber) % 100 == 0){
                         session.sendMessage(new BinaryMessage(blockNumber.getBytes()));
-                        logger.info("acknowleged block number: "+blockNumber);
+                        logger.info("acknowleged block number: "+ blockNumber);
                 }
 
                 } catch (JSONException e) {
@@ -92,11 +92,11 @@ public class SocketHandler extends BinaryWebSocketHandler implements WebSocketHa
 
                 break;
             case "BLOCK_COMPLETED":
-                logger.debug("Message type: "+messageType);
+                logger.debug("Message type: "+ messageType);
 
                 break;
             default:
-                logger.debug("Message type undefined: "+messageType);
+                logger.debug("Message type undefined: "+ messageType);
                 break;
         }
     }
