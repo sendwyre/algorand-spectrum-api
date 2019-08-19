@@ -9,17 +9,15 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.socket.*;
 import org.springframework.web.socket.config.annotation.EnableWebSocket;
 import org.springframework.web.socket.handler.BinaryWebSocketHandler;
-
 import java.io.IOException;
-
 import java.io.UnsupportedEncodingException;
 import java.net.UnknownHostException;
-
 import org.json.JSONObject;
 
 
 @Component
 @EnableWebSocket
+
 public class SocketHandler extends BinaryWebSocketHandler implements WebSocketHandler{
     private static final transient Logger logger = LoggerFactory.getLogger(SocketHandler.class);
 
@@ -51,7 +49,7 @@ public class SocketHandler extends BinaryWebSocketHandler implements WebSocketHa
     }
 
     @Override
-    public void handleBinaryMessage(WebSocketSession session, BinaryMessage binaryMessage) throws UnsupportedEncodingException {
+    public void handleBinaryMessage(WebSocketSession session, BinaryMessage binaryMessage) throws UnsupportedEncodingException, JSONException {
         String stringMessage = new String(binaryMessage.getPayload().array(),"UTF-8");
         JSONObject jsonMessage = new JSONObject(stringMessage);
         String messageType = jsonMessage.get("msgtype").toString();
