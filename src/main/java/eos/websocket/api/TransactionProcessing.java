@@ -1,6 +1,7 @@
 package eos.websocket.api;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,8 +31,9 @@ public class TransactionProcessing {
                 /**
                  * converting act.data field to string
                  */
-                actionData = jsonAction.getJSONObject("act").getJSONObject("data").toString();
+                actionData = jsonAction.getJSONObject("act").get("data").toString();
                 jsonAction.getJSONObject("act").put("data",actionData);
+
             }else {
                 logger.warn("Can't decode action: "+action.toString());
             }

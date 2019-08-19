@@ -20,9 +20,7 @@ import org.elasticsearch.transport.client.PreBuiltTransportClient;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.context.annotation.PropertySource;
+
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -77,7 +75,7 @@ public class ElasticSearchPublisher {
                 .setBulkActions(40000)
                 .setGlobalType("_doc")
                 .setBulkSize(new ByteSizeValue(25, ByteSizeUnit.MB))
-                .setFlushInterval(TimeValue.timeValueSeconds(5))
+//                .setFlushInterval(TimeValue.timeValueSeconds(40))
                 .setConcurrentRequests(20)
                 .setBackoffPolicy(BackoffPolicy.exponentialBackoff(TimeValue.timeValueMillis(100), 3))
                 .build();

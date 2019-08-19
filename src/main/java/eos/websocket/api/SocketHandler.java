@@ -17,7 +17,6 @@ import org.json.JSONObject;
 
 @Component
 @EnableWebSocket
-
 public class SocketHandler extends BinaryWebSocketHandler implements WebSocketHandler{
     private static final transient Logger logger = LoggerFactory.getLogger(SocketHandler.class);
 
