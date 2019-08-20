@@ -7,15 +7,20 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 
 public class TransactionProcessing {
     private JSONObject transactionMessage;
+    private HashSet actionsSet = new HashSet();
 
     private static final transient Logger logger = LoggerFactory.getLogger(TransactionProcessing.class);
 
     public TransactionProcessing(JSONObject transactionMessage){
         this.transactionMessage = transactionMessage;
+        this.actionsSet.add("eostribeprod");
     }
+
+
 
     public ArrayList<JSONObject> getActions(){
         ArrayList<JSONObject> actions = new ArrayList<>();

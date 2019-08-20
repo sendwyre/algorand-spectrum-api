@@ -59,6 +59,9 @@ public class SocketHandler extends BinaryWebSocketHandler implements WebSocketHa
             case "FORK":
                 logger.debug("Message type: "+ messageType);
                 break;
+            case "TABLE_DELTAS":
+                logger.debug("Message type: "+ messageType);
+                break;
             case "BLOCK":
                 logger.debug("Message type: "+ messageType);
                 break;
@@ -88,6 +91,7 @@ public class SocketHandler extends BinaryWebSocketHandler implements WebSocketHa
                 }
 
                 break;
+
             case "BLOCK_COMPLETED":
                 logger.debug("Message type: "+ messageType);
 
