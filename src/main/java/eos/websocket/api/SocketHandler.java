@@ -12,13 +12,19 @@ import org.springframework.web.socket.handler.BinaryWebSocketHandler;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.json.JSONObject;
 
 
 @Component
 @EnableWebSocket
-public class SocketHandler extends BinaryWebSocketHandler implements WebSocketHandler{
+public class SocketHandler extends BinaryWebSocketHandler implements WebSocketHandler,Observed{
     private static final transient Logger logger = LoggerFactory.getLogger(SocketHandler.class);
+
+    private List<Observer> subscribers = new ArrayList<>();
+    private ArrayList<JSONObject> actionsList;
 
     private ElasticSearchPublisher elasticSearchPublisher;
     private String ES_TRASNPORT_HOST1;
@@ -35,6 +41,8 @@ public class SocketHandler extends BinaryWebSocketHandler implements WebSocketHa
     {
         try {
             elasticSearchPublisher = new ElasticSearchPublisher();
+            addObserver(new ActionsPublisher());
+
             logger.info("es cluser name is: "+ES_CLUSTER_NAME+" transport host 1 is: "+ES_TRASNPORT_HOST1);
         } catch (UnknownHostException e) {
             e.printStackTrace();
@@ -69,17 +77,19 @@ public class SocketHandler extends BinaryWebSocketHandler implements WebSocketHa
                 logger.debug("Message type: "+ messageType);
                 try {
                     TransactionProcessing transactionProcessing = new TransactionProcessing(jsonMessage.getJSONObject("data"));
+                    actionsList = transactionProcessing.getActions();
+                    notifyObservers();
 
-                    elasticSearchPublisher.
-                            pubActions(transactionProcessing.getActions());
-                    elasticSearchPublisher.
-                            pubTransaction(transactionProcessing.getTransaction());
+//                    elasticSearchPublisher.
+//                            pubActions(transactionProcessing.getActions());
+//                    elasticSearchPublisher.
+//                            pubTransaction(transactionProcessing.getTransaction());
 
                     String blockNumber = jsonMessage.
                             getJSONObject("data").
                             getString("block_num");
 
-                    if (Integer.valueOf(blockNumber) % 100 == 0){
+                    if (Integer.valueOf(blockNumber) % 10 == 0){
                         session.sendMessage(new BinaryMessage(blockNumber.getBytes()));
                         logger.info("acknowleged block number: "+ blockNumber);
                 }
@@ -95,6 +105,17 @@ public class SocketHandler extends BinaryWebSocketHandler implements WebSocketHa
             case "BLOCK_COMPLETED":
                 logger.debug("Message type: "+ messageType);
 
+                try {
+                    String blockNumber = jsonMessage.
+                            getJSONObject("data").
+                            getString("block_num");
+                    session.sendMessage(new BinaryMessage(blockNumber.getBytes()));
+
+                }catch (JSONException e) {
+                    e.printStackTrace();
+                } catch (IOException e){
+                    e.printStackTrace();
+                }
                 break;
             default:
                 logger.debug("Message type undefined: "+ messageType);
@@ -109,5 +130,22 @@ public class SocketHandler extends BinaryWebSocketHandler implements WebSocketHa
     }
 
 
+    @Override
+    public void addObserver(Observer observer) {
+        this.subscribers.add(observer);
 
+    }
+
+    @Override
+    public void removeObserver(Observer observer) {
+
+    }
+
+    @Override
+    public void notifyObservers() {
+        for(Observer observer:subscribers){
+            observer.handleEvent(actionsList);
+        }
+
+    }
 }
