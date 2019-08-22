@@ -1,4 +1,9 @@
 buildscript {
+
+    ext {
+        springBootVersion = '2.1.7.RELEASE'
+        redisVersion = '2.9.0'
+    }
     repositories {
         mavenCentral()
     }
@@ -38,6 +43,9 @@ dependencies {
     compile 'ch.qos.logback:logback-classic:1.2.2'
     compile("org.springframework.boot:spring-boot-starter-websocket")
     compile "org.springframework.boot:spring-boot-configuration-processor"
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-data-redis', version: "${springBootVersion}"
+    compile group: 'redis.clients', name: 'jedis', version: "${redisVersion}"
+
     annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
     compile("org.webjars:webjars-locator-core")
     compile("org.webjars:sockjs-client:1.0.2")

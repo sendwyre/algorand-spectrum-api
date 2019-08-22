@@ -26,37 +26,22 @@ public class SocketHandler extends BinaryWebSocketHandler implements WebSocketHa
     private List<Observer> subscribers = new ArrayList<>();
     private ArrayList<JSONObject> actionsList;
 
-    private ElasticSearchPublisher elasticSearchPublisher;
-    private String ES_TRASNPORT_HOST1;
-    private String ES_TRASNPORT_HOST2;
-    private String ES_CLUSTER_NAME;
 
-    @Autowired
-    public void setProperties(Properties properties) {
-        ES_CLUSTER_NAME = properties.getEsClusterName();
-        ES_TRASNPORT_HOST1 = properties.getEsTransportHost1();
-        ES_TRASNPORT_HOST2 = properties.getEsTransportHost2();
+    public SocketHandler() {
+        addObserver(new ActionsPublisher());
+
+
     }
 
-    {
-        try {
-            elasticSearchPublisher = new ElasticSearchPublisher();
-            addObserver(new ActionsPublisher());
-
-            logger.info("es cluser name is: "+ES_CLUSTER_NAME+" transport host 1 is: "+ES_TRASNPORT_HOST1);
-        } catch (UnknownHostException e) {
-            e.printStackTrace();
-        }
-    }
 
     @Override
     public void afterConnectionEstablished(WebSocketSession session) {
         logger.info("Session established from: "+session.getRemoteAddress());
-
     }
 
     @Override
     public void handleBinaryMessage(WebSocketSession session, BinaryMessage binaryMessage) throws UnsupportedEncodingException, JSONException {
+        TransactionProcessing transactionProcessing;
         String stringMessage = new String(binaryMessage.getPayload().array(),"UTF-8");
         JSONObject jsonMessage = new JSONObject(stringMessage);
         String messageType = jsonMessage.get("msgtype").toString();
@@ -76,14 +61,10 @@ public class SocketHandler extends BinaryWebSocketHandler implements WebSocketHa
             case "TX_TRACE":
                 logger.debug("Message type: "+ messageType);
                 try {
-                    TransactionProcessing transactionProcessing = new TransactionProcessing(jsonMessage.getJSONObject("data"));
+                    transactionProcessing = new TransactionProcessing(jsonMessage.getJSONObject("data"));
+
                     actionsList = transactionProcessing.getActions();
                     notifyObservers();
-
-//                    elasticSearchPublisher.
-//                            pubActions(transactionProcessing.getActions());
-//                    elasticSearchPublisher.
-//                            pubTransaction(transactionProcessing.getTransaction());
 
                     String blockNumber = jsonMessage.
                             getJSONObject("data").
@@ -91,9 +72,7 @@ public class SocketHandler extends BinaryWebSocketHandler implements WebSocketHa
 
                     if (Integer.valueOf(blockNumber) % 10 == 0){
                         session.sendMessage(new BinaryMessage(blockNumber.getBytes()));
-                        logger.info("acknowleged block number: "+ blockNumber);
-                }
-
+                        logger.info("acknowleged block number: "+ blockNumber); }
                 } catch (JSONException e) {
                      e.printStackTrace();
                 } catch (IOException e){

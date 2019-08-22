@@ -1,5 +1,6 @@
 package eos.websocket.api;
 
+import org.apache.kafka.common.protocol.types.Field;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -20,6 +21,8 @@ public class TransactionProcessing {
         this.actionsSet.add("eostribeprod");
         this.actionsSet.add("eosiodetroit");
         this.actionsSet.add("eostribe");
+        this.actionsSet.add("chainriftcom");
+        this.actionsSet.add("eosmechanics");
 
     }
 
@@ -52,7 +55,9 @@ public class TransactionProcessing {
                     jsonAction.put("block_num", this.transactionMessage.get("block_num"));
                     jsonAction.put("block_timestamp",this.transactionMessage.get("block_timestamp"));
                     jsonAction.put("trx",this.transactionMessage.getJSONObject("trace").get("id"));
-                    actions.add(jsonAction);
+                    actions.add(
+                            prepareMessage(actAuthorizationActor,jsonAction)
+                    );
                     logger.info("actAuthorizationActor is: "+actAuthorizationActor);
 
                 }
@@ -61,7 +66,9 @@ public class TransactionProcessing {
                     jsonAction.put("block_timestamp",this.transactionMessage.get("block_timestamp"));
                     jsonAction.put("trx",this.transactionMessage.getJSONObject("trace").get("id"));
 
-                    actions.add(jsonAction);
+                    actions.add(
+                            prepareMessage(actAuthorizationActor,jsonAction)
+                    );
                     logger.info("receiptReceiver is: "+receiptReceiver);
                 }
 
@@ -78,6 +85,13 @@ public class TransactionProcessing {
 //         actions.add(jsonAction);
         }
         return actions;
+    }
+
+    private JSONObject prepareMessage(String accountID, JSONObject action){
+        JSONObject message = new JSONObject();
+        message.put("accountID",accountID);
+        message.put("action",action);
+        return message;
     }
 
     private JSONObject addFields(JSONObject action){
