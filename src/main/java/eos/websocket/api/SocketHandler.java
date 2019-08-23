@@ -90,6 +90,7 @@ public class SocketHandler extends BinaryWebSocketHandler implements WebSocketHa
                     String blockNumber = jsonMessage.
                             getJSONObject("data").
                             getString("block_num");
+
                     session.sendMessage(new BinaryMessage(blockNumber.getBytes()));
 
                 }catch (JSONException e) {
