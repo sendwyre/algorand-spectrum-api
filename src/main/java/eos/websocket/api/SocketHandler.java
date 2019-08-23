@@ -30,8 +30,10 @@ public class SocketHandler extends BinaryWebSocketHandler implements WebSocketHa
     public SocketHandler() {
         addObserver(new ActionsPublisher());
 
-
     }
+
+    @Autowired
+    private RedisMessagePublisher redisMessagePublisher;
 
 
     @Override
@@ -64,7 +66,7 @@ public class SocketHandler extends BinaryWebSocketHandler implements WebSocketHa
                     transactionProcessing = new TransactionProcessing(jsonMessage.getJSONObject("data"));
 
                     actionsList = transactionProcessing.getActions();
-                    notifyObservers();
+                    redisMessagePublisher.publish(actionsList.toString());
 
                     String blockNumber = jsonMessage.
                             getJSONObject("data").
@@ -119,6 +121,7 @@ public class SocketHandler extends BinaryWebSocketHandler implements WebSocketHa
     public void removeObserver(Observer observer) {
 
     }
+
 
     @Override
     public void notifyObservers() {
