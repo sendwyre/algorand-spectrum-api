@@ -65,7 +65,7 @@ public class SocketHandler extends BinaryWebSocketHandler implements WebSocketHa
                 try {
                     transactionProcessing = new TransactionProcessing(jsonMessage.getJSONObject("data"));
 
-                    actionsList = transactionProcessing.getActions();
+                    actionsList = transactionProcessing.getFiltredActions();
                     redisMessagePublisher.publish(actionsList.toString());
 
                     String blockNumber = jsonMessage.

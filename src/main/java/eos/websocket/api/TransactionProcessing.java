@@ -28,7 +28,7 @@ public class TransactionProcessing {
 
 
 
-    public ArrayList<JSONObject> getActions(){
+    public ArrayList<JSONObject> getFiltredActions(){
         ArrayList<JSONObject> actions = new ArrayList<>();
         JSONObject jsonAction = null;
         for (Object action:this.transactionMessage.getJSONObject("trace").getJSONArray("action_traces")){
