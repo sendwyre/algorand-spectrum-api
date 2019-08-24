@@ -1,6 +1,7 @@
 package eos.websocket.api;
 
 
+import org.elasticsearch.common.inject.Singleton;
 import org.json.JSONException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,6 +19,7 @@ import java.util.List;
 import org.json.JSONObject;
 
 
+@Singleton
 @Component
 @EnableWebSocket
 public class SocketHandler extends BinaryWebSocketHandler implements WebSocketHandler,Observed{
@@ -25,6 +27,7 @@ public class SocketHandler extends BinaryWebSocketHandler implements WebSocketHa
 
     private List<Observer> subscribers = new ArrayList<>();
     private ArrayList<JSONObject> actionsList;
+    private RedisMessagePublisher redisMessagePublisher;
 
 
     public SocketHandler() {
@@ -33,7 +36,9 @@ public class SocketHandler extends BinaryWebSocketHandler implements WebSocketHa
     }
 
     @Autowired
-    private RedisMessagePublisher redisMessagePublisher;
+    public void setRedisMessagePublisher(RedisMessagePublisher redisMessagePublisher) {
+        this.redisMessagePublisher = redisMessagePublisher;
+    }
 
 
     @Override

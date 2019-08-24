@@ -1,6 +1,7 @@
 package eos.websocket.api.configuration;
 
 import eos.websocket.api.SocketHandler;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.socket.config.annotation.*;
@@ -10,9 +11,16 @@ import org.springframework.web.socket.server.standard.ServletServerContainerFact
 @Configuration
 public class WebSocketConfig implements WebSocketConfigurer {
 
+    private SocketHandler socketHandler;
+
+    @Autowired
+    public void setSocketHandler(SocketHandler socketHandler) {
+        this.socketHandler = socketHandler;
+    }
+
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-        registry.addHandler(new SocketHandler(), "/");
+        registry.addHandler(socketHandler, "/");
     }
     @Bean
     public ServletServerContainerFactoryBean createWebSocketContainer() {
