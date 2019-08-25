@@ -1,7 +1,6 @@
 package eos.websocket.api;
 
 
-import org.elasticsearch.common.inject.Singleton;
 import org.json.JSONException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,17 +11,16 @@ import org.springframework.web.socket.config.annotation.EnableWebSocket;
 import org.springframework.web.socket.handler.BinaryWebSocketHandler;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.json.JSONObject;
 
 
-@Singleton
 @Component
 @EnableWebSocket
-public class SocketHandler extends BinaryWebSocketHandler implements WebSocketHandler,Observed{
+public class SocketHandler extends BinaryWebSocketHandler implements WebSocketHandler,Observed {
+
     private static final transient Logger logger = LoggerFactory.getLogger(SocketHandler.class);
 
     private List<Observer> subscribers = new ArrayList<>();
@@ -78,13 +76,14 @@ public class SocketHandler extends BinaryWebSocketHandler implements WebSocketHa
                             getJSONObject("data").
                             getString("block_num");
 
-                    if (Integer.valueOf(blockNumber) % 10 == 0){
+                    if (Integer.valueOf(blockNumber) % 10 == 0) {
                         session.sendMessage(new BinaryMessage(blockNumber.getBytes()));
-                        logger.info("acknowleged block number: "+ blockNumber); }
-                } catch (JSONException e) {
-                     e.printStackTrace();
-                } catch (IOException e){
-                    e.printStackTrace();
+                        logger.info("acknowledged block number: "+ blockNumber);
+                    }
+                } catch (JSONException jex) {
+                    logger.error("JSON Parse error", jex);
+                } catch (IOException ioex){
+                    logger.error("IO Exception", ioex);
                 }
 
                 break;
@@ -99,14 +98,14 @@ public class SocketHandler extends BinaryWebSocketHandler implements WebSocketHa
 
                     session.sendMessage(new BinaryMessage(blockNumber.getBytes()));
 
-                }catch (JSONException e) {
-                    e.printStackTrace();
-                } catch (IOException e){
-                    e.printStackTrace();
+                } catch (JSONException jex) {
+                    logger.error("JSON Parse error", jex);
+                } catch (IOException ioex){
+                    logger.error("IO Exception", ioex);
                 }
                 break;
             default:
-                logger.debug("Message type undefined: "+ messageType);
+                logger.debug("Unknown message type: "+ messageType);
                 break;
         }
     }

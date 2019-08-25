@@ -1,7 +1,5 @@
 package eos.websocket.api;
 
-import org.apache.kafka.common.protocol.types.Field;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
