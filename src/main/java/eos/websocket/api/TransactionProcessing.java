@@ -21,10 +21,13 @@ public class TransactionProcessing {
         this.actionsSet.add("eostribe");
         this.actionsSet.add("chainriftcom");
         this.actionsSet.add("eosmechanics");
-
+        this.actionsSet.add("gm2tsojsgige");
     }
 
-
+    public TransactionProcessing(JSONObject transactionMessage, HashSet<String> actions){
+        this.transactionMessage = transactionMessage;
+        this.actionsSet = actions;
+    }
 
     public ArrayList<JSONObject> getFiltredActions(){
         ArrayList<JSONObject> actions = new ArrayList<>();

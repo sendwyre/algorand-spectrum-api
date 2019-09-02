@@ -12,19 +12,19 @@ public class RedisMessagePublisher implements MessagePublisher{
 
 
     private final StringRedisTemplate stringRedisTemplate;
-    private final ChannelTopic topic;
+    private final ChannelTopic pubTopic;
 
 
     @Autowired
     public RedisMessagePublisher(StringRedisTemplate stringRedisTemplate,
-                     ChannelTopic topic) {
+                     ChannelTopic pubTopic) {
         this.stringRedisTemplate = stringRedisTemplate;
-        this.topic = topic;
+        this.pubTopic = pubTopic;
     }
 
 
     @Override
     public void publish(String message) {
-        stringRedisTemplate.convertAndSend(topic.getTopic(), message);
+        stringRedisTemplate.convertAndSend(pubTopic.getTopic(), message);
     }
 }
