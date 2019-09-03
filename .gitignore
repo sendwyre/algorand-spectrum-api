@@ -35,3 +35,10 @@ hs_err_pid*
 .*.md.html
 .idea
 .gradle
+.idea/*
+.gradle/*
+out/*
+build/*
+docker/consumer/build/*
+docker/chronicle/data/*
+
