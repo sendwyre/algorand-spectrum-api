@@ -13,7 +13,7 @@ public class SubscriberSessionStorage {
     private WebSocketSession session;
     private String sessionId;
     private HashMap<String,WebSocketSession> sessions = new HashMap<>();
-    private HashMap<String,String> accountsSessionID;
+    private HashMap<String,String> accountsSessionID = new HashMap<>();
 
 
     public void setSession(WebSocketSession session) {
