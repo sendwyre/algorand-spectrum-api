@@ -115,8 +115,6 @@ public class SocketHandler extends BinaryWebSocketHandler implements WebSocketHa
     public void  handleMessage(String message){
         logger.info(message);
         processServiceMessage(message);
-
-
     }
 
     public void processServiceMessage(String serviceMessage){
