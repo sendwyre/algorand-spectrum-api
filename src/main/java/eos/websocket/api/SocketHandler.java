@@ -15,6 +15,8 @@ import java.util.ArrayList;
 import java.util.HashSet;
 
 import org.json.JSONObject;
+import com.google.gson.Gson;
+
 
 
 @Component
@@ -65,7 +67,10 @@ public class SocketHandler extends BinaryWebSocketHandler implements WebSocketHa
 
                     actionsList = transactionProcessing.getFiltredActions();
                     if (actionsList.size() > 0) {
-                        redisMessagePublisherActions.publish(actionsList.toString());
+                        for (JSONObject action: actionsList) {
+                            redisMessagePublisherActions.publish(action.toString());
+                        }
+
                     }
                     String blockNumber = jsonMessage.
                             getJSONObject("data").
@@ -109,14 +114,16 @@ public class SocketHandler extends BinaryWebSocketHandler implements WebSocketHa
         processServiceMessage(message);
     }
 
-    public void processServiceMessage(String serviceMessage){
-        JSONObject jsonServiceMessage = new JSONObject(serviceMessage);
-        switch (jsonServiceMessage.getString("event")){
+    public void processServiceMessage(String message){
+
+        ServiceMessage serviceMessage = new Gson().fromJson(message,ServiceMessage.class);
+
+        switch (serviceMessage.getEvent().toString()){
             case "subscribe":
-                getAccountsFiltered().add(jsonServiceMessage.getString("account"));
+                getAccountsFiltered().add(serviceMessage.getAccount());
                 break;
             case "unsubscribe":
-                getAccountsFiltered().remove(jsonServiceMessage.getString("account"));
+                getAccountsFiltered().remove(serviceMessage.getAccount());
         }
     }
 

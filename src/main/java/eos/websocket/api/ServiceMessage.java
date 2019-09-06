@@ -4,7 +4,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 @Component
-public class SubscribeMessage {
+public class ServiceMessage {
     private Events event;
     private String account;
     private List<String> actions;

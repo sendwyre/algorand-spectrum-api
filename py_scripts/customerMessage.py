@@ -17,15 +17,18 @@ ws.ping()
 messageJson = json.dumps(messageBody)
 ws.send(messageJson)
 
-actionsList = ["transfer","test1"]
-messageBody = {"account":"eostribeprod","actions":actionsList }
-messageJson = json.dumps(messageBody)
-ws.send(messageJson)
+while True:
+    print(ws.recv())
 
-actionsList = ["transfer1","test1"]
-messageBody ={"account":"testuser","actions":actionsList }
-messageJson = json.dumps(messageBody)
-ws.send(messageJson)
+# actionsList = ["transfer","test1"]
+# messageBody = {"account":"eostribeprod","actions":actionsList }
+# messageJson = json.dumps(messageBody)
+# ws.send(messageJson)
+#
+# actionsList = ["transfer1","test1"]
+# messageBody ={"account":"testuser","actions":actionsList }
+# messageJson = json.dumps(messageBody)
+# ws.send(messageJson)
 
 
 ws.close()

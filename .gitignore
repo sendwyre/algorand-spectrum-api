@@ -42,3 +42,5 @@ build/*
 docker/consumer/build/*
 docker/chronicle/data/*
 docker/chronicle/data/receiver-state/shared_memory.bin
+py_pyscripts/.idea
+py_pyscripts/.idea/*

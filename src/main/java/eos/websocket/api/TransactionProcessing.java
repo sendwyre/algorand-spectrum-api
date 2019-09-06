@@ -38,6 +38,7 @@ public class TransactionProcessing {
                 String actAuthorizationActor;
                 String receiptReceiver;
                 try {
+//                    Obtain actAuthorizationActor field
                     actAuthorizationActor = jsonAction.getJSONObject("act").
                             getJSONArray("authorization").
                             getJSONObject(0).
@@ -68,7 +69,7 @@ public class TransactionProcessing {
                     jsonAction.put("trx",this.transactionMessage.getJSONObject("trace").get("id"));
 
                     actions.add(
-                            prepareMessage(actAuthorizationActor,jsonAction)
+                            prepareMessage(receiptReceiver,jsonAction)
                     );
                     logger.info("receiptReceiver is: "+receiptReceiver);
                 }
