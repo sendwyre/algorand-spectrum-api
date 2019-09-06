@@ -15,8 +15,8 @@ import org.springframework.data.redis.listener.adapter.MessageListenerAdapter;
 
 @Configuration
 public class RedisConfig implements ApplicationContextAware {
-    private static final String PUB_CHANNEL_NAME = "actions";
-    private static final String SUB_CHANNEL_NAME = "service";
+    private final String ACTIONS_CHANNEL = "actions";
+    private final String SERVICE_CHANNEL = "service";
     private ApplicationContext applicationContext = null;
 
     @Bean
@@ -33,8 +33,13 @@ public class RedisConfig implements ApplicationContextAware {
     }
 
     @Bean
-    public MessageListenerAdapter messageListener() {
+    public MessageListenerAdapter messageListenerSocketHandler() {
         return new MessageListenerAdapter(applicationContext.getBean("socketHandler"));
+    }
+
+    @Bean
+    public MessageListenerAdapter messageListenerSocketHandlerFrontend() {
+        return new MessageListenerAdapter(applicationContext.getBean("socketHandlerFrontend"));
     }
 
     @Bean
@@ -42,18 +47,19 @@ public class RedisConfig implements ApplicationContextAware {
         RedisMessageListenerContainer container
                 = new RedisMessageListenerContainer();
         container.setConnectionFactory(redisConnectionFactory());
-        container.addMessageListener(messageListener(), subTopic());
+        container.addMessageListener(messageListenerSocketHandler(), topicService());
+        container.addMessageListener(messageListenerSocketHandlerFrontend(),topicActions());
         return container;
     }
 
     @Bean
-    public ChannelTopic pubTopic() {
-        return new ChannelTopic(PUB_CHANNEL_NAME);
+    public ChannelTopic topicActions() {
+        return new ChannelTopic(ACTIONS_CHANNEL);
     }
 
     @Bean
-    public ChannelTopic subTopic(){
-        return new ChannelTopic(SUB_CHANNEL_NAME);
+    public ChannelTopic topicService(){
+        return new ChannelTopic(SERVICE_CHANNEL);
     }
 
     @Override

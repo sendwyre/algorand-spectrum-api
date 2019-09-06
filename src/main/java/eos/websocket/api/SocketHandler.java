@@ -13,7 +13,6 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 
 import org.json.JSONObject;
 
@@ -25,20 +24,13 @@ public class SocketHandler extends BinaryWebSocketHandler implements WebSocketHa
     private static final transient Logger logger = LoggerFactory.getLogger(SocketHandler.class);
 
     private ArrayList<JSONObject> actionsList;
-
     private HashSet<String> accountsFiltered = new HashSet<String>();
-    private RedisMessagePublisher redisMessagePublisher;
 
-    public HashSet<String> getAccountsFiltered() {
-        return accountsFiltered;
-    }
+    private RedisMessagePublisherActions redisMessagePublisherActions;
 
-    public void setAccountsFiltered(HashSet<String> accountsFiltered) {
-        this.accountsFiltered = accountsFiltered;
-    }
     @Autowired
-    public void setRedisMessagePublisher(RedisMessagePublisher redisMessagePublisher) {
-        this.redisMessagePublisher = redisMessagePublisher;
+    public void setRedisMessagePublisherActions(RedisMessagePublisherActions redisMessagePublisherActions) {
+        this.redisMessagePublisherActions = redisMessagePublisherActions;
     }
 
     @Override
@@ -73,7 +65,7 @@ public class SocketHandler extends BinaryWebSocketHandler implements WebSocketHa
 
                     actionsList = transactionProcessing.getFiltredActions();
                     if (actionsList.size() > 0) {
-                        redisMessagePublisher.publish(actionsList.toString());
+                        redisMessagePublisherActions.publish(actionsList.toString());
                     }
                     String blockNumber = jsonMessage.
                             getJSONObject("data").
@@ -129,6 +121,13 @@ public class SocketHandler extends BinaryWebSocketHandler implements WebSocketHa
     }
 
 
+    public HashSet<String> getAccountsFiltered() {
+        return accountsFiltered;
+    }
+
+    public void setAccountsFiltered(HashSet<String> accountsFiltered) {
+        this.accountsFiltered = accountsFiltered;
+    }
 
 
     @Override

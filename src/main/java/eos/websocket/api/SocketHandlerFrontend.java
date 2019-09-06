@@ -21,12 +21,13 @@ public class SocketHandlerFrontend extends TextWebSocketHandler implements WebSo
 
     private SubscribeMessage subscribeMessage;
 
-    private RedisMessagePublisher redisMessagePublisher;
+    private RedisMessagePublisherService redisMessagePublisherService;
 
     @Autowired
-    public void setRedisMessagePublisher(RedisMessagePublisher redisMessagePublisher) {
-        this.redisMessagePublisher = redisMessagePublisher;
+    public void setRedisMessagePublisherService(RedisMessagePublisherService redisMessagePublisherService){
+        this.redisMessagePublisherService = redisMessagePublisherService;
     }
+
 
     @Autowired
     public void setSubscribeMessage(SubscribeMessage subscribeMessage){
@@ -55,11 +56,11 @@ public class SocketHandlerFrontend extends TextWebSocketHandler implements WebSo
         SubscribeRequest subscribeRequest = new Gson().fromJson(message.getPayload(),SubscribeRequest.class);
         subscriberSessionStorage.setAccountsSessionID(subscribeRequest.getAccount(), session.getId());
 
-        subscribeMessage.setEvents(Events.subscribe);
+        subscribeMessage.setEvent(Events.subscribe);
         subscribeMessage.setAccount(subscribeRequest.getAccount());
-        subscribeRequest.setActions(subscribeRequest.getActions());
+        subscribeMessage.setActions(subscribeRequest.getActions());
 
-        redisMessagePublisher.publish(subscribeMessage.toString());
+        redisMessagePublisherService.publish(new Gson().toJson(subscribeMessage));
 
 
 

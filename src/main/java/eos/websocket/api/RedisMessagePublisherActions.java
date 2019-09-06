@@ -8,23 +8,23 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 @Component
-public class RedisMessagePublisher implements MessagePublisher{
+public class RedisMessagePublisherActions implements MessagePublisher{
 
 
     private final StringRedisTemplate stringRedisTemplate;
-    private final ChannelTopic pubTopic;
+    private final ChannelTopic topicActions;
 
 
     @Autowired
-    public RedisMessagePublisher(StringRedisTemplate stringRedisTemplate,
-                     ChannelTopic pubTopic) {
+    public RedisMessagePublisherActions(StringRedisTemplate stringRedisTemplate,
+                                        ChannelTopic topicActions) {
         this.stringRedisTemplate = stringRedisTemplate;
-        this.pubTopic = pubTopic;
+        this.topicActions = topicActions;
     }
 
 
     @Override
     public void publish(String message) {
-        stringRedisTemplate.convertAndSend(pubTopic.getTopic(), message);
+        stringRedisTemplate.convertAndSend(topicActions.getTopic(), message);
     }
 }

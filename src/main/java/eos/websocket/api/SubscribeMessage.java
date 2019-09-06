@@ -5,16 +5,16 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 @Component
 public class SubscribeMessage {
-    private Events events;
+    private Events event;
     private String account;
     private List<String> actions;
 
-    public Events getEvents() {
-        return events;
+    public Events getEvent() {
+        return event;
     }
 
-    public void setEvents(Events events) {
-        this.events = events;
+    public void setEvent(Events event) {
+        this.event = event;
     }
 
     public String getAccount() {
@@ -35,8 +35,8 @@ public class SubscribeMessage {
 
     @Override
     public String toString() {
-        return "SubscribeMessage{" +
-                "events=" + events +
+        return "{" +
+                "event=" + event +
                 ", account='" + account + '\'' +
                 ", actions=" + actions +
                 '}';
