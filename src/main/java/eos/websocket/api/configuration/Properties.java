@@ -10,24 +10,24 @@ import org.springframework.stereotype.Component;
 @ConfigurationProperties
 public class Properties {
     @Value("${CHRONICLE_WEBSOCKET_PATH}")
-    private String chronicleWebsocketPath;
+    private String socketPath;
 
     @Value("${CUSTOMER_WEBSOCKET_PATH}")
-    private String customerWebsocketPath;
+    private String socketPathFrontend;
 
-    public String getCustomerWebsocketPath() {
-        return customerWebsocketPath;
+    public String getSocketPath() {
+        return socketPath;
     }
 
-    public void setCustomerWebsocketPath(String customerWebsocketPath) {
-        this.customerWebsocketPath = customerWebsocketPath;
+    public void setSocketPath(String socketPath) {
+        this.socketPath = socketPath;
     }
 
-    public String getChronicleWebsocketPath() {
-        return chronicleWebsocketPath;
+    public String getSocketPathFrontend() {
+        return socketPathFrontend;
     }
 
-    public void setChronicleWebsocketPath(String chronicleWebsocketPath) {
-        this.chronicleWebsocketPath = chronicleWebsocketPath;
+    public void setSocketPathFrontend(String socketPathFrontend) {
+        this.socketPathFrontend = socketPathFrontend;
     }
 }

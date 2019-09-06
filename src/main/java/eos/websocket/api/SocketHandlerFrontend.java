@@ -1,9 +1,6 @@
 package eos.websocket.api;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.google.gson.Gson;
-import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,14 +12,10 @@ import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.config.annotation.EnableWebSocket;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Hashtable;
-
 @Component
 @EnableWebSocket
-public class CustomersWebSocketHandler extends TextWebSocketHandler implements WebSocketHandler{
-    private static final transient Logger logger = LoggerFactory.getLogger(CustomersWebSocketHandler.class);
+public class SocketHandlerFrontend extends TextWebSocketHandler implements WebSocketHandler{
+    private static final transient Logger logger = LoggerFactory.getLogger(SocketHandlerFrontend.class);
 
     private SubscriberSessionStorage subscriberSessionStorage;
 

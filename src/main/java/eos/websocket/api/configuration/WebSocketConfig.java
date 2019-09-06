@@ -1,6 +1,6 @@
 package eos.websocket.api.configuration;
 
-import eos.websocket.api.CustomersWebSocketHandler;
+import eos.websocket.api.SocketHandlerFrontend;
 import eos.websocket.api.SocketHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -14,18 +14,18 @@ public class WebSocketConfig implements WebSocketConfigurer {
 
     private SocketHandler socketHandler;
 
-    private CustomersWebSocketHandler custormersWebSocketHandler;
+    private SocketHandlerFrontend socketHandlerFrontend;
 
-    private String chronicleWebsocketPath;
-    private String customerWebsocketPath;
+    private String socketPath;
+    private String socketPathFrontend;
 
     @Autowired
-    public void setChronicleWebsocketPath(Properties properties){
-        this.chronicleWebsocketPath = properties.getChronicleWebsocketPath();
+    public void setSocketPath(Properties properties){
+        this.socketPath = properties.getSocketPath();
     }
 
-    @Autowired void setCustomerWebsocketPath(Properties properties){
-        this.customerWebsocketPath = properties.getCustomerWebsocketPath();
+    @Autowired void setSocketPathFrontend(Properties properties){
+        this.socketPathFrontend = properties.getSocketPathFrontend();
     }
 
     @Autowired
@@ -34,14 +34,14 @@ public class WebSocketConfig implements WebSocketConfigurer {
     }
 
     @Autowired
-    public void setCustormersWebSocketHandler(CustomersWebSocketHandler custormersWebSocketHandler){
-        this.custormersWebSocketHandler = custormersWebSocketHandler;
+    public void setSocketHandlerFrontend(SocketHandlerFrontend socketHandlerFrontend){
+        this.socketHandlerFrontend = socketHandlerFrontend;
     }
 
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-        registry.addHandler(socketHandler, chronicleWebsocketPath);
-        registry.addHandler(custormersWebSocketHandler,customerWebsocketPath);
+        registry.addHandler(socketHandler, socketPath);
+        registry.addHandler(socketHandlerFrontend, socketPathFrontend);
     }
 
 
