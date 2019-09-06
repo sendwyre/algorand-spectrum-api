@@ -43,8 +43,7 @@ public class SocketHandlerFrontend extends TextWebSocketHandler implements WebSo
 
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
-
-        subscriberSessionStorage.setSession(session);
+        subscriberSessionStorage.saveSession(session);
         logger.info(session.getId());
 
 
@@ -54,7 +53,10 @@ public class SocketHandlerFrontend extends TextWebSocketHandler implements WebSo
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
 
         SubscribeRequest subscribeRequest = new Gson().fromJson(message.getPayload(),SubscribeRequest.class);
-        subscriberSessionStorage.setAccountsSessionID(subscribeRequest.getAccount(), session.getId());
+
+        subscriberSessionStorage.saveSessionIDaccounts(session.getId(), subscribeRequest.getAccount());
+
+//        subscriberSessionStorage.saveSessionIDaccounts(subscribeRequest.getAccount(), session.getId());
 
         serviceMessage.setEvent(Events.subscribe);
         serviceMessage.setAccount(subscribeRequest.getAccount());
@@ -70,6 +72,8 @@ public class SocketHandlerFrontend extends TextWebSocketHandler implements WebSo
 
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
+        String sessionId = session.getId();
+
         unsubscribe(session);
 
     }
@@ -79,8 +83,8 @@ public class SocketHandlerFrontend extends TextWebSocketHandler implements WebSo
         JSONObject jsonMessage = new JSONObject(message);
 
         String accountid = jsonMessage.getString("accountID");
-        String sessionid = subscriberSessionStorage.getIdByAccountName(accountid);
-        WebSocketSession session = subscriberSessionStorage.getSessionByID(sessionid);
+        String sessionid = subscriberSessionStorage.getSessionId(accountid);
+        WebSocketSession session = subscriberSessionStorage.getSession(sessionid);
         synchronized(session) {
             if (session != null) session.sendMessage(new TextMessage(jsonMessage.getJSONObject("action").toString()));
         }
@@ -88,8 +92,17 @@ public class SocketHandlerFrontend extends TextWebSocketHandler implements WebSo
      }
 
      public void unsubscribe(WebSocketSession session){
+
         String sessionID = session.getId();
-//        subscriberSessionStorage.
+
+        for (String account : subscriberSessionStorage.getAccounts(sessionID)){
+            serviceMessage.setEvent(Events.unsubscribe);
+            serviceMessage.setAccount(account);
+            redisMessagePublisherService.publish(new Gson().toJson(serviceMessage));
+        }
+
+        subscriberSessionStorage.removeSessionIDaccounts(sessionID);
+        subscriberSessionStorage.removeSession(sessionID);
 
      }
 }

@@ -24,7 +24,7 @@ public class SubscribeRequest {
 
     @Override
     public String toString() {
-        return "SubscribeRequest{" +
+        return "SubscribeRequest {" +
                 "account='" + account + '\'' +
                 ", actions=" + actions +
                 '}';
