@@ -62,10 +62,11 @@ public class SocketHandler extends BinaryWebSocketHandler implements WebSocketHa
             case "TX_TRACE":
                 logger.debug("Message type: " + messageType);
                 try {
-//                    transactionProcessing = new TransactionProcessing(jsonMessage.getJSONObject("data"));
-                    transactionProcessing = new TransactionProcessing(jsonMessage.getJSONObject("data"),getAccountsFiltered());
+                    transactionProcessing = new TransactionProcessing(jsonMessage.getJSONObject("data"), getAccountsFiltered());
 
                     actionsList = transactionProcessing.getFiltredActions();
+
+
                     if (actionsList.size() > 0) {
                         for (JSONObject action: actionsList) {
                             redisMessagePublisherActions.publish(action.toString());

@@ -14,16 +14,6 @@ public class TransactionProcessing {
 
     private static final transient Logger logger = LoggerFactory.getLogger(TransactionProcessing.class);
 
-    public TransactionProcessing(JSONObject transactionMessage){
-        this.transactionMessage = transactionMessage;
-        this.actionsSet.add("eostribeprod");
-        this.actionsSet.add("eosiodetroit");
-        this.actionsSet.add("eostribe");
-        this.actionsSet.add("chainriftcom");
-        this.actionsSet.add("eosmechanics");
-        this.actionsSet.add("gm2tsojsgige");
-    }
-
     public TransactionProcessing(JSONObject transactionMessage, HashSet<String> actions){
         this.transactionMessage = transactionMessage;
         this.actionsSet = actions;
@@ -43,6 +33,7 @@ public class TransactionProcessing {
                             getJSONArray("authorization").
                             getJSONObject(0).
                             getString("actor");
+//                    Obtain receiptReceiver field
                     receiptReceiver = jsonAction.getJSONObject("receipt").
                             getString("receiver");
 
@@ -52,6 +43,8 @@ public class TransactionProcessing {
                     actAuthorizationActor = "empty";
                     receiptReceiver = "empty";
                 }
+
+
 
                 if (actionsSet.contains(actAuthorizationActor)){
                     jsonAction.put("block_num", this.transactionMessage.get("block_num"));
@@ -68,18 +61,9 @@ public class TransactionProcessing {
                     jsonAction.put("block_timestamp",this.transactionMessage.get("block_timestamp"));
                     jsonAction.put("trx",this.transactionMessage.getJSONObject("trace").get("id"));
 
-                    actions.add(
-                            prepareMessage(receiptReceiver,jsonAction)
-                    );
+                    actions.add(prepareMessage(receiptReceiver,jsonAction));
                     logger.info("receiptReceiver is: "+receiptReceiver);
                 }
-
-
-                /**
-                 * converting act.data field to string
-                 */
-//                actionData = jsonAction.getJSONObject("act").get("data").toString();
-//                jsonAction.getJSONObject("act").put("data",actionData);
 
             }else {
                 logger.warn("Can't decode action: "+action.toString());
