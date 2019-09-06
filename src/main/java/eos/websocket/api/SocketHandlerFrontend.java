@@ -70,6 +70,7 @@ public class SocketHandlerFrontend extends TextWebSocketHandler implements WebSo
 
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
+        unsubscribe(session);
 
     }
 
@@ -80,7 +81,15 @@ public class SocketHandlerFrontend extends TextWebSocketHandler implements WebSo
         String accountid = jsonMessage.getString("accountID");
         String sessionid = subscriberSessionStorage.getIdByAccountName(accountid);
         WebSocketSession session = subscriberSessionStorage.getSessionByID(sessionid);
-        if (session !=null ) session.sendMessage( new TextMessage(jsonMessage.getJSONObject("action").toString()));
+        synchronized(session) {
+            if (session != null) session.sendMessage(new TextMessage(jsonMessage.getJSONObject("action").toString()));
+        }
         logger.info("Message "+message);
+     }
+
+     public void unsubscribe(WebSocketSession session){
+        String sessionID = session.getId();
+//        subscriberSessionStorage.
+
      }
 }

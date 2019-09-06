@@ -1,6 +1,10 @@
-{"msgtype":"TX_TRACE","data":{"block_num":"2586112","block_timestamp":"2018-06-25T15:25:20.500","trace":{"account_ram_delta":null,"action_traces":
-[{"account_ram_deltas":[{"account":"gyztomjugage","delta":"240"}],"act":{"account":"gyztomjugage","authorization":
-[{"actor":"gyztomjugage","permission":"active"}],"data":{"from":"gyztomjugage","memo":"cetostokenairdrop","quantity":"1117.0000CETOS","to":"gm2tsojsgige"},
+{"msgtype":"TX_TRACE",
+  "data":{"block_num":"2586112","block_timestamp":"2018-06-25T15:25:20.500",
+  "trace":{"account_ram_delta":null,"action_traces":
+[{"account_ram_deltas":[{"account":"gyztomjugage","delta":"240"}],
+  "act":{"account":"gyztomjugage","authorization":
+[{"actor":"gyztomjugage","permission":"active"}],
+    "data":{"from":"gyztomjugage","memo":"cetostokenairdrop","quantity":"1117.0000CETOS","to":"gm2tsojsgige"},
   "name":"transfer"},"action_ordinal":"1","console":"","context_free":"false","creator_action_ordinal":"0","elapsed":"134","error_code":null,"except":"",
   "receipt":{"abi_sequence":"3","act_digest":"4371e1bb08c5e90f1b131f8a9c104c875396d7ebf4e505ec0e31b1454d8922c7","auth_sequence":
   [{"account":"gyztomjugage","sequence":"100689"}],"code_sequence":"3","global_sequence":"6926000","receiver":"gyztomjugage","recv_sequence":"50345"},
