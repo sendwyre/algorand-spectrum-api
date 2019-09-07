@@ -6,7 +6,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.web.socket.*;
+import org.springframework.web.socket.CloseStatus;
+import org.springframework.web.socket.TextMessage;
+import org.springframework.web.socket.WebSocketHandler;
+import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.config.annotation.EnableWebSocket;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
@@ -14,7 +17,8 @@ import java.io.IOException;
 
 @Component
 @EnableWebSocket
-public class SocketHandlerFrontend extends TextWebSocketHandler implements WebSocketHandler{
+public class SocketHandlerFrontend extends TextWebSocketHandler implements WebSocketHandler {
+
     private static final transient Logger logger = LoggerFactory.getLogger(SocketHandlerFrontend.class);
 
     private SubscriberSessionStorage subscriberSessionStorage;
@@ -24,21 +28,21 @@ public class SocketHandlerFrontend extends TextWebSocketHandler implements WebSo
     private RedisMessagePublisherService redisMessagePublisherService;
 
     @Autowired
-    public void setRedisMessagePublisherService(RedisMessagePublisherService redisMessagePublisherService){
+    public void setRedisMessagePublisherService(RedisMessagePublisherService redisMessagePublisherService) {
         this.redisMessagePublisherService = redisMessagePublisherService;
     }
 
 
     @Autowired
-    public void setServiceMessage(ServiceMessage serviceMessage){
+    public void setServiceMessage(ServiceMessage serviceMessage) {
         this.serviceMessage = serviceMessage;
     }
 
 
     @Autowired
-    public void setSubscriberSessionStorage(SubscriberSessionStorage subscriberSessionStorage){
+    public void setSubscriberSessionStorage(SubscriberSessionStorage subscriberSessionStorage) {
         this.subscriberSessionStorage = subscriberSessionStorage;
-         }
+    }
 
 
     @Override
@@ -52,18 +56,17 @@ public class SocketHandlerFrontend extends TextWebSocketHandler implements WebSo
     @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
 
-        SubscribeRequest subscribeRequest = new Gson().fromJson(message.getPayload(),SubscribeRequest.class);
+        SubscribeRequest subscribeRequest = new Gson().fromJson(message.getPayload(), SubscribeRequest.class);
 
-        subscriberSessionStorage.saveSessionIDaccounts(session.getId(), subscribeRequest.getAccount());
+        subscriberSessionStorage.saveSessionIdAccounts(session.getId(), subscribeRequest.getAccount());
 
-//        subscriberSessionStorage.saveSessionIDaccounts(subscribeRequest.getAccount(), session.getId());
+        //subscriberSessionStorage.saveSessionIdAccounts(subscribeRequest.getAccount(), session.getId());
 
         serviceMessage.setEvent(Events.subscribe);
         serviceMessage.setAccount(subscribeRequest.getAccount());
         serviceMessage.setActions(subscribeRequest.getActions());
 
         redisMessagePublisherService.publish(new Gson().toJson(serviceMessage));
-
 
 
         logger.info(subscribeRequest.toString());
@@ -78,31 +81,31 @@ public class SocketHandlerFrontend extends TextWebSocketHandler implements WebSo
 
     }
 
-    public void  handleMessage(String message) throws IOException {
+    public void handleMessage(String message) throws IOException {
 
         JSONObject jsonMessage = new JSONObject(message);
 
         String accountid = jsonMessage.getString("accountID");
         String sessionid = subscriberSessionStorage.getSessionId(accountid);
         WebSocketSession session = subscriberSessionStorage.getSession(sessionid);
-        synchronized(session) {
+        synchronized (session) {
             if (session != null) session.sendMessage(new TextMessage(jsonMessage.getJSONObject("action").toString()));
         }
-        logger.info("Message "+message);
-     }
+        logger.info("Message " + message);
+    }
 
-     public void unsubscribe(WebSocketSession session){
+    public void unsubscribe(WebSocketSession session) {
 
         String sessionID = session.getId();
 
-        for (String account : subscriberSessionStorage.getAccounts(sessionID)){
+        for (String account : subscriberSessionStorage.getAccounts(sessionID)) {
             serviceMessage.setEvent(Events.unsubscribe);
             serviceMessage.setAccount(account);
             redisMessagePublisherService.publish(new Gson().toJson(serviceMessage));
         }
 
-        subscriberSessionStorage.removeSessionIDaccounts(sessionID);
+        subscriberSessionStorage.removeSessionIdAccounts(sessionID);
         subscriberSessionStorage.removeSession(sessionID);
 
-     }
+    }
 }

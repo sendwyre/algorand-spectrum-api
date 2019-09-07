@@ -1,11 +1,12 @@
 package eos.websocket.api.configuration;
 
-import eos.websocket.api.SocketHandlerFrontend;
 import eos.websocket.api.SocketHandler;
+import eos.websocket.api.SocketHandlerFrontend;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.socket.config.annotation.*;
+import org.springframework.web.socket.config.annotation.WebSocketConfigurer;
+import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry;
 import org.springframework.web.socket.server.standard.ServletServerContainerFactoryBean;
 
 
@@ -20,11 +21,12 @@ public class WebSocketConfig implements WebSocketConfigurer {
     private String socketPathFrontend;
 
     @Autowired
-    public void setSocketPath(Properties properties){
+    public void setSocketPath(Properties properties) {
         this.socketPath = properties.getSocketPath();
     }
 
-    @Autowired void setSocketPathFrontend(Properties properties){
+    @Autowired
+    void setSocketPathFrontend(Properties properties) {
         this.socketPathFrontend = properties.getSocketPathFrontend();
     }
 
@@ -34,7 +36,7 @@ public class WebSocketConfig implements WebSocketConfigurer {
     }
 
     @Autowired
-    public void setSocketHandlerFrontend(SocketHandlerFrontend socketHandlerFrontend){
+    public void setSocketHandlerFrontend(SocketHandlerFrontend socketHandlerFrontend) {
         this.socketHandlerFrontend = socketHandlerFrontend;
     }
 

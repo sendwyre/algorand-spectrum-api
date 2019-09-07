@@ -6,7 +6,7 @@ import org.springframework.data.redis.listener.ChannelTopic;
 import org.springframework.stereotype.Component;
 
 @Component
-public class RedisMessagePublisherService implements MessagePublisher{
+public class RedisMessagePublisherService implements MessagePublisher {
 
 
     private final StringRedisTemplate stringRedisTemplate;

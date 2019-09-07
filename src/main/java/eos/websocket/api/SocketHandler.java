@@ -1,22 +1,24 @@
 package eos.websocket.api;
 
 
+import com.google.gson.Gson;
 import org.json.JSONException;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.web.socket.*;
+import org.springframework.web.socket.BinaryMessage;
+import org.springframework.web.socket.CloseStatus;
+import org.springframework.web.socket.WebSocketHandler;
+import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.config.annotation.EnableWebSocket;
 import org.springframework.web.socket.handler.BinaryWebSocketHandler;
+
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashSet;
-
-import org.json.JSONObject;
-import com.google.gson.Gson;
-
 
 
 @Component
@@ -64,11 +66,11 @@ public class SocketHandler extends BinaryWebSocketHandler implements WebSocketHa
                 try {
                     transactionProcessing = new TransactionProcessing(jsonMessage.getJSONObject("data"), getAccountsFiltered());
 
-                    actionsList = transactionProcessing.getFiltredActions();
+                    actionsList = transactionProcessing.getFilteredActions();
 
 
                     if (actionsList.size() > 0) {
-                        for (JSONObject action: actionsList) {
+                        for (JSONObject action : actionsList) {
                             redisMessagePublisherActions.publish(action.toString());
                         }
 
@@ -110,16 +112,17 @@ public class SocketHandler extends BinaryWebSocketHandler implements WebSocketHa
                 break;
         }
     }
-    public void  handleMessage(String message){
+
+    public void handleMessage(String message) {
         logger.info(message);
         processServiceMessage(message);
     }
 
-    public void processServiceMessage(String message){
+    public void processServiceMessage(String message) {
 
-        ServiceMessage serviceMessage = new Gson().fromJson(message,ServiceMessage.class);
+        ServiceMessage serviceMessage = new Gson().fromJson(message, ServiceMessage.class);
 
-        switch (serviceMessage.getEvent().toString()){
+        switch (serviceMessage.getEvent().toString()) {
             case "subscribe":
                 getAccountsFiltered().add(serviceMessage.getAccount());
                 break;

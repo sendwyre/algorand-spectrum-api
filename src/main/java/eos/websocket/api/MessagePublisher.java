@@ -1,5 +1,7 @@
 package eos.websocket.api;
 
 public interface MessagePublisher {
-        void publish(String message);
+
+    void publish(String message);
+
 }

@@ -3,6 +3,7 @@ package eos.websocket.api;
 import java.util.List;
 
 public class SubscribeRequest {
+
     private String account;
     private List<String> actions;
 

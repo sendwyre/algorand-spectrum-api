@@ -3,8 +3,10 @@ package eos.websocket.api;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+
 @Component
 public class ServiceMessage {
+
     private Events event;
     private String account;
     private List<String> actions;

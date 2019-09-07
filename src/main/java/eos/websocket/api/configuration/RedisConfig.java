@@ -15,6 +15,7 @@ import org.springframework.data.redis.listener.adapter.MessageListenerAdapter;
 
 @Configuration
 public class RedisConfig implements ApplicationContextAware {
+
     private final String ACTIONS_CHANNEL = "actions";
     private final String SERVICE_CHANNEL = "service";
     private ApplicationContext applicationContext = null;
@@ -48,7 +49,7 @@ public class RedisConfig implements ApplicationContextAware {
                 = new RedisMessageListenerContainer();
         container.setConnectionFactory(redisConnectionFactory());
         container.addMessageListener(messageListenerSocketHandler(), topicService());
-        container.addMessageListener(messageListenerSocketHandlerFrontend(),topicActions());
+        container.addMessageListener(messageListenerSocketHandlerFrontend(), topicActions());
         return container;
     }
 
@@ -58,7 +59,7 @@ public class RedisConfig implements ApplicationContextAware {
     }
 
     @Bean
-    public ChannelTopic topicService(){
+    public ChannelTopic topicService() {
         return new ChannelTopic(SERVICE_CHANNEL);
     }
 

@@ -1,5 +1,6 @@
 package eos.websocket.api;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -9,84 +10,86 @@ import java.util.ArrayList;
 import java.util.HashSet;
 
 public class TransactionProcessing {
+
     private JSONObject transactionMessage;
-    private HashSet actionsSet = new HashSet();
+    private HashSet actionsSet;
 
     private static final transient Logger logger = LoggerFactory.getLogger(TransactionProcessing.class);
 
-    public TransactionProcessing(JSONObject transactionMessage, HashSet<String> actions){
+    public TransactionProcessing(JSONObject transactionMessage, HashSet<String> actions) {
         this.transactionMessage = transactionMessage;
         this.actionsSet = actions;
     }
 
-    public ArrayList<JSONObject> getFiltredActions(){
+    public ArrayList<JSONObject> getFilteredActions() {
         ArrayList<JSONObject> actions = new ArrayList<>();
-        JSONObject jsonAction = null;
-        for (Object action:this.transactionMessage.getJSONObject("trace").getJSONArray("action_traces")){
-            if (action instanceof JSONObject){
-                jsonAction = (JSONObject)action;
+        JSONObject jsonAction;
+        JSONObject jsonTrace = this.transactionMessage.optJSONObject("trace");
+        if(jsonTrace == null) {
+            logger.error("Got null trace in transactionMessage " + this.transactionMessage.toString());
+            return actions;
+        }
+        JSONArray jsonActionTraces = jsonTrace.optJSONArray("action_traces");
+        if(jsonActionTraces == null) {
+            logger.error("Got null action traces array from JSON Trace "+jsonTrace.toString());
+            return actions;
+        }
+        for (Object action : jsonActionTraces) {
+            if (action instanceof JSONObject) {
+                jsonAction = (JSONObject) action;
                 String actAuthorizationActor;
                 String receiptReceiver;
                 try {
-//                    Obtain actAuthorizationActor field
+                    // Obtain actAuthorizationActor field
                     actAuthorizationActor = jsonAction.getJSONObject("act").
                             getJSONArray("authorization").
                             getJSONObject(0).
                             getString("actor");
-//                    Obtain receiptReceiver field
+                    // Obtain receiptReceiver field
                     receiptReceiver = jsonAction.getJSONObject("receipt").
                             getString("receiver");
 
-                }catch (JSONException exception){
-                    logger.warn("Can't get JSONarray");
-                    logger.warn(jsonAction.toString());
+                } catch (JSONException exception) {
+                    logger.warn("Can't get JSON array: "+jsonAction.toString());
                     actAuthorizationActor = "empty";
                     receiptReceiver = "empty";
                 }
 
 
-
-                if (actionsSet.contains(actAuthorizationActor)){
+                if (actionsSet.contains(actAuthorizationActor)) {
                     jsonAction.put("block_num", this.transactionMessage.get("block_num"));
-                    jsonAction.put("block_timestamp",this.transactionMessage.get("block_timestamp"));
-                    jsonAction.put("trx",this.transactionMessage.getJSONObject("trace").get("id"));
+                    jsonAction.put("block_timestamp", this.transactionMessage.get("block_timestamp"));
+                    jsonAction.put("trx", this.transactionMessage.getJSONObject("trace").get("id"));
                     actions.add(
-                            prepareMessage(actAuthorizationActor,jsonAction)
+                            prepareMessage(actAuthorizationActor, jsonAction)
                     );
-                    logger.info("actAuthorizationActor is: "+actAuthorizationActor);
+                    logger.info("actAuthorizationActor is: " + actAuthorizationActor);
 
                 }
-                if (actionsSet.contains(receiptReceiver)){
+                if (actionsSet.contains(receiptReceiver)) {
                     jsonAction.put("block_num", this.transactionMessage.get("block_num"));
-                    jsonAction.put("block_timestamp",this.transactionMessage.get("block_timestamp"));
-                    jsonAction.put("trx",this.transactionMessage.getJSONObject("trace").get("id"));
+                    jsonAction.put("block_timestamp", this.transactionMessage.get("block_timestamp"));
+                    jsonAction.put("trx", this.transactionMessage.getJSONObject("trace").get("id"));
 
-                    actions.add(prepareMessage(receiptReceiver,jsonAction));
-                    logger.info("receiptReceiver is: "+receiptReceiver);
+                    actions.add(prepareMessage(receiptReceiver, jsonAction));
+                    logger.info("receiptReceiver is: " + receiptReceiver);
                 }
 
-            }else {
-                logger.warn("Can't decode action: "+action.toString());
+            } else {
+                logger.warn("Can't decode action: " + action.toString());
             }
-//         actions.add(jsonAction);
         }
         return actions;
     }
 
-    private JSONObject prepareMessage(String accountID, JSONObject action){
+    private JSONObject prepareMessage(String accountID, JSONObject action) {
         JSONObject message = new JSONObject();
-        message.put("accountID",accountID);
-        message.put("action",action);
+        message.put("accountID", accountID);
+        message.put("action", action);
         return message;
     }
 
-    private JSONObject addFields(JSONObject action){
-
-        return new JSONObject();
-
-    }
-
-    public JSONObject getTransaction(){
+    public JSONObject getTransaction() {
         String failedDtrxTrace;
         JSONObject transaction = this.transactionMessage;
         /**
@@ -95,7 +98,7 @@ public class TransactionProcessing {
         failedDtrxTrace = this.transactionMessage.
                 getJSONObject("trace").
                 get("failed_dtrx_trace").toString();
-        transaction.getJSONObject("trace").put("failed_dtrx_trace",failedDtrxTrace);
+        transaction.getJSONObject("trace").put("failed_dtrx_trace", failedDtrxTrace);
         /**
          * removing filed actions from transaction
          */
