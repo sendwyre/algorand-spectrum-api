@@ -1,23 +1,11 @@
-package eos.websocket.api;
-
-import org.springframework.stereotype.Component;
+package eosio.spectrum.websocket.api;
 
 import java.util.List;
 
-@Component
-public class ServiceMessage {
+public class SubscribeRequest {
 
-    private Events event;
     private String account;
     private List<String> actions;
-
-    public Events getEvent() {
-        return event;
-    }
-
-    public void setEvent(Events event) {
-        this.event = event;
-    }
 
     public String getAccount() {
         return account;
@@ -37,10 +25,10 @@ public class ServiceMessage {
 
     @Override
     public String toString() {
-        return "{" +
-                "event=" + event +
-                ", account='" + account + '\'' +
+        return "SubscribeRequest {" +
+                "account='" + account + '\'' +
                 ", actions=" + actions +
                 '}';
     }
 }
+

@@ -1,4 +1,4 @@
-package eos.websocket.api;
+package eosio.spectrum.websocket.api;
 
 import com.google.gson.Gson;
 import org.json.JSONObject;

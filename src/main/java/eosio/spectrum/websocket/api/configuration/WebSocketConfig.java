@@ -1,7 +1,7 @@
-package eos.websocket.api.configuration;
+package eosio.spectrum.websocket.api.configuration;
 
-import eos.websocket.api.SocketHandler;
-import eos.websocket.api.SocketHandlerFrontend;
+import eosio.spectrum.websocket.api.SocketHandler;
+import eosio.spectrum.websocket.api.SocketHandlerFrontend;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

@@ -1,4 +1,4 @@
-package eos.websocket.api.configuration;
+package eosio.spectrum.websocket.api.configuration;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;

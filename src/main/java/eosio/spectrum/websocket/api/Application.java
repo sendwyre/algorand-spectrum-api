@@ -1,11 +1,11 @@
-package eos.websocket.api;
+package eosio.spectrum.websocket.api;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
 
 @SpringBootApplication
-@ComponentScan("eos.websocket.api")
+@ComponentScan("eosio.spectrum.websocket.api")
 public class Application {
 
     public static void main(String[] args) {

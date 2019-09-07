@@ -1,4 +1,4 @@
-package eos.websocket.api;
+package eosio.spectrum.websocket.api;
 
 
 import org.springframework.stereotype.Service;

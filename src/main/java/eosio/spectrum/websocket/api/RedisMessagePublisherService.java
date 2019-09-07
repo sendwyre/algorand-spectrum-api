@@ -1,4 +1,4 @@
-package eos.websocket.api;
+package eosio.spectrum.websocket.api;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -6,23 +6,23 @@ import org.springframework.data.redis.listener.ChannelTopic;
 import org.springframework.stereotype.Component;
 
 @Component
-public class RedisMessagePublisherActions implements MessagePublisher {
+public class RedisMessagePublisherService implements MessagePublisher {
 
 
     private final StringRedisTemplate stringRedisTemplate;
-    private final ChannelTopic topicActions;
+    private final ChannelTopic topicService;
 
 
     @Autowired
-    public RedisMessagePublisherActions(StringRedisTemplate stringRedisTemplate,
-                                        ChannelTopic topicActions) {
+    public RedisMessagePublisherService(StringRedisTemplate stringRedisTemplate,
+                                        ChannelTopic topicService) {
         this.stringRedisTemplate = stringRedisTemplate;
-        this.topicActions = topicActions;
+        this.topicService = topicService;
     }
 
 
     @Override
     public void publish(String message) {
-        stringRedisTemplate.convertAndSend(topicActions.getTopic(), message);
+        stringRedisTemplate.convertAndSend(topicService.getTopic(), message);
     }
 }
