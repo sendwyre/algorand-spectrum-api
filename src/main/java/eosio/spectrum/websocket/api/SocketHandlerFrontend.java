@@ -14,6 +14,7 @@ import org.springframework.web.socket.config.annotation.EnableWebSocket;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 @Component
 @EnableWebSocket
@@ -58,18 +59,15 @@ public class SocketHandlerFrontend extends TextWebSocketHandler implements WebSo
 
         SubscribeRequest subscribeRequest = new Gson().fromJson(message.getPayload(), SubscribeRequest.class);
 
-        subscriberSessionStorage.saveSessionIdAccounts(session.getId(), subscribeRequest.getAccount());
+        logger.info("Customer requsts "+ subscribeRequest.toString());
 
-        //subscriberSessionStorage.saveSessionIdAccounts(subscribeRequest.getAccount(), session.getId());
+        subscriberSessionStorage.saveSessionIdAccounts(session.getId(), subscribeRequest.getData().getAccount());
 
-        serviceMessage.setEvent(Events.subscribe);
-        serviceMessage.setAccount(subscribeRequest.getAccount());
-        serviceMessage.setActions(subscribeRequest.getActions());
+        serviceMessage.setEvent(subscribeRequest.getEvent());
+        serviceMessage.setAccount(subscribeRequest.getData().getAccount());
+        serviceMessage.setActions(subscribeRequest.getData().getActions());
 
         redisMessagePublisherService.publish(new Gson().toJson(serviceMessage));
-
-
-        logger.info(subscribeRequest.toString());
 
     }
 
@@ -89,17 +87,18 @@ public class SocketHandlerFrontend extends TextWebSocketHandler implements WebSo
         String sessionid = subscriberSessionStorage.getSessionId(accountid);
         WebSocketSession session = subscriberSessionStorage.getSession(sessionid);
         synchronized (session) {
-            if (session != null) session.sendMessage(new TextMessage(jsonMessage.getJSONObject("action").toString()));
+            if (session != null) session.
+                    sendMessage(new TextMessage(jsonMessage.getJSONObject("action").toString()));
         }
         logger.info("Message " + message);
     }
 
-    public void unsubscribe(WebSocketSession session) {
+    private void unsubscribe(WebSocketSession session) {
 
         String sessionID = session.getId();
 
         for (String account : subscriberSessionStorage.getAccounts(sessionID)) {
-            serviceMessage.setEvent(Events.unsubscribe);
+            serviceMessage.setEvent(Event.unsubscribe);
             serviceMessage.setAccount(account);
             redisMessagePublisherService.publish(new Gson().toJson(serviceMessage));
         }

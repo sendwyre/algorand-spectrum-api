@@ -11,8 +11,8 @@ import java.util.concurrent.ConcurrentHashMap;
 
 @Service
 public class SubscriberSessionStorage {
-    //    private WebSocketSession session;
-//    private String sessionId;
+
+
     private Map<String, WebSocketSession> sessions = new ConcurrentHashMap<>();
     private Map<String, HashSet<String>> sessionIdAccounts = new ConcurrentHashMap<>();
     private Map<String, String> accountSessiondId = new ConcurrentHashMap<>();
@@ -47,6 +47,9 @@ public class SubscriberSessionStorage {
     }
 
     public void removeSessionIdAccounts(String sessionId) {
+        for (String account:sessionIdAccounts.get(sessionId)) {
+            accountSessiondId.remove(account);
+        }
         sessionIdAccounts.remove(sessionId);
     }
 

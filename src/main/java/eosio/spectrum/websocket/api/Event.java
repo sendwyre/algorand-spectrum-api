@@ -1,6 +1,7 @@
 package eosio.spectrum.websocket.api;
 
-public enum Events {
+public enum Event {
     subscribe,
     unsubscribe
+
 }

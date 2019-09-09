@@ -8,7 +8,14 @@ url = "ws://127.0.0.1:8080/"+path
 
 messageBody = {}
 actionsList = ["transfer","buyram"]
-messageBody ={"account":"eostribe","actions":actionsList }
+data = {}
+data = {"account":"eostribe","actions":actionsList}
+
+messageBody ={"apikey":"test-api-key",
+              "event":"subscribe",
+              "type":"get_action",
+              "data": data
+              }
 
 # print(json.dumps(messageBody))
 #

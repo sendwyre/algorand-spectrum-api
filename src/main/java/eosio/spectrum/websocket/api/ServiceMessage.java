@@ -7,15 +7,15 @@ import java.util.List;
 @Component
 public class ServiceMessage {
 
-    private Events event;
+    private Event event;
     private String account;
     private List<String> actions;
 
-    public Events getEvent() {
+    public Event getEvent() {
         return event;
     }
 
-    public void setEvent(Events event) {
+    public void setEvent(Event event) {
         this.event = event;
     }
 

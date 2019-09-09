@@ -4,30 +4,54 @@ import java.util.List;
 
 public class SubscribeRequest {
 
-    private String account;
-    private List<String> actions;
 
-    public String getAccount() {
-        return account;
+    private String apikey;
+
+    private RequestType type;
+
+    private Event event;
+
+    private Data data;
+
+    public String getApiKey() {
+        return apikey;
     }
 
-    public void setAccount(String account) {
-        this.account = account;
+    public void setApiKey(String apiKey) {
+        this.apikey = apiKey;
     }
 
-    public List<String> getActions() {
-        return actions;
+    public RequestType getRequestType() {
+        return type;
     }
 
-    public void setActions(List<String> actions) {
-        this.actions = actions;
+    public void setRequestType(RequestType type) {
+        this.type = type;
+    }
+
+    public Event getEvent() {
+        return event;
+    }
+
+    public void setEvent(Event event) {
+        this.event = event;
+    }
+
+    public Data getData() {
+        return data;
+    }
+
+    public void setData(Data data) {
+        this.data = data;
     }
 
     @Override
     public String toString() {
-        return "SubscribeRequest {" +
-                "account='" + account + '\'' +
-                ", actions=" + actions +
+        return "SubscribeRequest{" +
+                "apikey='" + apikey + '\'' +
+                ", requestType=" + type +
+                ", event=" + event +
+                ", data=" + data.toString() +
                 '}';
     }
 }
