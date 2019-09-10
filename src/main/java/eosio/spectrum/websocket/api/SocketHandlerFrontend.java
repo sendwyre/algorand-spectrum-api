@@ -1,10 +1,7 @@
 package eosio.spectrum.websocket.api;
 
 import com.google.gson.*;
-import eosio.spectrum.websocket.api.Message.Event;
-import eosio.spectrum.websocket.api.Message.ServiceMessage;
-import eosio.spectrum.websocket.api.Message.SubscriberRequest;
-import eosio.spectrum.websocket.api.Message.UnsubscribeRequest;
+import eosio.spectrum.websocket.api.Message.*;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -80,10 +77,10 @@ public class SocketHandlerFrontend extends TextWebSocketHandler implements WebSo
                             switch (subscriberRequest.getRequestType())
                             {
                                 case get_actions:
+
                                     subscriberSessionStorage.saveSessionIdAccounts(session.getId(), subscriberRequest.getData().getAccount());
                                     serviceMessage.setEvent(subscriberRequest.getEvent());
-                                    serviceMessage.setAccount(subscriberRequest.getData().getAccount());
-                                    serviceMessage.setActions(subscriberRequest.getData().getActions());
+                                    serviceMessage.setData(subscriberRequest.getData());
                                     redisMessagePublisherService.publish(new Gson().toJson(serviceMessage));
                                     break;
                                 case get_transaction:
