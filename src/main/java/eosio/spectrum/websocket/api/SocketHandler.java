@@ -2,6 +2,7 @@ package eosio.spectrum.websocket.api;
 
 
 import com.google.gson.Gson;
+import eosio.spectrum.websocket.api.Message.ServiceMessage;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;

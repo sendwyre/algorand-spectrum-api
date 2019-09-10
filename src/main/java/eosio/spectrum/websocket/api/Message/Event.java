@@ -1,4 +1,4 @@
-package eosio.spectrum.websocket.api;
+package eosio.spectrum.websocket.api.Message;
 
 public enum Event {
     subscribe,

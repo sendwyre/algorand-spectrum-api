@@ -1,5 +1,6 @@
-package eosio.spectrum.websocket.api;
+package eosio.spectrum.websocket.api.Message;
 
+import eosio.spectrum.websocket.api.Message.Event;
 import org.springframework.stereotype.Component;
 
 import java.util.List;

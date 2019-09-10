@@ -12,7 +12,7 @@ data = {}
 data = {"account":"eostribe","actions":actionsList}
 
 messageBody ={"apikey":"test-api-key",
-              "event":"subscribe",
+              # "event":"subscribe",
               "type":"get_action",
               "data": data
               }

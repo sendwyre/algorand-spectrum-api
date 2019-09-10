@@ -1,16 +1,23 @@
-package eosio.spectrum.websocket.api;
+package eosio.spectrum.websocket.api.Message;
 
-import java.util.List;
+import com.google.gson.annotations.SerializedName;
+import eosio.spectrum.websocket.api.Message.Data;
+import eosio.spectrum.websocket.api.Message.Event;
+import eosio.spectrum.websocket.api.Message.RequestType;
+
+import javax.validation.constraints.NotNull;
 
 public class SubscribeRequest {
-
-
+    @SerializedName("api-key")
     private String apikey;
-
+    @NotNull
+    @SerializedName("type")
     private RequestType type;
-
+    @NotNull
+    @SerializedName("event")
     private Event event;
-
+    @NotNull
+    @SerializedName("data")
     private Data data;
 
     public String getApiKey() {
