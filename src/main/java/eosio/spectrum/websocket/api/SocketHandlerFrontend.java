@@ -1,9 +1,10 @@
 package eosio.spectrum.websocket.api;
 
-import com.google.gson.Gson;
+import com.google.gson.*;
 import eosio.spectrum.websocket.api.Message.Event;
 import eosio.spectrum.websocket.api.Message.ServiceMessage;
-import eosio.spectrum.websocket.api.Message.SubscribeRequest;
+import eosio.spectrum.websocket.api.Message.SubscriberRequest;
+import eosio.spectrum.websocket.api.Message.UnsubscribeRequest;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,6 +31,9 @@ public class SocketHandlerFrontend extends TextWebSocketHandler implements WebSo
 
     private RedisMessagePublisherService redisMessagePublisherService;
 
+    private SubscriberRequest subscriberRequest;
+//    private UnsubscribeRequest unsubscribeRequest;
+
     @Autowired
     public void setRedisMessagePublisherService(RedisMessagePublisherService redisMessagePublisherService) {
         this.redisMessagePublisherService = redisMessagePublisherService;
@@ -51,33 +55,72 @@ public class SocketHandlerFrontend extends TextWebSocketHandler implements WebSo
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
         subscriberSessionStorage.saveSession(session);
-        logger.info(session.getId());
-
-
+        logger.debug("Established sessin from"+session.getRemoteAddress());
     }
+
 
     @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
+        try {
+            subscriberRequest = new Gson().fromJson(message.getPayload(), SubscriberRequest.class);
 
-        SubscribeRequest subscribeRequest = new Gson().fromJson(message.getPayload(), SubscribeRequest.class);
+            if (subscriberRequest.getRequestType() == null | subscriberRequest.getEvent() == null)
+            {
+                String infoMessage = "Unable to proceed request, fill fields according to documentation";
+                session.sendMessage(new TextMessage(infoMessage));
+                logger.warn("Request from "+session.getRemoteAddress()+" has unknown format");
+                logger.warn("message body : "+message.getPayload());
+                session.close();
 
-        logger.info("Customer requsts "+ subscribeRequest.toString());
-
-        subscriberSessionStorage.saveSessionIdAccounts(session.getId(), subscribeRequest.getData().getAccount());
-
-        serviceMessage.setEvent(subscribeRequest.getEvent());
-        serviceMessage.setAccount(subscribeRequest.getData().getAccount());
-        serviceMessage.setActions(subscribeRequest.getData().getActions());
-
-        redisMessagePublisherService.publish(new Gson().toJson(serviceMessage));
-
-    }
+            }else
+                {
+                    switch (subscriberRequest.getEvent())
+                    {
+                        case subscribe:
+                            switch (subscriberRequest.getRequestType())
+                            {
+                                case get_actions:
+                                    subscriberSessionStorage.saveSessionIdAccounts(session.getId(), subscriberRequest.getData().getAccount());
+                                    serviceMessage.setEvent(subscriberRequest.getEvent());
+                                    serviceMessage.setAccount(subscriberRequest.getData().getAccount());
+                                    serviceMessage.setActions(subscriberRequest.getData().getActions());
+                                    redisMessagePublisherService.publish(new Gson().toJson(serviceMessage));
+                                    break;
+                                case get_transaction:
+                                    break;
+                                case get_table_deltas:
+                                    break;
+                                case get_blocks:
+                                    break;
+                                case ping:
+                                    break;
+                            }
+                            break;
+                        case unsubscribe:
+                            subscriberRequest.getRequestType();
+                    break;
+                default:
+                    String infoMessage = "Value of event field is unknown";
+                    session.sendMessage(new TextMessage(infoMessage));
+                    logger.warn("Request from "+session.getRemoteAddress()+" has unknown format");
+                    session.close();
+                  }
+            }
+        }
+        catch (JsonIOException|JsonSyntaxException e){
+            String infoMessage = "Unknown type of request";
+            session.sendMessage(new TextMessage(infoMessage));
+            logger.warn("Request from "+session.getRemoteAddress()+" has unknown format");
+            logger.warn(e.toString());
+            session.close();
+        }
+        }
 
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
-        String sessionId = session.getId();
+//        String sessionId = session.getId();
+//        unsubscribe(session);
 
-        unsubscribe(session);
 
     }
 

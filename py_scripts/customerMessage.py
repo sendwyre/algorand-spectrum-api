@@ -9,11 +9,14 @@ url = "ws://127.0.0.1:8080/"+path
 messageBody = {}
 actionsList = ["transfer","buyram"]
 data = {}
-data = {"account":"eostribe","actions":actionsList}
+data = {"account":"eostribe",
+        # "actions":actionsList
+        }
 
-messageBody ={"apikey":"test-api-key",
-              # "event":"subscribe",
-              "type":"get_action",
+messageBody ={
+    "apikey":"test-api-key",
+              "event":"subscribe",
+               "type":"get_actions",
               "data": data
               }
 
@@ -24,8 +27,8 @@ ws.ping()
 messageJson = json.dumps(messageBody)
 ws.send(messageJson)
 
-while True:
-    print(ws.recv())
+# while True:
+   # print(ws.recv())
 
 # actionsList = ["transfer","test1"]
 # messageBody = {"account":"eostribeprod","actions":actionsList }

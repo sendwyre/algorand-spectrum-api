@@ -7,16 +7,16 @@ import eosio.spectrum.websocket.api.Message.RequestType;
 
 import javax.validation.constraints.NotNull;
 
-public class SubscribeRequest {
+public class SubscriberRequest {
     @SerializedName("api-key")
     private String apikey;
-    @NotNull
+
     @SerializedName("type")
     private RequestType type;
-    @NotNull
+
     @SerializedName("event")
     private Event event;
-    @NotNull
+
     @SerializedName("data")
     private Data data;
 
@@ -54,7 +54,7 @@ public class SubscribeRequest {
 
     @Override
     public String toString() {
-        return "SubscribeRequest{" +
+        return "SubscriberRequest{" +
                 "apikey='" + apikey + '\'' +
                 ", requestType=" + type +
                 ", event=" + event +

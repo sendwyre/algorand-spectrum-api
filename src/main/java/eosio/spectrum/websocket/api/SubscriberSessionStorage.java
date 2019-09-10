@@ -10,6 +10,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 
 @Service
+@SuppressWarnings("unchecked")
 public class SubscriberSessionStorage {
 
 
@@ -33,13 +34,13 @@ public class SubscriberSessionStorage {
 
     public void saveSessionIdAccounts(String sessionId, String account) {
         if (sessionIdAccounts.get(sessionId) == null) {
-            HashSet accounts = new HashSet();
+            HashSet<String> accounts = new HashSet();
             accounts.add(account);
             sessionIdAccounts.put(sessionId, accounts);
             accountSessiondId.put(account, sessionId);
 
         } else {
-            HashSet accounts = sessionIdAccounts.get(sessionId);
+            HashSet<String> accounts = sessionIdAccounts.get(sessionId);
             accounts.add(account);
             sessionIdAccounts.replace(sessionId, accounts);
             accountSessiondId.put(account, sessionId);

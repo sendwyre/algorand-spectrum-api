@@ -123,12 +123,23 @@ public class SocketHandler extends BinaryWebSocketHandler implements WebSocketHa
 
         ServiceMessage serviceMessage = new Gson().fromJson(message, ServiceMessage.class);
 
-        switch (serviceMessage.getEvent().toString()) {
-            case "subscribe":
-                getAccountsFiltered().add(serviceMessage.getAccount());
-                break;
-            case "unsubscribe":
-                getAccountsFiltered().remove(serviceMessage.getAccount());
+        switch (serviceMessage.getEvent()) {
+            case subscribe:
+                switch (serviceMessage.getRequestType()){
+                    case get_actions:
+                        String account = serviceMessage.getData().getAccount();
+                        ArrayList<String> actions = serviceMessage.getData().getActions();
+                        getAccountsFiltered().add(serviceMessage.getData().getAccount());
+                        break;
+                    case get_transaction:
+                        break;
+                    case get_table_deltas:
+                        break;
+                    case get_blocks:
+                        break;
+                }
+            case unsubscribe:
+                getAccountsFiltered().remove(serviceMessage.getData().getAccount());
         }
     }
 
