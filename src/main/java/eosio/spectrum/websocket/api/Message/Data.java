@@ -1,10 +1,11 @@
 package eosio.spectrum.websocket.api.Message;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 
 public class   Data {
     private String account;
-    private ArrayList<String> actions;
+    private HashSet<String> actions;
 
     public String getAccount() {
         return account;
@@ -14,11 +15,11 @@ public class   Data {
         this.account = account;
     }
 
-    public ArrayList<String> getActions() {
+    public HashSet<String> getActions() {
         return actions;
     }
 
-    public void setActions(ArrayList<String> actions) {
+    public void setActions(HashSet actions) {
             this.actions = actions;
 
     }

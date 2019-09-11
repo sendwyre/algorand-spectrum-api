@@ -5,6 +5,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sun.font.TrueTypeFont;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -56,19 +57,19 @@ public class TransactionProcessing {
                     receiptReceiver = jsonAction.getJSONObject("receipt").
                             getString("receiver");
                     actionName = jsonAction.getJSONObject("act").getString("name");
-
-
-                } catch (JSONException exception) {
-                    logger.warn("Can't get JSON array: "+jsonAction.toString());
-                    actAuthorizationActor = "empty";
-                    receiptReceiver = "empty";
+                    if (get_actionsFilters.containsKey(actAuthorizationActor)) {
+                        HashSet<String> actionsFiltered = (HashSet<String>) get_actionsFilters.get(actAuthorizationActor);
+                        if (actionsFiltered.contains(actionName)){
+                            logger.info(actionName.toString());
+                        }else {
+                            logger.info("action name is null");
+                    }
                 }
-
-                if (get_actionsFilters.containsKey(actAuthorizationActor)) {
-                    HashSet<String> actionsFiltered = (HashSet<String>) get_actionsFilters.get(actAuthorizationActor);
-                    if ()
-                }
-
+            } catch (JSONException exception) {
+                logger.warn("Can't get JSON array: "+jsonAction.toString());
+                actAuthorizationActor = "empty";
+                receiptReceiver = "empty";
+            }
 
                 if (actionsSet.contains(actAuthorizationActor)) {
                     jsonAction.put("block_num", this.transactionMessage.get("block_num"));

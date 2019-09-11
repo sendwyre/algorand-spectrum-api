@@ -10,7 +10,7 @@ messageBody = {}
 actionsList = ["transfer","buyram"]
 data = {}
 data = {"account":"eostribe",
-        # "actions":actionsList
+        "actions":actionsList
         }
 
 messageBody ={

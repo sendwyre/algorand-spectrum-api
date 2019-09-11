@@ -159,8 +159,8 @@ public class SocketHandler extends BinaryWebSocketHandler implements WebSocketHa
     private HashSet<String> getAccountsFiltered() {
         return this.accountsFiltered;
     }
-    private HashMap<String,ArrayList<String>>getGet_actionsFilters(){
-//        return this.get_actionsFilters;
+    private HashMap<String, HashSet<String>> getGet_actionsFilters(){
+        return this.get_actionsFilters;
     }
 
     @Override
