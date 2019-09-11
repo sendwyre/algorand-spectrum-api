@@ -15,6 +15,7 @@ import org.springframework.web.socket.config.annotation.EnableWebSocket;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 @Component
 @EnableWebSocket
@@ -79,8 +80,11 @@ public class SocketHandlerFrontend extends TextWebSocketHandler implements WebSo
                                 case get_actions:
 
                                     subscriberSessionStorage.saveSessionIdAccounts(session.getId(), subscriberRequest.getData().getAccount());
+
                                     serviceMessage.setEvent(subscriberRequest.getEvent());
+                                    serviceMessage.setRequestType(subscriberRequest.getRequestType());
                                     serviceMessage.setData(subscriberRequest.getData());
+
                                     redisMessagePublisherService.publish(new Gson().toJson(serviceMessage));
                                     break;
                                 case get_transaction:
@@ -141,7 +145,7 @@ public class SocketHandlerFrontend extends TextWebSocketHandler implements WebSo
 
         for (String account : subscriberSessionStorage.getAccounts(sessionID)) {
             serviceMessage.setEvent(Event.unsubscribe);
-            serviceMessage.setAccount(account);
+//            serviceMessage.setAccount(account);
             redisMessagePublisherService.publish(new Gson().toJson(serviceMessage));
         }
 

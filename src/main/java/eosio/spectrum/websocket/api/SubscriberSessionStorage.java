@@ -33,6 +33,8 @@ public class SubscriberSessionStorage {
     }
 
     public void saveSessionIdAccounts(String sessionId, String account) {
+//        check whether the provided account already is saved
+
         if (sessionIdAccounts.get(sessionId) == null) {
             HashSet<String> accounts = new HashSet();
             accounts.add(account);

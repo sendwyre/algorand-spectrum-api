@@ -19,7 +19,8 @@ public class   Data {
     }
 
     public void setActions(ArrayList<String> actions) {
-        this.actions = actions;
+            this.actions = actions;
+
     }
 
     @Override

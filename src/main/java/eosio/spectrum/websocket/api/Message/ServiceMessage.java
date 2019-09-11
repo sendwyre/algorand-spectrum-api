@@ -1,5 +1,6 @@
 package eosio.spectrum.websocket.api.Message;
 
+import com.google.gson.annotations.SerializedName;
 import eosio.spectrum.websocket.api.Message.Event;
 import org.springframework.stereotype.Component;
 
@@ -8,13 +9,15 @@ import java.util.List;
 @Component
 public class ServiceMessage {
 
+    @SerializedName("type")
+    private RequestType type;
+
+    @SerializedName("event")
     private Event event;
-    private String account;
-    private RequestType requestType;
 
-    private List<String> actions;
-
+    @SerializedName("data")
     private Data data;
+
 
     public Event getEvent() {
         return event;
@@ -24,28 +27,12 @@ public class ServiceMessage {
         this.event = event;
     }
 
-    public String getAccount() {
-        return account;
-    }
-
-    public void setAccount(String account) {
-        this.account = account;
-    }
-
-    public List<String> getActions() {
-        return actions;
-    }
-
-    public void setActions(List<String> actions) {
-        this.actions = actions;
-    }
-
     public RequestType getRequestType() {
-        return requestType;
+        return type;
     }
 
-    public void setRequestType(RequestType requestType) {
-        this.requestType = requestType;
+    public void setRequestType(RequestType type) {
+        this.type = type;
     }
 
     public Data getData() {
@@ -53,15 +40,9 @@ public class ServiceMessage {
     }
 
     public void setData(Data data) {
+
         this.data = data;
     }
 
-    @Override
-    public String toString() {
-        return "{" +
-                "event=" + event +
-                ", account='" + account + '\'' +
-                ", actions=" + actions +
-                '}';
-    }
+
 }

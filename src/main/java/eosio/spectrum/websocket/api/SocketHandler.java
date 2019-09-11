@@ -2,6 +2,7 @@ package eosio.spectrum.websocket.api;
 
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import eosio.spectrum.websocket.api.Message.ServiceMessage;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -19,6 +20,7 @@ import org.springframework.web.socket.handler.BinaryWebSocketHandler;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 
 
@@ -30,6 +32,7 @@ public class SocketHandler extends BinaryWebSocketHandler implements WebSocketHa
 
     private ArrayList<JSONObject> actionsList;
     private HashSet<String> accountsFiltered = new HashSet<String>();
+    private HashMap<String,HashSet<String>> get_actionsFilters = new HashMap<>();
 
     private RedisMessagePublisherActions redisMessagePublisherActions;
 
@@ -119,16 +122,22 @@ public class SocketHandler extends BinaryWebSocketHandler implements WebSocketHa
         processServiceMessage(message);
     }
 
-    public void processServiceMessage(String message) {
-
-        ServiceMessage serviceMessage = new Gson().fromJson(message, ServiceMessage.class);
+    private void processServiceMessage(String message) {
+        Gson gson = new GsonBuilder().serializeNulls().create();
+        ServiceMessage serviceMessage = gson.fromJson(message, ServiceMessage.class);
 
         switch (serviceMessage.getEvent()) {
             case subscribe:
                 switch (serviceMessage.getRequestType()){
                     case get_actions:
-                        String account = serviceMessage.getData().getAccount();
-                        ArrayList<String> actions = serviceMessage.getData().getActions();
+
+                        getGet_actionsFilters().put(
+                                serviceMessage.getData().getAccount(),
+                                serviceMessage.getData().getActions()
+                        );
+//                        getGet_actionsFilters().put("test", null);
+//                        serviceMessage.getData().getActions();
+
                         getAccountsFiltered().add(serviceMessage.getData().getAccount());
                         break;
                     case get_transaction:
@@ -138,20 +147,21 @@ public class SocketHandler extends BinaryWebSocketHandler implements WebSocketHa
                     case get_blocks:
                         break;
                 }
+                break;
             case unsubscribe:
                 getAccountsFiltered().remove(serviceMessage.getData().getAccount());
+                break;
         }
     }
 
 
-    public HashSet<String> getAccountsFiltered() {
-        return accountsFiltered;
-    }
 
-    public void setAccountsFiltered(HashSet<String> accountsFiltered) {
-        this.accountsFiltered = accountsFiltered;
+    private HashSet<String> getAccountsFiltered() {
+        return this.accountsFiltered;
     }
-
+    private HashMap<String,ArrayList<String>>getGet_actionsFilters(){
+//        return this.get_actionsFilters;
+    }
 
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) {

@@ -7,18 +7,24 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 
 public class TransactionProcessing {
 
     private JSONObject transactionMessage;
     private HashSet actionsSet;
+    private HashMap get_actionsFilters;
 
     private static final transient Logger logger = LoggerFactory.getLogger(TransactionProcessing.class);
 
     public TransactionProcessing(JSONObject transactionMessage, HashSet<String> actions) {
         this.transactionMessage = transactionMessage;
         this.actionsSet = actions;
+    }
+    public TransactionProcessing(JSONObject transactionMessage, HashMap get_actionsFilters) {
+        this.transactionMessage = transactionMessage;
+        this.get_actionsFilters =get_actionsFilters;
     }
 
     public ArrayList<JSONObject> getFilteredActions() {
@@ -39,6 +45,7 @@ public class TransactionProcessing {
                 jsonAction = (JSONObject) action;
                 String actAuthorizationActor;
                 String receiptReceiver;
+                String actionName;
                 try {
                     // Obtain actAuthorizationActor field
                     actAuthorizationActor = jsonAction.getJSONObject("act").
@@ -48,11 +55,18 @@ public class TransactionProcessing {
                     // Obtain receiptReceiver field
                     receiptReceiver = jsonAction.getJSONObject("receipt").
                             getString("receiver");
+                    actionName = jsonAction.getJSONObject("act").getString("name");
+
 
                 } catch (JSONException exception) {
                     logger.warn("Can't get JSON array: "+jsonAction.toString());
                     actAuthorizationActor = "empty";
                     receiptReceiver = "empty";
+                }
+
+                if (get_actionsFilters.containsKey(actAuthorizationActor)) {
+                    HashSet<String> actionsFiltered = (HashSet<String>) get_actionsFilters.get(actAuthorizationActor);
+                    if ()
                 }
 
 
