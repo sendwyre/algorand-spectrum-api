@@ -31,7 +31,7 @@ public class SocketHandler extends BinaryWebSocketHandler implements WebSocketHa
     private static final transient Logger logger = LoggerFactory.getLogger(SocketHandler.class);
 
     private ArrayList<JSONObject> actionsList;
-    private HashSet<String> accountsFiltered = new HashSet<String>();
+    private HashSet<String> accountsFiltered = new HashSet<>();
     private HashMap<String,HashSet<String>> get_actionsFilters = new HashMap<>();
 
     private RedisMessagePublisherActions redisMessagePublisherActions;
@@ -68,7 +68,7 @@ public class SocketHandler extends BinaryWebSocketHandler implements WebSocketHa
             case "TX_TRACE":
                 logger.debug("Message type: " + messageType);
                 try {
-                    transactionProcessing = new TransactionProcessing(jsonMessage.getJSONObject("data"), getAccountsFiltered());
+                    transactionProcessing = new TransactionProcessing(jsonMessage.getJSONObject("data"), getGet_actionsFilters());
 
                     actionsList = transactionProcessing.getFilteredActions();
 

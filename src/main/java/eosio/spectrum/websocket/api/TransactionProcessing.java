@@ -19,10 +19,11 @@ public class TransactionProcessing {
 
     private static final transient Logger logger = LoggerFactory.getLogger(TransactionProcessing.class);
 
-    public TransactionProcessing(JSONObject transactionMessage, HashSet<String> actions) {
-        this.transactionMessage = transactionMessage;
-        this.actionsSet = actions;
-    }
+//    public TransactionProcessing(JSONObject transactionMessage, HashSet<String> actions) {
+//        this.transactionMessage = transactionMessage;
+//        this.actionsSet = actions;
+//    }
+
     public TransactionProcessing(JSONObject transactionMessage, HashMap get_actionsFilters) {
         this.transactionMessage = transactionMessage;
         this.get_actionsFilters =get_actionsFilters;
@@ -58,42 +59,37 @@ public class TransactionProcessing {
                             getString("receiver");
                     actionName = jsonAction.getJSONObject("act").getString("name");
                     if (get_actionsFilters.containsKey(actAuthorizationActor)) {
+                        // Obtain action names for given actAuthorizationActor
                         HashSet<String> actionsFiltered = (HashSet<String>) get_actionsFilters.get(actAuthorizationActor);
-                        if (actionsFiltered.contains(actionName)){
-                            logger.info(actionName.toString());
-                        }else {
-                            logger.info("action name is null");
+
+                        if ( (actionsFiltered == null) || actionsFiltered.contains(actionName) ){
+                             jsonAction.put("block_num", this.transactionMessage.get("block_num"));
+                             jsonAction.put("block_timestamp", this.transactionMessage.get("block_timestamp"));
+                             jsonAction.put("trx", this.transactionMessage.getJSONObject("trace").get("id"));
+                             actions.add(prepareMessage(actAuthorizationActor, jsonAction));
+                             logger.info("actAuthorizationActor");
+                        }
                     }
-                }
-            } catch (JSONException exception) {
+                    if (get_actionsFilters.containsKey(receiptReceiver)) {
+                        // Obtain action names for given receiptReceive
+                        HashSet<String> actionsFiltered = (HashSet<String>) get_actionsFilters.get(receiptReceiver);
+                        if ( (actionsFiltered == null) || actionsFiltered.contains(actionName) ){
+                            jsonAction.put("block_num", this.transactionMessage.get("block_num"));
+                            jsonAction.put("block_timestamp", this.transactionMessage.get("block_timestamp"));
+                            jsonAction.put("trx", this.transactionMessage.getJSONObject("trace").get("id"));
+                            actions.add(prepareMessage(receiptReceiver, jsonAction));
+                            logger.info("actAuthorizationActor");
+                        }
+                    }
+                } catch (JSONException exception) {
                 logger.warn("Can't get JSON array: "+jsonAction.toString());
                 actAuthorizationActor = "empty";
                 receiptReceiver = "empty";
-            }
-
-                if (actionsSet.contains(actAuthorizationActor)) {
-                    jsonAction.put("block_num", this.transactionMessage.get("block_num"));
-                    jsonAction.put("block_timestamp", this.transactionMessage.get("block_timestamp"));
-                    jsonAction.put("trx", this.transactionMessage.getJSONObject("trace").get("id"));
-                    actions.add(
-                            prepareMessage(actAuthorizationActor, jsonAction)
-                    );
-                    logger.info("actAuthorizationActor is: " + actAuthorizationActor);
-
                 }
-                if (actionsSet.contains(receiptReceiver)) {
-                    jsonAction.put("block_num", this.transactionMessage.get("block_num"));
-                    jsonAction.put("block_timestamp", this.transactionMessage.get("block_timestamp"));
-                    jsonAction.put("trx", this.transactionMessage.getJSONObject("trace").get("id"));
-
-                    actions.add(prepareMessage(receiptReceiver, jsonAction));
-                    logger.info("receiptReceiver is: " + receiptReceiver);
-                }
-
             } else {
                 logger.warn("Can't decode action: " + action.toString());
             }
-        }
+          }
         return actions;
     }
 
