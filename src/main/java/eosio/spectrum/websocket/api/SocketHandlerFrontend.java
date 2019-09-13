@@ -53,7 +53,7 @@ public class SocketHandlerFrontend extends TextWebSocketHandler implements WebSo
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
         subscriberSessionStorage.saveSession(session);
-        logger.debug("Established sessin from"+session.getRemoteAddress());
+        logger.debug("Chronicle connected from: "+session.getRemoteAddress());
     }
 
 

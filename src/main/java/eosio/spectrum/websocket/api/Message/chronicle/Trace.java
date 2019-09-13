@@ -1,13 +1,13 @@
-package eosio.spectrum.websocket.api.Message;
+package eosio.spectrum.websocket.api.Message.chronicle;
 
-import eosio.spectrum.websocket.api.ActionTraces;
+import java.util.List;
 
 public class Trace {
     private Boolean scheduled;
     private String account_ram_delta;
     private int net_usage;
-    private ActionTraces action_traces;
-    private Failed_dtrx_trace failed_dtrx_trace;
+    private List<ActionTraces> action_traces;
+    private List<Failed_dtrx_trace> failed_dtrx_trace;
     private int elapsed;
     private int net_usage_words;
     private String except;
