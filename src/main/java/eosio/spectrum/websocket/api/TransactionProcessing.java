@@ -83,8 +83,6 @@ public class TransactionProcessing {
                     }
                 } catch (JSONException exception) {
                 logger.warn("Can't get JSON array: "+jsonAction.toString());
-                actAuthorizationActor = "empty";
-                receiptReceiver = "empty";
                 }
             } else {
                 logger.warn("Can't decode action: " + action.toString());
