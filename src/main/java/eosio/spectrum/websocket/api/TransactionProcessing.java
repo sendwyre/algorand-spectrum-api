@@ -58,6 +58,7 @@ public class TransactionProcessing {
                     receiptReceiver = jsonAction.getJSONObject("receipt").
                             getString("receiver");
                     actionName = jsonAction.getJSONObject("act").getString("name");
+
                     if (get_actionsFilters.containsKey(actAuthorizationActor)) {
                         // Obtain action names for given actAuthorizationActor
                         HashSet<String> actionsFiltered = (HashSet<String>) get_actionsFilters.get(actAuthorizationActor);

@@ -4,6 +4,7 @@ package eosio.spectrum.websocket.api;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import eosio.spectrum.websocket.api.Message.ServiceMessage;
+import eosio.spectrum.websocket.api.Message.chronicle.ChronicleMessage;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -50,6 +51,8 @@ public class SocketHandler extends BinaryWebSocketHandler implements WebSocketHa
     public void handleBinaryMessage(WebSocketSession session, BinaryMessage binaryMessage) throws UnsupportedEncodingException, JSONException {
         TransactionProcessing transactionProcessing;
         String stringMessage = new String(binaryMessage.getPayload().array(), "UTF-8");
+        ChronicleMessage chronicleMessage = new Gson().fromJson(stringMessage, ChronicleMessage.class);
+
         JSONObject jsonMessage = new JSONObject(stringMessage);
         String messageType = jsonMessage.get("msgtype").toString();
         switch (messageType) {
