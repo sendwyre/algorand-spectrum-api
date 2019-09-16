@@ -120,7 +120,7 @@ public class SocketHandlerFrontend extends TextWebSocketHandler implements WebSo
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
 //        String sessionId = session.getId();
-//        unsubscribe(session);
+        unsubscribe(session);
 
 
     }
@@ -140,17 +140,20 @@ public class SocketHandlerFrontend extends TextWebSocketHandler implements WebSo
     }
 
     private void unsubscribe(WebSocketSession session) {
-
         String sessionID = session.getId();
+        if ( subscriberSessionStorage.getAccounts(sessionID ) != null) {
 
-        for (String account : subscriberSessionStorage.getAccounts(sessionID)) {
-            serviceMessage.setEvent(Event.unsubscribe);
+            for (String account : subscriberSessionStorage.getAccounts(sessionID)) {
+                serviceMessage.setEvent(Event.unsubscribe);
 //            serviceMessage.setAccount(account);
-            redisMessagePublisherService.publish(new Gson().toJson(serviceMessage));
-        }
+                redisMessagePublisherService.publish(new Gson().toJson(serviceMessage));
+                logger.info("Account: "+account+" was unsubscribed" );
+            }
 
-        subscriberSessionStorage.removeSessionIdAccounts(sessionID);
-        subscriberSessionStorage.removeSession(sessionID);
+            subscriberSessionStorage.removeSessionIdAccounts(sessionID);
+            subscriberSessionStorage.removeSession(sessionID);
+            logger.info("SessionId: "+sessionID+" was removed");
+        }
 
     }
 }
