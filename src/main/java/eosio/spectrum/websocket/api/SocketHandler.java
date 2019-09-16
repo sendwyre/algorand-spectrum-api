@@ -51,7 +51,6 @@ public class SocketHandler extends BinaryWebSocketHandler implements WebSocketHa
     public void handleBinaryMessage(WebSocketSession session, BinaryMessage binaryMessage) throws UnsupportedEncodingException, JSONException {
         TransactionProcessing transactionProcessing;
         String stringMessage = new String(binaryMessage.getPayload().array(), "UTF-8");
-        ChronicleMessage chronicleMessage = new Gson().fromJson(stringMessage, ChronicleMessage.class);
 
         JSONObject jsonMessage = new JSONObject(stringMessage);
         String messageType = jsonMessage.get("msgtype").toString();
@@ -72,6 +71,8 @@ public class SocketHandler extends BinaryWebSocketHandler implements WebSocketHa
                 logger.debug("Message type: " + messageType);
                 try {
                     transactionProcessing = new TransactionProcessing(jsonMessage.getJSONObject("data"), getGet_actionsFilters());
+                    ChronicleMessage chronicleMessage = new Gson().fromJson(stringMessage, ChronicleMessage.class);
+
 
                     actionsList = transactionProcessing.getFilteredActions();
 
