@@ -1,5 +1,7 @@
 package eosio.spectrum.websocket.api.message.eosio;
 
+import eosio.spectrum.websocket.api.message.FilteredAction;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -55,25 +57,41 @@ public class Transaction {
         }
         return actionTraces;
     }
-    public void getActionsFiltered(HashMap<String,HashSet<String>> filters){
+    public List<FilteredAction> getActionsFiltered(HashMap<String,HashSet<String>> filters){
+        List<FilteredAction> filteredActions= new ArrayList<>();
         for (ActionTraces action:this.getTrace().getAction_traces()) {
-            if (filters.containsKey(action.getAct().getAuthorization().get(0).getActor())){
-                if (filters.get(action.
-                        getAct().
-                        getAuthorization().
-                        get(0).getActor()).
+            String actAuthorizationActor = action.getAct().getAuthorization().get(0).getActor();
+            String receiptReceiver = action.getReceipt().getReceiver();
+
+            if (filters.containsKey(actAuthorizationActor)){
+                if (filters.get(actAuthorizationActor).
                         contains(action.getAct().getName())
                          ||
-                        (filters.get(action.getAct().getAuthorization().get(0).getActor().contains(action.
+                        (filters.get(actAuthorizationActor.
+                                contains(action.getAct().getName()))== null)
+                        ){
+                    FilteredAction filteredAction = new FilteredAction(actAuthorizationActor,action);
+                    filteredActions.add(filteredAction);
+                }
+
+            }
+
+            if (filters.containsKey(receiptReceiver)){
+                if (filters.get(receiptReceiver).
+                        contains(action.getAct().getName())
+                        ||
+                        (filters.get(receiptReceiver.contains(action.
                                 getAct().getName()))== null)
                         ){
-
+                    FilteredAction filteredAction = new FilteredAction(actAuthorizationActor,action);
+                    filteredActions.add(filteredAction);
                 }
 
             }
 
 
         }
+        return filteredActions;
     }
 
 }

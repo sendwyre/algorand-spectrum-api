@@ -3,8 +3,10 @@ package eosio.spectrum.websocket.api;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import eosio.spectrum.websocket.api.message.FilteredAction;
 import eosio.spectrum.websocket.api.message.ServiceMessage;
 import eosio.spectrum.websocket.api.message.chronicle.TX_TRACE;
+import eosio.spectrum.websocket.api.message.eosio.ActionTraces;
 import eosio.spectrum.websocket.api.message.eosio.Transaction;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -76,18 +78,21 @@ public class SocketHandler extends BinaryWebSocketHandler implements WebSocketHa
 
                     Transaction transaction = tx_trace.getTransaction();
 
-//                    transaction.getActionsFiltered()
-
-
-                    actionsList = transactionProcessing.getFilteredActions();
-
-
-                    if (actionsList.size() > 0) {
-                        for (JSONObject action : actionsList) {
-                            redisMessagePublisherActions.publish(action.toString());
-                        }
-
+                    for (FilteredAction filteredAction:transaction.getActionsFiltered(get_actionsFilters)
+                         ) {
+                        redisMessagePublisherActions.publish(new Gson().toJson(filteredAction));
                     }
+
+//
+//                    actionsList = transactionProcessing.getFilteredActions();
+//
+//
+//                    if (actionsList.size() > 0) {
+//                        for (JSONObject action : actionsList) {
+//                            redisMessagePublisherActions.publish(action.toString());
+//                        }
+//
+//                    }
                     String blockNumber = jsonMessage.
                             getJSONObject("data").
                             getString("block_num");
