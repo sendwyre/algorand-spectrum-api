@@ -1,10 +1,7 @@
-package eosio.spectrum.websocket.api.Message;
+package eosio.spectrum.websocket.api.message;
 
 import com.google.gson.annotations.SerializedName;
-import eosio.spectrum.websocket.api.Message.Event;
 import org.springframework.stereotype.Component;
-
-import java.util.List;
 
 @Component
 public class ServiceMessage {

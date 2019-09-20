@@ -1,4 +1,4 @@
-package eosio.spectrum.websocket.api.Message;
+package eosio.spectrum.websocket.api.message;
 
 import com.google.gson.annotations.SerializedName;
 

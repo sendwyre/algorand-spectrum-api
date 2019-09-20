@@ -1,27 +1,34 @@
-package eosio.spectrum.websocket.api.Message.chronicle;
+package eosio.spectrum.websocket.api.message.eosio;
+
+import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
 public class Partial {
-    private List<Context_free_data> context_free_data;
-    private int delay_sec;
+    @SerializedName("DoNotSerialize")
+    private String context_free_data;
+    private long delay_sec;
     private String expiration;
     private int max_cpu_usage_ms;
     private int max_net_usage_words;
     private int ref_block_num;
-    private int ref_block_prefix;
+    private long ref_block_prefix;
     private List<String> signatures;
     private List<Transaction_extensions> transaction_extensions;
 
-    public List<Context_free_data> getContext_free_data() {
+    public String getContext_free_data() {
         return context_free_data;
     }
 
-    public void setContext_free_data(List<Context_free_data> context_free_data) {
+    public void setContext_free_data(String context_free_data) {
         this.context_free_data = context_free_data;
     }
 
-    public int getDelay_sec() {
+    public void setRef_block_prefix(long ref_block_prefix) {
+        this.ref_block_prefix = ref_block_prefix;
+    }
+
+    public long getDelay_sec() {
         return delay_sec;
     }
 
@@ -61,7 +68,7 @@ public class Partial {
         this.ref_block_num = ref_block_num;
     }
 
-    public int getRef_block_prefix() {
+    public long getRef_block_prefix() {
         return ref_block_prefix;
     }
 

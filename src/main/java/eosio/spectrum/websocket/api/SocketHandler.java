@@ -3,8 +3,9 @@ package eosio.spectrum.websocket.api;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import eosio.spectrum.websocket.api.Message.ServiceMessage;
-import eosio.spectrum.websocket.api.Message.chronicle.ChronicleMessage;
+import eosio.spectrum.websocket.api.message.ServiceMessage;
+import eosio.spectrum.websocket.api.message.chronicle.TX_TRACE;
+import eosio.spectrum.websocket.api.message.eosio.Transaction;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -71,7 +72,11 @@ public class SocketHandler extends BinaryWebSocketHandler implements WebSocketHa
                 logger.debug("Message type: " + messageType);
                 try {
                     transactionProcessing = new TransactionProcessing(jsonMessage.getJSONObject("data"), getGet_actionsFilters());
-                    ChronicleMessage chronicleMessage = new Gson().fromJson(stringMessage, ChronicleMessage.class);
+                    TX_TRACE tx_trace = new Gson().fromJson(stringMessage, TX_TRACE.class);
+
+                    Transaction transaction = tx_trace.getTransaction();
+
+//                    transaction.getActionsFiltered()
 
 
                     actionsList = transactionProcessing.getFilteredActions();

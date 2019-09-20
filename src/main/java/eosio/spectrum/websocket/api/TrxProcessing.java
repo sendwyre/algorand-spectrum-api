@@ -1,7 +1,7 @@
 package eosio.spectrum.websocket.api;
 
-import eosio.spectrum.websocket.api.Message.chronicle.ActionTraces;
-import eosio.spectrum.websocket.api.Message.chronicle.Transaction;
+import eosio.spectrum.websocket.api.message.eosio.ActionTraces;
+import eosio.spectrum.websocket.api.message.eosio.Transaction;
 
 import java.util.List;
 

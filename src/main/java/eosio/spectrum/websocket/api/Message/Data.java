@@ -1,6 +1,5 @@
-package eosio.spectrum.websocket.api.Message;
+package eosio.spectrum.websocket.api.message;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 
 public class   Data {
