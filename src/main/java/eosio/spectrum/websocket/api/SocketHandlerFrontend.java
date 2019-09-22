@@ -126,14 +126,12 @@ public class SocketHandlerFrontend extends TextWebSocketHandler implements WebSo
 
     public void handleMessage(String message) throws IOException {
 
-        JSONObject jsonMessage = new JSONObject(message);
-
-        String accountid = jsonMessage.getString("accountID");
-        String sessionid = subscriberSessionStorage.getSessionId(accountid);
+        FilteredAction filteredAction = new Gson().fromJson(message, FilteredAction.class);
+        String sessionid = subscriberSessionStorage.getSessionId(filteredAction.getAccountName());
         WebSocketSession session = subscriberSessionStorage.getSession(sessionid);
         synchronized (session) {
             if (session != null && session.isOpen()) session.
-                    sendMessage(new TextMessage(jsonMessage.getJSONObject("action").toString()));
+                    sendMessage(new TextMessage(new Gson().toJson(filteredAction.getAction())));
         }
         logger.info("Message " + message);
     }

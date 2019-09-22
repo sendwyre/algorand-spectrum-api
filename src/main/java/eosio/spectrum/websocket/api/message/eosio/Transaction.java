@@ -1,6 +1,9 @@
 package eosio.spectrum.websocket.api.message.eosio;
 
+import com.google.gson.Gson;
 import eosio.spectrum.websocket.api.message.FilteredAction;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -8,6 +11,9 @@ import java.util.HashSet;
 import java.util.List;
 
 public class Transaction {
+    private static final transient Logger logger = LoggerFactory.getLogger(Transaction.class);
+
+
     private int block_num;
     private String block_timestamp;
     private Trace trace;
@@ -59,9 +65,23 @@ public class Transaction {
     }
     public List<FilteredAction> getActionsFiltered(HashMap<String,HashSet<String>> filters){
         List<FilteredAction> filteredActions= new ArrayList<>();
+        String actAuthorizationActor;
+        String receiptReceiver;
         for (ActionTraces action:this.getTrace().getAction_traces()) {
-            String actAuthorizationActor = action.getAct().getAuthorization().get(0).getActor();
-            String receiptReceiver = action.getReceipt().getReceiver();
+            try {
+                actAuthorizationActor = action.getAct().getAuthorization().get(0).getActor();
+            }catch (NullPointerException npe){
+                actAuthorizationActor = null;
+                logger.warn(new Gson().toJson(action));
+
+            }
+            try {
+                receiptReceiver = action.getReceipt().getReceiver();
+            }catch (NullPointerException npe){
+                receiptReceiver = null;
+                logger.warn(new Gson().toJson(action));
+
+            }
 
             if (filters.containsKey(actAuthorizationActor)){
                 if (filters.get(actAuthorizationActor).
@@ -83,7 +103,7 @@ public class Transaction {
                         (filters.get(receiptReceiver.contains(action.
                                 getAct().getName()))== null)
                         ){
-                    FilteredAction filteredAction = new FilteredAction(actAuthorizationActor,action);
+                    FilteredAction filteredAction = new FilteredAction(receiptReceiver,action);
                     filteredActions.add(filteredAction);
                 }
 

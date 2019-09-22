@@ -23,9 +23,11 @@ import org.springframework.web.socket.handler.BinaryWebSocketHandler;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 
 
 @Component
@@ -72,43 +74,39 @@ public class SocketHandler extends BinaryWebSocketHandler implements WebSocketHa
                 break;
             case "TX_TRACE":
                 logger.debug("Message type: " + messageType);
-                try {
-                    transactionProcessing = new TransactionProcessing(jsonMessage.getJSONObject("data"), getGet_actionsFilters());
                     TX_TRACE tx_trace = new Gson().fromJson(stringMessage, TX_TRACE.class);
 
                     Transaction transaction = tx_trace.getTransaction();
-
-                    for (FilteredAction filteredAction:transaction.getActionsFiltered(get_actionsFilters)
-                         ) {
-                        redisMessagePublisherActions.publish(new Gson().toJson(filteredAction));
+                    List<FilteredAction> filteredActions = transaction.getActionsFiltered(get_actionsFilters);
+                    if ( filteredActions.size() > 0) {
+                        for (FilteredAction filteredAction : filteredActions) {
+                            redisMessagePublisherActions.publish(
+                                    new Gson().toJson(filteredAction));
+                        }
                     }
 
-//
-//                    actionsList = transactionProcessing.getFilteredActions();
-//
-//
-//                    if (actionsList.size() > 0) {
-//                        for (JSONObject action : actionsList) {
-//                            redisMessagePublisherActions.publish(action.toString());
+                try {
+// this section is not working properly
+//                    if (transaction.getBlock_num() % 100 == 0){
+//                        if (session.isOpen()) {
+//                            BigInteger bigInt = BigInteger.valueOf(transaction.getBlock_num());
+//                            session.sendMessage(new BinaryMessage(bigInt.toByteArray()));
+//                            logger.info("acknowleged block number: " + transaction.getBlock_num());
 //                        }
-//
 //                    }
                     String blockNumber = jsonMessage.
                             getJSONObject("data").
                             getString("block_num");
 
-                    if (Integer.valueOf(blockNumber) % 10 == 0) {
-                        session.sendMessage(new BinaryMessage(blockNumber.getBytes()));
-                        logger.info("acknowledged block number: " + blockNumber);
-                    }
-                } catch (JSONException jex) {
+                    session.sendMessage(new BinaryMessage(blockNumber.getBytes()));
+
+                }catch (JSONException jex){
                     logger.error("JSON Parse error", jex);
-                } catch (IOException ioex) {
-                    logger.error("IO Exception", ioex);
+                    logger.error(stringMessage);
+                }catch (IOException ioexcept){
+                        logger.warn("Message from chronicle: "+jsonMessage.toString());
                 }
-
                 break;
-
             case "BLOCK_COMPLETED":
                 logger.debug("Message type: " + messageType);
 

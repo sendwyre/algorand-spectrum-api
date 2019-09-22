@@ -27,8 +27,10 @@ ws.ping()
 messageJson = json.dumps(messageBody)
 ws.send(messageJson)
 
-# while True:
-   # print(ws.recv())
+while True:
+    messsage = ws.recv()
+    print(messsage)
+
 
 # actionsList = ["transfer","test1"]
 # messageBody = {"account":"eostribeprod","actions":actionsList }
