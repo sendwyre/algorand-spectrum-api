@@ -78,13 +78,24 @@ public class SocketHandlerFrontend extends TextWebSocketHandler implements WebSo
                             {
                                 case get_actions:
 
-                                    subscriberSessionStorage.saveSessionIdAccounts(session.getId(), subscriberRequest.getData().getAccount());
+                                    try {
 
-                                    serviceMessage.setEvent(subscriberRequest.getEvent());
-                                    serviceMessage.setRequestType(subscriberRequest.getRequestType());
-                                    serviceMessage.setData(subscriberRequest.getData());
+                                        subscriberSessionStorage.saveSessionIdAccounts(session.getId(), subscriberRequest.getData().getAccount());
+                                        serviceMessage.setEvent(subscriberRequest.getEvent());
+                                        serviceMessage.setRequestType(subscriberRequest.getRequestType());
+                                        serviceMessage.setData(subscriberRequest.getData());
+                                        redisMessagePublisherService.publish(new Gson().toJson(serviceMessage));
+                                    }catch (NullPointerException npe){
+                                        if (session.isOpen()) {
 
-                                    redisMessagePublisherService.publish(new Gson().toJson(serviceMessage));
+                                            String infoMessage = "Unable to proceed request, fill fields according to documentation";
+                                            session.sendMessage(new TextMessage(infoMessage));
+                                            logger.warn("Request from "+session.getRemoteAddress()+" has unknown format");
+                                            logger.warn("message body : "+message.getPayload());
+                                            session.close();
+                                        }
+                                    }
+
                                     break;
                                 case get_transaction:
                                     break;

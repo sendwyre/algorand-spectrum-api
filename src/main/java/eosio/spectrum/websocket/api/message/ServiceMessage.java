@@ -6,6 +6,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class ServiceMessage {
 
+
+
     @SerializedName("type")
     private RequestType type;
 
@@ -14,7 +16,13 @@ public class ServiceMessage {
 
     @SerializedName("data")
     private Data data;
+    public ServiceMessage() {
+    }
 
+    public ServiceMessage(SubscriberRequest subscriberRequest){
+
+
+    }
 
     public Event getEvent() {
         return event;

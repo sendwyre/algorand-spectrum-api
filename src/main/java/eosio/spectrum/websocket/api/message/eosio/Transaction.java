@@ -74,7 +74,11 @@ public class Transaction {
                 actAuthorizationActor = null;
                 logger.warn(new Gson().toJson(action));
 
+            }catch (IndexOutOfBoundsException except){
+                actAuthorizationActor = null;
+                logger.warn(new Gson().toJson(action));
             }
+
             try {
                 receiptReceiver = action.getReceipt().getReceiver();
             }catch (NullPointerException npe){

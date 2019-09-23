@@ -87,18 +87,18 @@ public class SocketHandler extends BinaryWebSocketHandler implements WebSocketHa
 
                 try {
 // this section is not working properly
-//                    if (transaction.getBlock_num() % 100 == 0){
-//                        if (session.isOpen()) {
-//                            BigInteger bigInt = BigInteger.valueOf(transaction.getBlock_num());
-//                            session.sendMessage(new BinaryMessage(bigInt.toByteArray()));
-//                            logger.info("acknowleged block number: " + transaction.getBlock_num());
-//                        }
-//                    }
-                    String blockNumber = jsonMessage.
-                            getJSONObject("data").
-                            getString("block_num");
-
-                    session.sendMessage(new BinaryMessage(blockNumber.getBytes()));
+                    if (transaction.getBlock_num() % 100 == 0){
+                        if (session.isOpen()) {
+                            BigInteger bigInt = BigInteger.valueOf(transaction.getBlock_num());
+                            session.sendMessage(new BinaryMessage(bigInt.toByteArray()));
+                            logger.info("acknowleged block number: " + transaction.getBlock_num());
+                        }
+                    }
+//                    String blockNumber = jsonMessage.
+//                            getJSONObject("data").
+//                            getString("block_num");
+//
+//                    session.sendMessage(new BinaryMessage(blockNumber.getBytes()));
 
                 }catch (JSONException jex){
                     logger.error("JSON Parse error", jex);
@@ -177,7 +177,7 @@ public class SocketHandler extends BinaryWebSocketHandler implements WebSocketHa
 
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) {
-        System.out.println(status);
+        logger.info("Chronicle was disconnected "+status.getReason());
     }
 
 }
