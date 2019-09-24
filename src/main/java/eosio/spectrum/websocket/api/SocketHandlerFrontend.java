@@ -138,11 +138,15 @@ public class SocketHandlerFrontend extends TextWebSocketHandler implements WebSo
     public void handleMessage(String message) throws IOException {
 
         FilteredAction filteredAction = new Gson().fromJson(message, FilteredAction.class);
+        ResponseGetActions responseGetActions = new ResponseGetActions();
+        responseGetActions.setRequestType(RequestType.get_actions);
+        responseGetActions.setAction(filteredAction.getAction());
         String sessionid = subscriberSessionStorage.getSessionId(filteredAction.getAccountName());
         WebSocketSession session = subscriberSessionStorage.getSession(sessionid);
+
         synchronized (session) {
             if (session != null && session.isOpen()) session.
-                    sendMessage(new TextMessage(new Gson().toJson(filteredAction.getAction())));
+                    sendMessage(new TextMessage(new Gson().toJson(responseGetActions)));
         }
         logger.info("Message " + message);
     }

@@ -85,37 +85,26 @@ public class SocketHandler extends BinaryWebSocketHandler implements WebSocketHa
                         }
                     }
 
-                try {
-// this section is not working properly
-                    if (transaction.getBlock_num() % 10 == 0){
-                        if (session.isOpen()) {
-                            BigInteger bigInt = BigInteger.valueOf(transaction.getBlock_num());
-                            session.sendMessage(new BinaryMessage(bigInt.toByteArray()));
-                            logger.info("acknowleged block number: " + transaction.getBlock_num());
-                        }
-                    }
-//                    String blockNumber = jsonMessage.
-//                            getJSONObject("data").
-//                            getString("block_num");
-//
-//                    session.sendMessage(new BinaryMessage(blockNumber.getBytes()));
 
-                }catch (JSONException jex){
-                    logger.error("JSON Parse error", jex);
-                    logger.error(stringMessage);
-                }catch (IOException ioexcept){
-                        logger.warn("Message from chronicle: "+jsonMessage.toString());
-                }
                 break;
             case "BLOCK_COMPLETED":
-                logger.debug("Message type: " + messageType);
-
                 try {
                     String blockNumber = jsonMessage.
                             getJSONObject("data").
                             getString("block_num");
+                    logger.debug("acknowleged block number: : " + blockNumber);
+                    if (Integer.valueOf(blockNumber) % 100==0){
+                        logger.info("acknowleged block number: "+blockNumber);
+                    }
 
                     session.sendMessage(new BinaryMessage(blockNumber.getBytes()));
+//                    if (transaction.getBlock_num() % 10 == 0){
+//                        if (session.isOpen()) {
+//                            BigInteger bigInt = BigInteger.valueOf(transaction.getBlock_num());
+//                            session.sendMessage(new BinaryMessage(bigInt.toByteArray()));
+//                            logger.info("acknowleged block number: " + transaction.getBlock_num());
+//                        }
+//                    }
 
                 } catch (JSONException jex) {
                     logger.error("JSON Parse error", jex);

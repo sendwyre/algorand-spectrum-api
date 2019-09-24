@@ -94,6 +94,10 @@ public class Transaction {
                         (filters.get(actAuthorizationActor.
                                 contains(action.getAct().getName()))== null)
                         ){
+                    action.setBlock_num(this.getBlock_num());
+                    action.setTrxId(this.getTrace().getId());
+                    action.setBlock_timestamp(this.getBlock_timestamp());
+
                     FilteredAction filteredAction = new FilteredAction(actAuthorizationActor,action);
                     filteredActions.add(filteredAction);
                 }
