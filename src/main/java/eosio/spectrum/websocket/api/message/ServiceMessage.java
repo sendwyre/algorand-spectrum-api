@@ -19,11 +19,6 @@ public class ServiceMessage {
     public ServiceMessage() {
     }
 
-    public ServiceMessage(SubscriberRequest subscriberRequest){
-
-
-    }
-
     public Event getEvent() {
         return event;
     }

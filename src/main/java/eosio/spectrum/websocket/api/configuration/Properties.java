@@ -14,6 +14,8 @@ public class Properties {
 
     @Value("${CUSTOMER_WEBSOCKET_PATH}")
     private String socketPathFrontend;
+    @Value("${REDIS_HOSTNAME}")
+    private String redisHostname;
 
     public String getSocketPath() {
         return socketPath;
@@ -29,5 +31,13 @@ public class Properties {
 
     public void setSocketPathFrontend(String socketPathFrontend) {
         this.socketPathFrontend = socketPathFrontend;
+    }
+
+    public String getRedisHostname() {
+        return redisHostname;
+    }
+
+    public void setRedisHostname(String redisHostname) {
+        this.redisHostname = redisHostname;
     }
 }

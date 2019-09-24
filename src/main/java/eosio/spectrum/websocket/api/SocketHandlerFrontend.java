@@ -29,7 +29,7 @@ public class SocketHandlerFrontend extends TextWebSocketHandler implements WebSo
     private RedisMessagePublisherService redisMessagePublisherService;
 
     private SubscriberRequest subscriberRequest;
-//    private UnsubscribeRequest unsubscribeRequest;
+
 
     @Autowired
     public void setRedisMessagePublisherService(RedisMessagePublisherService redisMessagePublisherService) {
@@ -37,10 +37,10 @@ public class SocketHandlerFrontend extends TextWebSocketHandler implements WebSo
     }
 
 
-    @Autowired
-    public void setServiceMessage(ServiceMessage serviceMessage) {
-        this.serviceMessage = serviceMessage;
-    }
+//    @Autowired
+//    public void setServiceMessage(ServiceMessage serviceMessage) {
+//        this.serviceMessage = serviceMessage;
+//    }
 
 
     @Autowired
@@ -79,6 +79,7 @@ public class SocketHandlerFrontend extends TextWebSocketHandler implements WebSo
                                 case get_actions:
 
                                     try {
+                                        serviceMessage = new ServiceMessage();
 
                                         subscriberSessionStorage.saveSessionIdAccounts(session.getId(), subscriberRequest.getData().getAccount());
                                         serviceMessage.setEvent(subscriberRequest.getEvent());
@@ -129,7 +130,6 @@ public class SocketHandlerFrontend extends TextWebSocketHandler implements WebSo
 
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
-//        String sessionId = session.getId();
         unsubscribe(session);
 
 
@@ -156,8 +156,11 @@ public class SocketHandlerFrontend extends TextWebSocketHandler implements WebSo
         if ( subscriberSessionStorage.getAccounts(sessionID ) != null) {
 
             for (String account : subscriberSessionStorage.getAccounts(sessionID)) {
+                serviceMessage = new ServiceMessage();
+                Data data = new Data();
+                data.setAccount(account);
                 serviceMessage.setEvent(Event.unsubscribe);
-//            serviceMessage.setAccount(account);
+                serviceMessage.setData(data);
                 redisMessagePublisherService.publish(new Gson().toJson(serviceMessage));
                 logger.info("Account: "+account+" was unsubscribed" );
             }

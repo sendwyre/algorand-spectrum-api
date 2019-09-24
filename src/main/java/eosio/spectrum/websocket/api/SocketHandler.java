@@ -36,7 +36,6 @@ public class SocketHandler extends BinaryWebSocketHandler implements WebSocketHa
 
     private static final transient Logger logger = LoggerFactory.getLogger(SocketHandler.class);
 
-    private ArrayList<JSONObject> actionsList;
     private HashSet<String> accountsFiltered = new HashSet<>();
     private HashMap<String,HashSet<String>> get_actionsFilters = new HashMap<>();
 
@@ -54,7 +53,7 @@ public class SocketHandler extends BinaryWebSocketHandler implements WebSocketHa
 
     @Override
     public void handleBinaryMessage(WebSocketSession session, BinaryMessage binaryMessage) throws UnsupportedEncodingException, JSONException {
-        TransactionProcessing transactionProcessing;
+
         String stringMessage = new String(binaryMessage.getPayload().array(), "UTF-8");
 
         JSONObject jsonMessage = new JSONObject(stringMessage);
@@ -136,9 +135,6 @@ public class SocketHandler extends BinaryWebSocketHandler implements WebSocketHa
                                 serviceMessage.getData().getAccount(),
                                 serviceMessage.getData().getActions()
                         );
-//                        getGet_actionsFilters().put("test", null);
-//                        serviceMessage.getData().getActions();
-
                         getAccountsFiltered().add(serviceMessage.getData().getAccount());
                         break;
                     case get_transaction:

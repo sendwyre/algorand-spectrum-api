@@ -2,6 +2,7 @@ package eosio.spectrum.websocket.api.configuration;
 
 
 import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.annotation.Bean;
@@ -20,15 +21,22 @@ public class RedisConfig implements ApplicationContextAware {
     private final String ACTIONS_CHANNEL = "actions";
     private final String SERVICE_CHANNEL = "service";
 
+    private String redisHostname;
+
     private ApplicationContext applicationContext = null;
+
+    @Autowired
+    public void setRedisHostname(Properties properties) {
+        this.redisHostname = properties.getRedisHostname();
+    }
 
     @Bean
     public RedisConnectionFactory redisConnectionFactory() {
 
         RedisStandaloneConfiguration redisStandaloneConfiguration = new RedisStandaloneConfiguration();
-        redisStandaloneConfiguration.setHostName("redis");
+        redisStandaloneConfiguration.setHostName(redisHostname);
         redisStandaloneConfiguration.setPort(6379);
-         JedisConnectionFactory jedisConnectionFactory = new JedisConnectionFactory(redisStandaloneConfiguration);
+        JedisConnectionFactory jedisConnectionFactory = new JedisConnectionFactory(redisStandaloneConfiguration);
 
         return jedisConnectionFactory;
     }
@@ -37,7 +45,6 @@ public class RedisConfig implements ApplicationContextAware {
     public StringRedisTemplate redisTemplate() {
         StringRedisTemplate template = new StringRedisTemplate();
         template.setConnectionFactory(redisConnectionFactory());
-
         return template;
     }
 
