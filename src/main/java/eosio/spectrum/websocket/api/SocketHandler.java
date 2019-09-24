@@ -87,7 +87,7 @@ public class SocketHandler extends BinaryWebSocketHandler implements WebSocketHa
 
                 try {
 // this section is not working properly
-                    if (transaction.getBlock_num() % 100 == 0){
+                    if (transaction.getBlock_num() % 10 == 0){
                         if (session.isOpen()) {
                             BigInteger bigInt = BigInteger.valueOf(transaction.getBlock_num());
                             session.sendMessage(new BinaryMessage(bigInt.toByteArray()));
