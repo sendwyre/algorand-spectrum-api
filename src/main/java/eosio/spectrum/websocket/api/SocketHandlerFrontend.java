@@ -36,18 +36,10 @@ public class SocketHandlerFrontend extends TextWebSocketHandler implements WebSo
         this.redisMessagePublisherService = redisMessagePublisherService;
     }
 
-
-//    @Autowired
-//    public void setServiceMessage(ServiceMessage serviceMessage) {
-//        this.serviceMessage = serviceMessage;
-//    }
-
-
     @Autowired
     public void setSubscriberSessionStorage(SubscriberSessionStorage subscriberSessionStorage) {
         this.subscriberSessionStorage = subscriberSessionStorage;
     }
-
 
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
@@ -109,7 +101,24 @@ public class SocketHandlerFrontend extends TextWebSocketHandler implements WebSo
                             }
                             break;
                         case unsubscribe:
-                            subscriberRequest.getRequestType();
+                            switch (subscriberRequest.getRequestType()){
+                                case get_actions:
+
+                                    serviceMessage = new ServiceMessage();
+                                    serviceMessage.setEvent(Event.unsubscribe);
+                                    serviceMessage.setRequestType(RequestType.get_actions);
+                                    serviceMessage.setData(subscriberRequest.getData());
+                                    redisMessagePublisherService.publish(new Gson().toJson(serviceMessage));
+                                    subscriberSessionStorage.removeAccount(subscriberRequest.getData().getAccount());
+
+                                    break;
+                                case get_blocks:
+                                    break;
+                                case get_transaction:
+                                    break;
+                                case get_table_deltas:
+                                    break;
+                            }
                     break;
                 default:
                     String infoMessage = "Value of event field is unknown";
@@ -160,6 +169,7 @@ public class SocketHandlerFrontend extends TextWebSocketHandler implements WebSo
                 Data data = new Data();
                 data.setAccount(account);
                 serviceMessage.setEvent(Event.unsubscribe);
+                serviceMessage.setRequestType(RequestType.get_actions);
                 serviceMessage.setData(data);
                 redisMessagePublisherService.publish(new Gson().toJson(serviceMessage));
                 logger.info("Account: "+account+" was unsubscribed" );

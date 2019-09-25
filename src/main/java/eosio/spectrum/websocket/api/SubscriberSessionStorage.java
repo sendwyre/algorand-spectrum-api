@@ -18,6 +18,10 @@ public class SubscriberSessionStorage {
     private Map<String, HashSet<String>> sessionIdAccounts = new ConcurrentHashMap<>();
     private Map<String, String> accountSessiondId = new ConcurrentHashMap<>();
 
+    public void saveGetActionsSession(String account, String sessionId){
+
+    }
+
 
     public void saveSession(WebSocketSession session) {
         this.sessions.put(session.getId(), session);
@@ -54,6 +58,11 @@ public class SubscriberSessionStorage {
             accountSessiondId.remove(account);
         }
         sessionIdAccounts.remove(sessionId);
+    }
+
+    public void removeAccount(String account){
+        sessionIdAccounts.remove(accountSessiondId.get(account));
+        accountSessiondId.remove(account);
     }
 
     public String getSessionId(String account) {

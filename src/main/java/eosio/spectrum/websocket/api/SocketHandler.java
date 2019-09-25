@@ -36,7 +36,6 @@ public class SocketHandler extends BinaryWebSocketHandler implements WebSocketHa
 
     private static final transient Logger logger = LoggerFactory.getLogger(SocketHandler.class);
 
-    private HashSet<String> accountsFiltered = new HashSet<>();
     private HashMap<String,HashSet<String>> get_actionsFilters = new HashMap<>();
 
     private RedisMessagePublisherActions redisMessagePublisherActions;
@@ -83,8 +82,6 @@ public class SocketHandler extends BinaryWebSocketHandler implements WebSocketHa
                                     new Gson().toJson(filteredAction));
                         }
                     }
-
-
                 break;
             case "BLOCK_COMPLETED":
                 try {
@@ -130,12 +127,10 @@ public class SocketHandler extends BinaryWebSocketHandler implements WebSocketHa
             case subscribe:
                 switch (serviceMessage.getRequestType()){
                     case get_actions:
-
                         getGet_actionsFilters().put(
                                 serviceMessage.getData().getAccount(),
                                 serviceMessage.getData().getActions()
                         );
-                        getAccountsFiltered().add(serviceMessage.getData().getAccount());
                         break;
                     case get_transaction:
                         break;
@@ -146,16 +141,17 @@ public class SocketHandler extends BinaryWebSocketHandler implements WebSocketHa
                 }
                 break;
             case unsubscribe:
-                getAccountsFiltered().remove(serviceMessage.getData().getAccount());
+                switch (serviceMessage.getRequestType()){
+                    case get_actions:
+                        getGet_actionsFilters().remove(serviceMessage.getData().getAccount());
+                        break;
+                }
+
                 break;
         }
     }
 
 
-
-    private HashSet<String> getAccountsFiltered() {
-        return this.accountsFiltered;
-    }
     private HashMap<String, HashSet<String>> getGet_actionsFilters(){
         return this.get_actionsFilters;
     }
