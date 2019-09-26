@@ -5,7 +5,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sun.font.TrueTypeFont;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -19,10 +18,6 @@ public class TransactionProcessing {
 
     private static final transient Logger logger = LoggerFactory.getLogger(TransactionProcessing.class);
 
-//    public TransactionProcessing(JSONObject transactionMessage, HashSet<String> actions) {
-//        this.transactionMessage = transactionMessage;
-//        this.actionsSet = actions;
-//    }
 
     public TransactionProcessing(JSONObject transactionMessage, HashMap get_actionsFilters) {
         this.transactionMessage = transactionMessage;
