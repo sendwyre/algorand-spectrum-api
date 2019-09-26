@@ -82,6 +82,10 @@ public class SocketHandler extends BinaryWebSocketHandler implements WebSocketHa
                                     new Gson().toJson(filteredAction));
                         }
                     }
+
+
+
+
                 break;
             case "BLOCK_COMPLETED":
                 try {
