@@ -73,7 +73,8 @@ public class SocketHandlerFrontend extends TextWebSocketHandler implements WebSo
                                     try {
                                         serviceMessage = new ServiceMessage();
 
-                                        subscriberSessionStorage.saveSessionIdAccounts(session.getId(), subscriberRequest.getData().getAccount());
+                                        subscriberSessionStorage.addAccount(session.getId(), subscriberRequest.getData().getAccount());
+
                                         serviceMessage.setEvent(subscriberRequest.getEvent());
                                         serviceMessage.setRequestType(subscriberRequest.getRequestType());
                                         serviceMessage.setData(subscriberRequest.getData());
@@ -162,22 +163,23 @@ public class SocketHandlerFrontend extends TextWebSocketHandler implements WebSo
 
     private void unsubscribe(WebSocketSession session) {
         String sessionID = session.getId();
-        if ( subscriberSessionStorage.getAccounts(sessionID ) != null) {
+        //
+        if ( true) {
 
-            for (String account : subscriberSessionStorage.getAccounts(sessionID)) {
-                serviceMessage = new ServiceMessage();
-                Data data = new Data();
-                data.setAccount(account);
-                serviceMessage.setEvent(Event.unsubscribe);
-                serviceMessage.setRequestType(RequestType.get_actions);
-                serviceMessage.setData(data);
-                redisMessagePublisherService.publish(new Gson().toJson(serviceMessage));
-                logger.info("Account: "+account+" was unsubscribed" );
-            }
-
-            subscriberSessionStorage.removeSessionIdAccounts(sessionID);
-            subscriberSessionStorage.removeSession(sessionID);
-            logger.info("SessionId: "+sessionID+" was removed");
+//            for (String account : subscriberSessionStorage.getAccounts(sessionID)) {
+//                serviceMessage = new ServiceMessage();
+//                Data data = new Data();
+//                data.setAccount(account);
+//                serviceMessage.setEvent(Event.unsubscribe);
+//                serviceMessage.setRequestType(RequestType.get_actions);
+//                serviceMessage.setData(data);
+//                redisMessagePublisherService.publish(new Gson().toJson(serviceMessage));
+//                logger.info("Account: "+account+" was unsubscribed" );
+//            }
+//
+//            subscriberSessionStorage.removeSessionIdAccounts(sessionID);
+//            subscriberSessionStorage.removeSession(sessionID);
+//            logger.info("SessionId: "+sessionID+" was removed");
         }
 
     }

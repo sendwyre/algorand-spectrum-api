@@ -4,21 +4,23 @@ import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
 @Component
 public class SessionIdAccounts {
 
-    private HashMap<String, HashSet<String>> records;
+    private Map<String, HashSet<String>> records;
 
     public SessionIdAccounts(){
-        records = new HashMap<>();
+        records = new ConcurrentHashMap<>();
     }
 
-    public synchronized void  addAccount(String sessionId,String account){
+    public  void  addAccount(String sessionId,String account){
         if (records.containsKey(sessionId)){
             HashSet accounts = records.get(sessionId);
             accounts.add(account);
             records.replace(sessionId, accounts);
-
         }else {
             HashSet accounts = new HashSet();
             accounts.add(account);
@@ -26,13 +28,13 @@ public class SessionIdAccounts {
         }
     }
 
-    public synchronized void removeAccount(String sessionID, String account){
+    public  void removeAccount(String sessionID, String account){
         HashSet accounts = records.get(sessionID);
         accounts.remove(account);
         records.replace(sessionID,accounts);
     }
 
-    public synchronized void removeSession(String session){
+    public  void removeSession(String session){
         records.remove(session);
     }
 
@@ -40,8 +42,8 @@ public class SessionIdAccounts {
         return this.records.get(sessionId);
     }
 
-    public boolean containsAccount(String account){
-        return false;
-    }
+    public boolean containsSessionId(String sessionId){
+        return this.records.containsKey(sessionId);
 
+    }
 }
