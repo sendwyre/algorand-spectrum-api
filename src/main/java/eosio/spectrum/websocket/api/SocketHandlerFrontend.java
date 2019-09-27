@@ -110,7 +110,7 @@ public class SocketHandlerFrontend extends TextWebSocketHandler implements WebSo
                                     serviceMessage.setRequestType(RequestType.get_actions);
                                     serviceMessage.setData(subscriberRequest.getData());
                                     redisMessagePublisherService.publish(new Gson().toJson(serviceMessage));
-                                    subscriberSessionStorage.removeAccount(subscriberRequest.getData().getAccount());
+                                    subscriberSessionStorage.removeAccount(session.getId(), subscriberRequest.getData().getAccount());
 
                                     break;
                                 case get_blocks:
