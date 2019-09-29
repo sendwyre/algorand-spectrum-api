@@ -54,7 +54,6 @@ public class SubscriberSessionStorageTest {
 
     @Test
     public void removeSessionIdAccounts() {
-
         subscriberSessionStorage.removeSession(userFirstSessionId);
 
         assertNull(subscriberSessionStorage.getSessionId(userFirstAccount1));

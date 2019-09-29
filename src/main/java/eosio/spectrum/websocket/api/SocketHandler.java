@@ -92,7 +92,6 @@ public class SocketHandler extends BinaryWebSocketHandler implements WebSocketHa
                     if (Integer.valueOf(blockNumber) % 100==0){
                         logger.info("acknowleged block number: "+blockNumber);
                     }
-
                     session.sendMessage(new BinaryMessage(blockNumber.getBytes()));
 //                    if (transaction.getBlock_num() % 10 == 0){
 //                        if (session.isOpen()) {

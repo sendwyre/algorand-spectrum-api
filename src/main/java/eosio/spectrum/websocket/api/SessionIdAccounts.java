@@ -38,7 +38,7 @@ public class SessionIdAccounts {
         records.remove(session);
     }
 
-    public HashSet getAccounts(String sessionId){
+    public HashSet<String> getAccounts(String sessionId){
         return this.records.get(sessionId);
     }
 

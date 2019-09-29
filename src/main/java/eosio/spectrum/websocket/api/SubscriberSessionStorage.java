@@ -26,6 +26,10 @@ public class SubscriberSessionStorage {
 
     public void removeSession(String sessionId) {
         sessions.remove(sessionId);
+        for (String account:sessionIdAccounts.getAccounts(sessionId)) {
+            accountSessionIds.removeSessionId(account, sessionId);
+        }
+        sessionIdAccounts.removeSession(sessionId);
     }
 
     public void addAccount(String sessionId, String account) {
