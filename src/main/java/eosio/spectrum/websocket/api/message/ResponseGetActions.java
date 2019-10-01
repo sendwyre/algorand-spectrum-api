@@ -3,6 +3,7 @@ package eosio.spectrum.websocket.api.message;
 import eosio.spectrum.websocket.api.message.eosio.ActionTraces;
 
 public class ResponseGetActions {
+
     RequestType requestType;
     ActionTraces action;
 

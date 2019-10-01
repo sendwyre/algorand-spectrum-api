@@ -9,7 +9,7 @@ public enum RequestType {
     get_transaction,
     @SerializedName("get_table_deltas")
     get_table_deltas,
-    @SerializedName("get_blocsk")
+    @SerializedName("get_blocks")
     get_blocks,
     @SerializedName("ping")
     ping

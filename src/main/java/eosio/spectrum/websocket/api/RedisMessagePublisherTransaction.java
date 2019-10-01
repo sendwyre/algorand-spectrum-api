@@ -6,19 +6,23 @@ import org.springframework.data.redis.listener.ChannelTopic;
 import org.springframework.stereotype.Component;
 
 @Component
-public class RedisMessagePublisherActions implements MessagePublisher {
+public class RedisMessagePublisherTransaction implements MessagePublisher {
 
 
     private final StringRedisTemplate stringRedisTemplate;
-    private final ChannelTopic topicActions;
+    private final ChannelTopic topicTransaction;
+
+
     @Autowired
-    public RedisMessagePublisherActions(StringRedisTemplate stringRedisTemplate,
-                                        ChannelTopic topicActions) {
+    public RedisMessagePublisherTransaction(StringRedisTemplate stringRedisTemplate,
+                                            ChannelTopic topicTransaction) {
         this.stringRedisTemplate = stringRedisTemplate;
-        this.topicActions = topicActions;
+        this.topicTransaction = topicTransaction;
     }
+
+
     @Override
     public void publish(String message) {
-        stringRedisTemplate.convertAndSend(topicActions.getTopic(), message);
+        stringRedisTemplate.convertAndSend(topicTransaction.getTopic(), message);
     }
 }

@@ -1,18 +1,13 @@
-package eosio.spectrum.websocket.api;
-
-
-import eosio.spectrum.websocket.api.message.RequestType;
-import org.springframework.stereotype.Service;
+package eosio.spectrum.websocket.api.SessionStorage;
+import org.springframework.stereotype.Component;
 import org.springframework.web.socket.WebSocketSession;
 
-import javax.validation.constraints.Null;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 
-@Service
-@SuppressWarnings("unchecked")
+@Component
 public class SubscriberSessionStorage {
 
 
@@ -30,6 +25,7 @@ public class SubscriberSessionStorage {
             accountSessionIds.removeSessionId(account, sessionId);
         }
         sessionIdAccounts.removeSession(sessionId);
+        sessions.remove(sessionId);
     }
 
     public void addAccount(String sessionId, String account) {
@@ -37,14 +33,18 @@ public class SubscriberSessionStorage {
         this.accountSessionIds.addSession(account,sessionId);
     }
 
+
     public void removeAccount(String sessionId, String account) {
         this.accountSessionIds.removeAccount(account);
         this.sessionIdAccounts.removeAccount(sessionId,account);
     }
 
-    public String getSessionId(String account) {
-//        return accountSessiondId.get(account);
-        return new String();
+    public HashSet<String> getAccounts(String sessionId){
+        return this.sessionIdAccounts.getAccounts(sessionId);
+    }
+
+    public HashSet<String> getSessionsId(String account) {
+        return this.accountSessionIds.getSessionIds(account);
     }
 
     public WebSocketSession getSession(String sessionId) {

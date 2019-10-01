@@ -1,15 +1,14 @@
-package eosio.spectrum.websocket.api;
+package eosio.spectrum.websocket.api.SessionStorage;
 
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class AccountSessionIds {
+  public class  AccountSessionIds {
 
     private static final transient Logger logger = LoggerFactory.getLogger(AccountSessionIds.class);
 /*
@@ -35,7 +34,7 @@ public class AccountSessionIds {
         }
     }
 
-    public  HashSet getSessionIds(String account){
+    public  HashSet<String> getSessionIds(String account){
         return this.records.get(account);
     }
 
