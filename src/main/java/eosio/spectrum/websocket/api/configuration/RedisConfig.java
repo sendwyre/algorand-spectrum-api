@@ -20,6 +20,9 @@ public class RedisConfig implements ApplicationContextAware {
 
     private final String ACTIONS_CHANNEL = "actions";
     private final String SERVICE_CHANNEL = "service";
+    private final String TRANSACTION_CHANNEL = "transaction";
+    private final String BLOCKS_CHANNEL = "transaction";
+    private final String TBL_DELTAS_CHANNEL = "transaction";
 
     private String redisHostname;
 
@@ -32,7 +35,6 @@ public class RedisConfig implements ApplicationContextAware {
 
     @Bean
     public RedisConnectionFactory redisConnectionFactory() {
-
         RedisStandaloneConfiguration redisStandaloneConfiguration = new RedisStandaloneConfiguration();
         redisStandaloneConfiguration.setHostName(redisHostname);
         redisStandaloneConfiguration.setPort(6379);
@@ -49,13 +51,20 @@ public class RedisConfig implements ApplicationContextAware {
     }
 
     @Bean
-    public MessageListenerAdapter messageListenerSocketHandler() {
-        return new MessageListenerAdapter(applicationContext.getBean("socketHandler"));
+    public MessageListenerAdapter messageListenerServiceHandler() {
+        return new MessageListenerAdapter(applicationContext.getBean("messageListenerService"));
     }
-
     @Bean
-    public MessageListenerAdapter messageListenerSocketHandlerFrontend() {
-        return new MessageListenerAdapter(applicationContext.getBean("socketHandlerFrontend"));
+    public MessageListenerAdapter messageListenerActionsHandler() {
+        return new MessageListenerAdapter(applicationContext.getBean("messageListenerActions"));
+    }
+    @Bean
+    public MessageListenerAdapter messageListenerTransactionHandler() {
+        return new MessageListenerAdapter(applicationContext.getBean("messageListenerTransaction"));
+    }
+    @Bean
+    public MessageListenerAdapter messageListenerBlocksHandler() {
+        return new MessageListenerAdapter(applicationContext.getBean("messageListenerBlocks"));
     }
 
     @Bean
@@ -63,8 +72,11 @@ public class RedisConfig implements ApplicationContextAware {
         RedisMessageListenerContainer container
                 = new RedisMessageListenerContainer();
         container.setConnectionFactory(redisConnectionFactory());
-        container.addMessageListener(messageListenerSocketHandler(), topicService());
-        container.addMessageListener(messageListenerSocketHandlerFrontend(), topicActions());
+        container.addMessageListener(messageListenerServiceHandler(), topicService());
+        container.addMessageListener(messageListenerActionsHandler(), topicActions());
+        container.addMessageListener(messageListenerTransactionHandler(), topicTransaction());
+        container.addMessageListener(messageListenerBlocksHandler(), topicBlocks());
+
         return container;
     }
 
@@ -72,11 +84,19 @@ public class RedisConfig implements ApplicationContextAware {
     public ChannelTopic topicActions() {
         return new ChannelTopic(ACTIONS_CHANNEL);
     }
-
     @Bean
     public ChannelTopic topicService() {
         return new ChannelTopic(SERVICE_CHANNEL);
     }
+    @Bean
+    public ChannelTopic topicTransaction() {
+        return new ChannelTopic(TRANSACTION_CHANNEL);
+    }
+    @Bean
+    public ChannelTopic topicBlocks(){
+        return new ChannelTopic(BLOCKS_CHANNEL);
+    }
+
 
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {

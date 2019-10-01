@@ -1,4 +1,4 @@
-package eosio.spectrum.websocket.api;
+package eosio.spectrum.websocket.api.SessionStorage;
 
 import org.springframework.stereotype.Component;
 
@@ -7,8 +7,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-@Component
-public class SessionIdAccounts {
+ public class  SessionIdAccounts {
 
     private Map<String, HashSet<String>> records;
 
@@ -38,12 +37,11 @@ public class SessionIdAccounts {
         records.remove(session);
     }
 
-    public HashSet getAccounts(String sessionId){
+    public HashSet<String> getAccounts(String sessionId){
         return this.records.get(sessionId);
     }
 
     public boolean containsSessionId(String sessionId){
         return this.records.containsKey(sessionId);
-
     }
 }

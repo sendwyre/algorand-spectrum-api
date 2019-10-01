@@ -1,8 +1,8 @@
 package eosio.spectrum.websocket.api;
 
 import com.google.gson.*;
+import eosio.spectrum.websocket.api.SessionStorage.SubscriberSessionStorage;
 import eosio.spectrum.websocket.api.message.*;
-import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -151,36 +151,31 @@ public class SocketHandlerFrontend extends TextWebSocketHandler implements WebSo
         ResponseGetActions responseGetActions = new ResponseGetActions();
         responseGetActions.setRequestType(RequestType.get_actions);
         responseGetActions.setAction(filteredAction.getAction());
-        String sessionid = subscriberSessionStorage.getSessionId(filteredAction.getAccountName());
-        WebSocketSession session = subscriberSessionStorage.getSession(sessionid);
-
-        synchronized (session) {
-            if (session != null && session.isOpen()) session.
-                    sendMessage(new TextMessage(new Gson().toJson(responseGetActions)));
+        for (String sessionId : subscriberSessionStorage.getSessionsId(filteredAction.getAccountName())) {
+            WebSocketSession session = subscriberSessionStorage.getSession(sessionId);
+            synchronized (session) {
+                if (session.isOpen()) session.
+                        sendMessage(new TextMessage(new Gson().toJson(responseGetActions)));
+            }
+            logger.info("Message " + message);
         }
-        logger.info("Message " + message);
     }
 
     private void unsubscribe(WebSocketSession session) {
         String sessionID = session.getId();
-        //
-        if ( true) {
+        if (subscriberSessionStorage.getAccounts(sessionID)!=null){
+            for (String account:subscriberSessionStorage.getAccounts(sessionID)){
+                serviceMessage = new ServiceMessage();
+                serviceMessage.setEvent(Event.unsubscribe);
+                serviceMessage.setRequestType(RequestType.get_actions);
+                Data data = new Data();
+                data.setAccount(account);
+                serviceMessage.setData(data);
+                redisMessagePublisherService.publish(new Gson().toJson(serviceMessage));
 
-//            for (String account : subscriberSessionStorage.getAccounts(sessionID)) {
-//                serviceMessage = new ServiceMessage();
-//                Data data = new Data();
-//                data.setAccount(account);
-//                serviceMessage.setEvent(Event.unsubscribe);
-//                serviceMessage.setRequestType(RequestType.get_actions);
-//                serviceMessage.setData(data);
-//                redisMessagePublisherService.publish(new Gson().toJson(serviceMessage));
-//                logger.info("Account: "+account+" was unsubscribed" );
-//            }
-//
-//            subscriberSessionStorage.removeSessionIdAccounts(sessionID);
-//            subscriberSessionStorage.removeSession(sessionID);
-//            logger.info("SessionId: "+sessionID+" was removed");
+            }
         }
 
+        subscriberSessionStorage.removeSession(sessionID);
     }
 }
