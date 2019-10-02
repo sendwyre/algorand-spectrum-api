@@ -14,14 +14,16 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.ApplicationContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.web.WebAppConfiguration;
 
+import java.util.HashMap;
 import java.util.HashSet;
 
 import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-@WebMvcTest
+@WebAppConfiguration
 public class MessageListenerServiceTest {
 
    @Autowired
@@ -41,34 +43,34 @@ public class MessageListenerServiceTest {
     private String secondAccountActions_1;
     private String secondAccountActions_2;
     private HashSet<String> secondAccountActions;
+    private HashMap<String, HashSet<String>> filterRuleFirstAccount;
 
     @Before
     public void setUp() throws Exception {
-//        messageListenerService.setFilterRulesStorage(filterRulesStorage);
+        messageListenerService.setFilterRulesStorage(filterRulesStorage);
+        filterRuleFirstAccount = new HashMap<>();
 
 //        serviceMessageFirst = new ServiceMessage();
 //        serviceMessageSecond = new ServiceMessage();
 
-//        serviceMessage.setEvent(Event.subscribe);
-//        serviceMessage.setRequestType(RequestType.get_actions);
-//        Data firstAccountData = new Data();
-//        firstAccount = "firstAccount";
-//        firstAccountAction_1 = "firstAccountAction_1";
-//        firstAccountAction_2 = "firstAccountAction_2";
-//        firstAccountActions = new HashSet<>();
-//        firstAccountActions.add(firstAccountAction_1);
-//        firstAccountActions.add(firstAccountAction_2);
-//        firstAccountData.setAccount(firstAccount);
-//        firstAccountData.setActions(firstAccountActions);
-//        serviceMessage.setData(firstAccountData);
+        serviceMessage.setEvent(Event.subscribe);
+        serviceMessage.setRequestType(RequestType.get_actions);
+        Data firstAccountData = new Data();
+        firstAccount = "firstAccount";
+        firstAccountAction_1 = "firstAccountAction_1";
+        firstAccountAction_2 = "firstAccountAction_2";
+        firstAccountActions = new HashSet<>();
+        firstAccountActions.add(firstAccountAction_1);
+        firstAccountActions.add(firstAccountAction_2);
+        firstAccountData.setAccount(firstAccount);
+        firstAccountData.setActions(firstAccountActions);
+        filterRuleFirstAccount.put(firstAccount, firstAccountActions);
+        serviceMessage.setData(firstAccountData);
          }
-
-    @Test
-    public void setFilterRulesStorage() {
-    }
 
     @Test
     public void handleMessage() {
         messageListenerService.handleMessage(new Gson().toJson(serviceMessage));
+        assertEquals(filterRuleFirstAccount, filterRulesStorage.getRules(RequestType.get_actions));
     }
 }
