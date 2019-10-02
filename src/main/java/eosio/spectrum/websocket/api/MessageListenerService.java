@@ -25,7 +25,7 @@ public class MessageListenerService {
     private FilterRulesStorage filterRulesStorage;
 
     @Autowired
-    private void setFilterRulesStorage(FilterRulesStorage filterRulesStorage){
+    public void setFilterRulesStorage(FilterRulesStorage filterRulesStorage){
         this.filterRulesStorage = filterRulesStorage;
     }
 
