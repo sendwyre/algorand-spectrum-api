@@ -69,11 +69,10 @@ public class SocketHandlerFrontend extends TextWebSocketHandler implements WebSo
                             switch (subscriberRequest.getRequestType())
                             {
                                 case get_actions:
-
                                     try {
                                         serviceMessage = new ServiceMessage();
 
-                                        subscriberSessionStorage.addAccount(session.getId(), subscriberRequest.getData().getAccount());
+                                        subscriberSessionStorage.addAccount(session.getId(), subscriberRequest.getData().getAccount(),subscriberRequest.getRequestType());
 
                                         serviceMessage.setEvent(subscriberRequest.getEvent());
                                         serviceMessage.setRequestType(subscriberRequest.getRequestType());
@@ -81,7 +80,6 @@ public class SocketHandlerFrontend extends TextWebSocketHandler implements WebSo
                                         redisMessagePublisherService.publish(new Gson().toJson(serviceMessage));
                                     }catch (NullPointerException npe){
                                         if (session.isOpen()) {
-
                                             String infoMessage = "Unable to proceed request, fill fields according to documentation";
                                             session.sendMessage(new TextMessage(infoMessage));
                                             logger.warn("Request from "+session.getRemoteAddress()+" has unknown format");
@@ -110,7 +108,7 @@ public class SocketHandlerFrontend extends TextWebSocketHandler implements WebSo
                                     serviceMessage.setRequestType(RequestType.get_actions);
                                     serviceMessage.setData(subscriberRequest.getData());
                                     redisMessagePublisherService.publish(new Gson().toJson(serviceMessage));
-                                    subscriberSessionStorage.removeAccount(session.getId(), subscriberRequest.getData().getAccount());
+                                    subscriberSessionStorage.removeAccount(session.getId(), subscriberRequest.getData().getAccount(), subscriberRequest.getRequestType());
 
                                     break;
                                 case get_blocks:
@@ -145,22 +143,6 @@ public class SocketHandlerFrontend extends TextWebSocketHandler implements WebSo
 
     }
 
-    public void handleMessage(String message) throws IOException {
-
-        FilteredAction filteredAction = new Gson().fromJson(message, FilteredAction.class);
-        ResponseGetActions responseGetActions = new ResponseGetActions();
-        responseGetActions.setRequestType(RequestType.get_actions);
-        responseGetActions.setAction(filteredAction.getAction());
-        for (String sessionId : subscriberSessionStorage.getSessionsId(filteredAction.getAccountName())) {
-            WebSocketSession session = subscriberSessionStorage.getSession(sessionId);
-            synchronized (session) {
-                if (session.isOpen()) session.
-                        sendMessage(new TextMessage(new Gson().toJson(responseGetActions)));
-            }
-            logger.info("Message " + message);
-        }
-    }
-
     private void unsubscribe(WebSocketSession session) {
         String sessionID = session.getId();
         if (subscriberSessionStorage.getAccounts(sessionID)!=null){
@@ -172,10 +154,8 @@ public class SocketHandlerFrontend extends TextWebSocketHandler implements WebSo
                 data.setAccount(account);
                 serviceMessage.setData(data);
                 redisMessagePublisherService.publish(new Gson().toJson(serviceMessage));
-
             }
         }
-
         subscriberSessionStorage.removeSession(sessionID);
     }
 }

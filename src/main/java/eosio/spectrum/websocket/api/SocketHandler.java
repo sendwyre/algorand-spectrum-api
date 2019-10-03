@@ -6,6 +6,7 @@ import com.google.gson.GsonBuilder;
 import eosio.spectrum.websocket.api.message.FilteredAction;
 import eosio.spectrum.websocket.api.message.RequestType;
 import eosio.spectrum.websocket.api.message.ServiceMessage;
+import eosio.spectrum.websocket.api.message.chronicle.BLOCK;
 import eosio.spectrum.websocket.api.message.chronicle.TX_TRACE;
 import eosio.spectrum.websocket.api.message.eosio.ActionTraces;
 import eosio.spectrum.websocket.api.message.eosio.Transaction;
@@ -79,6 +80,13 @@ public class SocketHandler extends BinaryWebSocketHandler implements WebSocketHa
                 logger.debug("Message type: " + messageType);
                 break;
             case "BLOCK":
+                try {
+                    BLOCK block = new Gson().fromJson(stringMessage, BLOCK.class);
+                }catch (Exception exception){
+                    logger.info(stringMessage);
+                    logger.warn(exception.toString());
+                }
+
                 logger.debug("Message type: " + messageType);
                 break;
             case "TX_TRACE":

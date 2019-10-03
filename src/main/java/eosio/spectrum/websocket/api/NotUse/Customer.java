@@ -1,4 +1,4 @@
-package eosio.spectrum.websocket.api;
+package eosio.spectrum.websocket.api.NotUse;
 
 import eosio.spectrum.websocket.api.message.SubscriberRequest;
 import org.springframework.web.socket.WebSocketSession;

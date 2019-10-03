@@ -1,6 +1,7 @@
 package eosio.spectrum.websocket.api;
 
 import com.google.gson.Gson;
+import eosio.spectrum.websocket.api.RedisTopicListeners.MessageListenerService;
 import eosio.spectrum.websocket.api.message.Data;
 import eosio.spectrum.websocket.api.message.Event;
 import eosio.spectrum.websocket.api.message.RequestType;
@@ -9,10 +10,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.ApplicationContext;
-import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
@@ -27,7 +25,7 @@ import static org.junit.Assert.*;
 public class MessageListenerServiceTest {
 
    @Autowired
-    MessageListenerService messageListenerService;
+   MessageListenerService messageListenerService;
     @Autowired
     FilterRulesStorage filterRulesStorage;
 

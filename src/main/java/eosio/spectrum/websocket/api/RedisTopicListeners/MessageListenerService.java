@@ -1,20 +1,14 @@
-package eosio.spectrum.websocket.api;
+package eosio.spectrum.websocket.api.RedisTopicListeners;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import eosio.spectrum.websocket.api.SessionStorage.SubscriberSessionStorage;
-import eosio.spectrum.websocket.api.message.FilteredAction;
+import eosio.spectrum.websocket.api.FilterRulesStorage;
 import eosio.spectrum.websocket.api.message.RequestType;
-import eosio.spectrum.websocket.api.message.ResponseGetActions;
 import eosio.spectrum.websocket.api.message.ServiceMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.web.socket.TextMessage;
-import org.springframework.web.socket.WebSocketSession;
-
-import java.io.IOException;
 
 
 @Component

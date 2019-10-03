@@ -1,4 +1,4 @@
-package eosio.spectrum.websocket.api;
+package eosio.spectrum.websocket.api.RedisTopicListeners;
 
 import com.google.gson.Gson;
 import eosio.spectrum.websocket.api.SessionStorage.SubscriberSessionStorage;
@@ -32,7 +32,7 @@ public class MessageListenerActions {
         ResponseGetActions responseGetActions = new ResponseGetActions();
         responseGetActions.setRequestType(RequestType.get_actions);
         responseGetActions.setAction(filteredAction.getAction());
-        for (String sessionId : subscriberSessionStorage.getSessionsId(filteredAction.getAccountName())) {
+        for (String sessionId : subscriberSessionStorage.getSessionsId(filteredAction.getAccountName(),RequestType.get_actions)) {
             WebSocketSession session = subscriberSessionStorage.getSession(sessionId);
             synchronized (session) {
                 if (session.isOpen()) try {
@@ -46,6 +46,5 @@ public class MessageListenerActions {
             }
             logger.info("Message " + message);
         }
-        logger.info(message);
     }
 }
