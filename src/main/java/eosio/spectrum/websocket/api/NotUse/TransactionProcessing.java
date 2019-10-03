@@ -1,4 +1,4 @@
-package eosio.spectrum.websocket.api;
+package eosio.spectrum.websocket.api.NotUse;
 
 import org.json.JSONArray;
 import org.json.JSONException;

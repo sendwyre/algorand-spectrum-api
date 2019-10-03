@@ -73,53 +73,42 @@ public class Transaction {
             }catch (NullPointerException npe){
                 actAuthorizationActor = null;
                 logger.debug(new Gson().toJson(action));
-
             }catch (IndexOutOfBoundsException except){
                 actAuthorizationActor = null;
                 logger.debug(new Gson().toJson(action));
             }
-
             try {
                 receiptReceiver = action.getReceipt().getReceiver();
             }catch (NullPointerException npe){
                 receiptReceiver = null;
                 logger.warn(new Gson().toJson(action));
-
             }
 
             if (filters.containsKey(actAuthorizationActor)){
-                if (filters.get(actAuthorizationActor).
-                        contains(action.getAct().getName())
-                         ||
-                        (filters.get(actAuthorizationActor.
-                                contains(action.getAct().getName()))== null)
+                    HashSet<String> actions = filters.get(actAuthorizationActor);
+                    if (actions == null || actions.contains(action.getAct().getName()))
+                    {
+                        action.setBlock_num(this.getBlock_num());
+                        action.setTrxId(this.getTrace().getId());
+                        action.setBlock_timestamp(this.getBlock_timestamp());
+                        FilteredAction filteredAction = new FilteredAction(actAuthorizationActor,action);
+                        filteredActions.add(filteredAction);
+                    }
+            }
+
+            if (filters.containsKey(receiptReceiver)){
+                HashSet<String> actions = filters.get(receiptReceiver);
+                if (actions == null ||
+                        actions.contains(action.getAct().getName())
                         ){
                     action.setBlock_num(this.getBlock_num());
                     action.setTrxId(this.getTrace().getId());
                     action.setBlock_timestamp(this.getBlock_timestamp());
-
-                    FilteredAction filteredAction = new FilteredAction(actAuthorizationActor,action);
-                    filteredActions.add(filteredAction);
-                }
-
-            }
-
-            if (filters.containsKey(receiptReceiver)){
-                if (filters.get(receiptReceiver).
-                        contains(action.getAct().getName())
-                        ||
-                        (filters.get(receiptReceiver.contains(action.
-                                getAct().getName()))== null)
-                        ){
                     FilteredAction filteredAction = new FilteredAction(receiptReceiver,action);
                     filteredActions.add(filteredAction);
                 }
-
             }
-
-
         }
         return filteredActions;
     }
-
 }
