@@ -53,35 +53,26 @@ public class SocketHandlerFrontend extends TextWebSocketHandler implements WebSo
         try {
             subscriberRequest = new Gson().fromJson(message.getPayload(), SubscriberRequest.class);
 
-            if (subscriberRequest.getRequestType() == null | subscriberRequest.getEvent() == null)
-            {
+            if (subscriberRequest.getRequestType() == null | subscriberRequest.getEvent() == null) {
                 String infoMessage = "Unable to proceed request, fill fields according to documentation";
                 session.sendMessage(new TextMessage(infoMessage));
                 logger.warn("Request from "+session.getRemoteAddress()+" has unknown format");
                 logger.warn("message body : "+message.getPayload());
                 session.close();
-
-            }else
-                {
-                    switch (subscriberRequest.getEvent())
-                    {
+            } else {
+                    switch (subscriberRequest.getEvent()) {
                         case subscribe:
-                            switch (subscriberRequest.getRequestType())
-                            {
+                            switch (subscriberRequest.getRequestType()) {
                                 case get_actions:
-
                                     try {
                                         serviceMessage = new ServiceMessage();
-
                                         subscriberSessionStorage.addAccount(session.getId(), subscriberRequest.getData().getAccount());
-
                                         serviceMessage.setEvent(subscriberRequest.getEvent());
                                         serviceMessage.setRequestType(subscriberRequest.getRequestType());
                                         serviceMessage.setData(subscriberRequest.getData());
                                         redisMessagePublisherService.publish(new Gson().toJson(serviceMessage));
-                                    }catch (NullPointerException npe){
+                                    } catch (NullPointerException npe) {
                                         if (session.isOpen()) {
-
                                             String infoMessage = "Unable to proceed request, fill fields according to documentation";
                                             session.sendMessage(new TextMessage(infoMessage));
                                             logger.warn("Request from "+session.getRemoteAddress()+" has unknown format");
@@ -89,7 +80,6 @@ public class SocketHandlerFrontend extends TextWebSocketHandler implements WebSo
                                             session.close();
                                         }
                                     }
-
                                     break;
                                 case get_transaction:
                                     break;
@@ -120,33 +110,30 @@ public class SocketHandlerFrontend extends TextWebSocketHandler implements WebSo
                                 case get_table_deltas:
                                     break;
                             }
-                    break;
-                default:
-                    String infoMessage = "Value of event field is unknown";
-                    session.sendMessage(new TextMessage(infoMessage));
-                    logger.warn("Request from "+session.getRemoteAddress()+" has unknown format");
-                    session.close();
-                  }
+                        break;
+                        default:
+                            String infoMessage = "Value of event field is unknown";
+                            session.sendMessage(new TextMessage(infoMessage));
+                            logger.warn("Request from "+session.getRemoteAddress()+" has unknown format");
+                            session.close();
+                    }
             }
         }
-        catch (JsonIOException|JsonSyntaxException e){
+        catch (JsonIOException|JsonSyntaxException e) {
             String infoMessage = "Unknown type of request";
             session.sendMessage(new TextMessage(infoMessage));
             logger.warn("Request from "+session.getRemoteAddress()+" has unknown format");
             logger.warn(e.toString());
             session.close();
         }
-        }
+    }
 
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
         unsubscribe(session);
-
-
     }
 
     public void handleMessage(String message) throws IOException {
-
         FilteredAction filteredAction = new Gson().fromJson(message, FilteredAction.class);
         ResponseGetActions responseGetActions = new ResponseGetActions();
         responseGetActions.setRequestType(RequestType.get_actions);
@@ -172,10 +159,8 @@ public class SocketHandlerFrontend extends TextWebSocketHandler implements WebSo
                 data.setAccount(account);
                 serviceMessage.setData(data);
                 redisMessagePublisherService.publish(new Gson().toJson(serviceMessage));
-
             }
         }
-
         subscriberSessionStorage.removeSession(sessionID);
     }
 }

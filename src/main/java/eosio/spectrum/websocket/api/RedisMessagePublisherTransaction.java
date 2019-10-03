@@ -12,14 +12,12 @@ public class RedisMessagePublisherTransaction implements MessagePublisher {
     private final StringRedisTemplate stringRedisTemplate;
     private final ChannelTopic topicTransaction;
 
-
     @Autowired
     public RedisMessagePublisherTransaction(StringRedisTemplate stringRedisTemplate,
                                             ChannelTopic topicTransaction) {
         this.stringRedisTemplate = stringRedisTemplate;
         this.topicTransaction = topicTransaction;
     }
-
 
     @Override
     public void publish(String message) {

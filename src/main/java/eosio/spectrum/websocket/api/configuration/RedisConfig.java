@@ -39,7 +39,6 @@ public class RedisConfig implements ApplicationContextAware {
         redisStandaloneConfiguration.setHostName(redisHostname);
         redisStandaloneConfiguration.setPort(6379);
         JedisConnectionFactory jedisConnectionFactory = new JedisConnectionFactory(redisStandaloneConfiguration);
-
         return jedisConnectionFactory;
     }
 

@@ -11,7 +11,7 @@ public class TrxProcessing {
     public void getActions(){
         List<ActionTraces> actionTraces = this.transaction.getTrace().getAction_traces();
         for (ActionTraces action: actionTraces){
-
+            //TODO: implement action processing
         }
 
     }

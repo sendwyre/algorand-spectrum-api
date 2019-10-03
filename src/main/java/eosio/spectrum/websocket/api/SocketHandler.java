@@ -2,12 +2,9 @@ package eosio.spectrum.websocket.api;
 
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import eosio.spectrum.websocket.api.message.FilteredAction;
 import eosio.spectrum.websocket.api.message.RequestType;
-import eosio.spectrum.websocket.api.message.ServiceMessage;
 import eosio.spectrum.websocket.api.message.chronicle.TX_TRACE;
-import eosio.spectrum.websocket.api.message.eosio.ActionTraces;
 import eosio.spectrum.websocket.api.message.eosio.Transaction;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -24,10 +21,6 @@ import org.springframework.web.socket.handler.BinaryWebSocketHandler;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 
 
@@ -48,7 +41,7 @@ public class SocketHandler extends BinaryWebSocketHandler implements WebSocketHa
     }
     @Autowired
     private void setFilterRulesStorage(FilterRulesStorage filterRulesStorage){
-        this.filterRulesStorage =filterRulesStorage;
+        this.filterRulesStorage = filterRulesStorage;
     }
 
     @Autowired
@@ -93,8 +86,6 @@ public class SocketHandler extends BinaryWebSocketHandler implements WebSocketHa
                                     new Gson().toJson(filteredAction));
                         }
                     }
-
-
 
 
                 break;

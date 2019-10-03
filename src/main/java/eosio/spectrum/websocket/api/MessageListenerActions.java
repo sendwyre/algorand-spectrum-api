@@ -36,10 +36,8 @@ public class MessageListenerActions {
             WebSocketSession session = subscriberSessionStorage.getSession(sessionId);
             synchronized (session) {
                 if (session.isOpen()) try {
-                    session.
-
-                            sendMessage(new TextMessage(new Gson().toJson(responseGetActions)));
-                }catch (IOException exception){
+                    session.sendMessage(new TextMessage(new Gson().toJson(responseGetActions)));
+                } catch (IOException exception){
                     logger.error(session.getRemoteAddress().toString());
                     logger.error(exception.toString());
                 }

@@ -1,4 +1,5 @@
 package eosio.spectrum.websocket.api.SessionStorage;
+
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.WebSocketSession;
 
@@ -21,7 +22,7 @@ public class SubscriberSessionStorage {
 
     public void removeSession(String sessionId) {
         sessions.remove(sessionId);
-        for (String account:sessionIdAccounts.getAccounts(sessionId)) {
+        for (String account : sessionIdAccounts.getAccounts(sessionId)) {
             accountSessionIds.removeSessionId(account, sessionId);
         }
         sessionIdAccounts.removeSession(sessionId);

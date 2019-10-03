@@ -5,6 +5,7 @@ import org.springframework.web.socket.WebSocketSession;
 import java.util.List;
 
 public class Customer{
+
     private WebSocketSession webSocketSession;
     private String websocketSessionId;
     private List<SubscriberRequest> subscriberRequests;

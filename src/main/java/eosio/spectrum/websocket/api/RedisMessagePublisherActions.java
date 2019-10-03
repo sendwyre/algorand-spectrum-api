@@ -11,12 +11,14 @@ public class RedisMessagePublisherActions implements MessagePublisher {
 
     private final StringRedisTemplate stringRedisTemplate;
     private final ChannelTopic topicActions;
+
     @Autowired
     public RedisMessagePublisherActions(StringRedisTemplate stringRedisTemplate,
                                         ChannelTopic topicActions) {
         this.stringRedisTemplate = stringRedisTemplate;
         this.topicActions = topicActions;
     }
+
     @Override
     public void publish(String message) {
         stringRedisTemplate.convertAndSend(topicActions.getTopic(), message);
