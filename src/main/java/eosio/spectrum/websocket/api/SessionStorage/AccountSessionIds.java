@@ -1,6 +1,5 @@
 package eosio.spectrum.websocket.api.SessionStorage;
 
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -8,13 +7,13 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-  public class  AccountSessionIds {
+/**
+ * This class describe relations one to many because of several subscribers can listen the same account
+ */
+public class  AccountSessionIds {
 
     private static final transient Logger logger = LoggerFactory.getLogger(AccountSessionIds.class);
-/*
- This class describe relations one to many because of several subscribers can listen the same account
 
- */
     private Map<String, HashSet<String>> records;
 
     public AccountSessionIds(){
@@ -23,11 +22,10 @@ import java.util.concurrent.ConcurrentHashMap;
 
     public  void addSession(String account, String sessionId){
         if (this.records.containsKey(account)){
-            HashSet sessions = this.records.get(account);
+            HashSet<String> sessions = this.records.get(account);
             sessions.add(sessionId);
             records.replace(account,sessions);
-
-        }else {
+        } else {
             HashSet<String> sessions = new HashSet<>();
             sessions.add(sessionId);
             records.put(account,sessions);
@@ -39,8 +37,8 @@ import java.util.concurrent.ConcurrentHashMap;
     }
 
     public  void removeSessionId(String account, String sessionId){
-        HashSet sessions = records.get(account);
-        if (sessions.contains(sessionId)) sessions.remove(sessionId);
+        HashSet<String> sessions = records.get(account);
+        sessions.remove(sessionId);
         records.replace(account,sessions);
     }
 

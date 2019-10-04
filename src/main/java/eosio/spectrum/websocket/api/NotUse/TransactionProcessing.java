@@ -78,12 +78,12 @@ public class TransactionProcessing {
                         }
                     }
                 } catch (JSONException exception) {
-                logger.warn("Can't get JSON array: "+jsonAction.toString());
+                    logger.warn("Can't get JSON array: "+jsonAction.toString());
                 }
             } else {
                 logger.warn("Can't decode action: " + action.toString());
             }
-          }
+        }
         return actions;
     }
 

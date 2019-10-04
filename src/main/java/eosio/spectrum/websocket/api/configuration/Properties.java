@@ -9,11 +9,13 @@ import org.springframework.stereotype.Component;
 @PropertySource("classpath:global.properties")
 @ConfigurationProperties
 public class Properties {
+
     @Value("${CHRONICLE_WEBSOCKET_PATH}")
     private String socketPath;
 
     @Value("${CUSTOMER_WEBSOCKET_PATH}")
     private String socketPathFrontend;
+
     @Value("${REDIS_HOSTNAME}")
     private String redisHostname;
 
