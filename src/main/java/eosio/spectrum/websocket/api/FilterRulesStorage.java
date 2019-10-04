@@ -6,6 +6,8 @@ import org.springframework.stereotype.Component;
 import java.util.HashMap;
 import java.util.HashSet;
 
+import static eosio.spectrum.websocket.api.message.RequestType.get_actions;
+
 @Component
 public class FilterRulesStorage {
 
@@ -47,10 +49,14 @@ public class FilterRulesStorage {
             case get_actions:
                 if (filtersGetActions.containsKey(account)) {
                     HashSet<String> actionsName = filtersGetActions.get(account);
-                    for (String actionName : actions) {
-                        actionsName.remove(actionName);
+                    if (actionsName != null){
+                        for (String actionName : actions) {
+                            actionsName.remove(actionName);
+                        }
+                        filtersGetActions.replace(account, actionsName);
+                    }else {
+                        filtersGetActions.remove(account);
                     }
-                    filtersGetActions.replace(account, actionsName);
                 }
                 break;
         }

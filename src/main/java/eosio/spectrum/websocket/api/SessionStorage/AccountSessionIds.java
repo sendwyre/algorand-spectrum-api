@@ -38,8 +38,10 @@ public class  AccountSessionIds {
 
     public  void removeSessionId(String account, String sessionId){
         HashSet<String> sessions = records.get(account);
-        sessions.remove(sessionId);
-        records.replace(account,sessions);
+        if (sessions != null){
+            sessions.remove(sessionId);
+            records.replace(account,sessions);
+        }
     }
 
     public  void removeAccount(String account){

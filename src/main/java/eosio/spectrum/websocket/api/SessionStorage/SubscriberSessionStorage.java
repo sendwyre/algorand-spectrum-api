@@ -1,5 +1,8 @@
 package eosio.spectrum.websocket.api.SessionStorage;
+import eosio.spectrum.websocket.api.SocketHandler;
 import eosio.spectrum.websocket.api.message.RequestType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.WebSocketSession;
 
@@ -12,6 +15,8 @@ import java.util.concurrent.ConcurrentHashMap;
 
 @Component
 public class SubscriberSessionStorage {
+
+    private static final transient Logger logger = LoggerFactory.getLogger(SubscriberSessionStorage.class);
 
 
     private Map<String, WebSocketSession> sessions;
@@ -55,10 +60,13 @@ public class SubscriberSessionStorage {
     public void removeSession(String sessionId) {
         sessions.remove(sessionId);
         for (SessionIdAccounts sessionIdAccounts:sessionIdAccountsList) {
-            for (String account : sessionIdAccounts.getAccounts(sessionId)) {
-                for (AccountSessionIds accountSessionIds:accountSessionIdsList) {
-                    accountSessionIds.removeSessionId(account, sessionId);
-                }
+            try {
+                for (String account : sessionIdAccounts.getAccounts(sessionId)) {
+                    for (AccountSessionIds accountSessionIds:accountSessionIdsList) {
+                        accountSessionIds.removeSessionId(account, sessionId);
+                    }
+            }}catch (NullPointerException npe){
+                logger.error("Npe");
             }
             sessionIdAccounts.removeSession(sessionId);
             sessions.remove(sessionId);
@@ -118,12 +126,15 @@ public class SubscriberSessionStorage {
 
     public HashSet<String> getAccounts(String sessionId){
         HashSet<String> result = new HashSet<>();
-        for (SessionIdAccounts sessionIdAccounts:sessionIdAccountsList){
-            for (String account:sessionIdAccounts.getAccounts(sessionId)){
-                if (account != null)
-                result.add(account);
+        try {
+            for (SessionIdAccounts sessionIdAccounts:sessionIdAccountsList){
+                for (String account:sessionIdAccounts.getAccounts(sessionId)){
+                    if (account != null) result.add(account);
+                }
             }
-        }
+        }catch (NullPointerException npe){
+            logger.error(npe.toString());
+    }
 
         return result;
     }
