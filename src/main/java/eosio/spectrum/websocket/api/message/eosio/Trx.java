@@ -3,16 +3,16 @@ package eosio.spectrum.websocket.api.message.eosio;
 import java.util.List;
 
 public class Trx {
-    private List<Object> signatures;
+    private String signatures;
     private String compression;
     private String packed_context_free_data;
     private String packed_trx;
 
-    public List<Object> getSignatures() {
+    public String getSignatures() {
         return signatures;
     }
 
-    public void setSignatures(List<Object> signatures) {
+    public void setSignatures(String signatures) {
         this.signatures = signatures;
     }
 

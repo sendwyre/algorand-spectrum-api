@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName;
 import java.util.List;
 
 public class Block {
-    private List<String> header_extensions;
+    private List<Header_extensions> header_extensions;
     private String new_producesrs;
     private String previous;
     private List<String> block_extensions;
@@ -14,16 +14,16 @@ public class Block {
     private String transaction_mroot;
     private String producer_signature;
     @SerializedName("transactions")
-    private List<BlockTransaction> transactions;
+    private List<Transactions> transactions;
     private int confirmed;
     private String action_mroot;
     private String timestamp;
 
-    public List<String> getHeader_extensions() {
+    public List<Header_extensions> getHeader_extensions() {
         return header_extensions;
     }
 
-    public void setHeader_extensions(List<String> header_extensions) {
+    public void setHeader_extensions(List<Header_extensions> header_extensions) {
         this.header_extensions = header_extensions;
     }
 
@@ -83,11 +83,11 @@ public class Block {
         this.producer_signature = producer_signature;
     }
 
-    public List<BlockTransaction> getTransactions() {
+    public List<Transactions> getTransactions() {
         return transactions;
     }
 
-    public void setTransactions(List<BlockTransaction> transactions) {
+    public void setTransactions(List<Transactions> transactions) {
         this.transactions = transactions;
     }
 

@@ -5,10 +5,9 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import eosio.spectrum.websocket.api.message.FilteredAction;
 import eosio.spectrum.websocket.api.message.RequestType;
-import eosio.spectrum.websocket.api.message.ServiceMessage;
 import eosio.spectrum.websocket.api.message.chronicle.BLOCK;
 import eosio.spectrum.websocket.api.message.chronicle.TX_TRACE;
-import eosio.spectrum.websocket.api.message.eosio.ActionTraces;
+import eosio.spectrum.websocket.api.message.eosio.Transactions;
 import eosio.spectrum.websocket.api.message.eosio.Transaction;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -25,10 +24,6 @@ import org.springframework.web.socket.handler.BinaryWebSocketHandler;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 
 
@@ -81,7 +76,9 @@ public class SocketHandler extends BinaryWebSocketHandler implements WebSocketHa
                 break;
             case "BLOCK":
                 try {
-                    BLOCK block = new Gson().fromJson(stringMessage, BLOCK.class);
+                    Gson gson = new GsonBuilder().
+                            registerTypeAdapter(Transactions.class, new TransactionsDeserializer()).create();
+                    BLOCK block = gson.fromJson(stringMessage, BLOCK.class);
                 }catch (Exception exception){
                     logger.info(stringMessage);
                     logger.warn(exception.toString());
