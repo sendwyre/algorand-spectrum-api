@@ -42,6 +42,7 @@ public class SubscriberSessionStorage {
         sessionIdAccountsGetBlocks = new SessionIdAccounts();
         accountSessionIdsGetTblDeltas = new AccountSessionIds();
         sessionIdAccountsGetTblDeltas = new SessionIdAccounts();
+
         sessionIdAccountsList = new ArrayList<>();
         sessionIdAccountsList.add(sessionIdAccountsGetActions);
         sessionIdAccountsList.add(sessionIdAccountsGetBlocks);
@@ -66,17 +67,13 @@ public class SubscriberSessionStorage {
                         accountSessionIds.removeSessionId(account, sessionId);
                     }
             }}catch (NullPointerException npe){
-                logger.error("Npe");
+
             }
             sessionIdAccounts.removeSession(sessionId);
             sessions.remove(sessionId);
         }
     }
 
-//    public void addAccount(String sessionId, String account) {
-//        this.sessionIdAccounts.addAccount(sessionId,account);
-//        this.accountSessionIds.addSession(account,sessionId);
-//    }
     public void addAccount(String sessionId, String account, RequestType requestType) {
         switch (requestType){
             case get_actions:
@@ -99,10 +96,6 @@ public class SubscriberSessionStorage {
 
     }
 
-//    public void removeAccount(String sessionId, String account) {
-//        this.accountSessionIds.removeAccount(account);
-//        this.sessionIdAccounts.removeAccount(sessionId,account);
-//    }
     public void removeAccount(String sessionId, String account, RequestType requestType) {
         switch (requestType){
             case get_table_deltas:
@@ -158,11 +151,6 @@ public class SubscriberSessionStorage {
         return result;
     }
 
-
-//    public HashSet<String> getSessionsId(String account) {
-//        return this.accountSessionIds.getSessionIds(account);
-//    }
-
     public HashSet<String> getSessionsId(String account, RequestType requestType) {
         HashSet<String> result = new HashSet<>();
         switch (requestType){
@@ -180,6 +168,15 @@ public class SubscriberSessionStorage {
                 break;
         }
         return result;
+    }
+
+    public HashSet<String> getSessionsId(RequestType requestType){
+        HashSet<String> result = new HashSet<>();
+        switch (requestType){
+            case get_blocks:
+                result = sessionIdAccountsGetBlocks.getSessions();
+        }
+                return result;
     }
 
     public WebSocketSession getSession(String sessionId) {

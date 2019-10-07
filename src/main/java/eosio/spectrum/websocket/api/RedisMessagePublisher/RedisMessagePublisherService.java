@@ -1,5 +1,6 @@
-package eosio.spectrum.websocket.api;
+package eosio.spectrum.websocket.api.RedisMessagePublisher;
 
+import eosio.spectrum.websocket.api.MessagePublisher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.listener.ChannelTopic;

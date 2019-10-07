@@ -1,6 +1,7 @@
 package eosio.spectrum.websocket.api;
 
 import com.google.gson.*;
+import eosio.spectrum.websocket.api.RedisMessagePublisher.RedisMessagePublisherService;
 import eosio.spectrum.websocket.api.SessionStorage.SubscriberSessionStorage;
 import eosio.spectrum.websocket.api.message.*;
 import org.slf4j.Logger;
@@ -13,8 +14,6 @@ import org.springframework.web.socket.WebSocketHandler;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.config.annotation.EnableWebSocket;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
-
-import java.io.IOException;
 
 @Component
 @EnableWebSocket
@@ -29,7 +28,6 @@ public class SocketHandlerFrontend extends TextWebSocketHandler implements WebSo
     private RedisMessagePublisherService redisMessagePublisherService;
 
     private SubscriberRequest subscriberRequest;
-
 
     @Autowired
     public void setRedisMessagePublisherService(RedisMessagePublisherService redisMessagePublisherService) {
@@ -71,9 +69,7 @@ public class SocketHandlerFrontend extends TextWebSocketHandler implements WebSo
                                 case get_actions:
                                     try {
                                         serviceMessage = new ServiceMessage();
-
                                         subscriberSessionStorage.addAccount(session.getId(), subscriberRequest.getData().getAccount(),subscriberRequest.getRequestType());
-
                                         serviceMessage.setEvent(subscriberRequest.getEvent());
                                         serviceMessage.setRequestType(subscriberRequest.getRequestType());
                                         serviceMessage.setData(subscriberRequest.getData());
@@ -94,6 +90,14 @@ public class SocketHandlerFrontend extends TextWebSocketHandler implements WebSo
                                 case get_table_deltas:
                                     break;
                                 case get_blocks:
+                                    serviceMessage = new ServiceMessage();
+                                    subscriberSessionStorage.addAccount(session.getId(), session.getId()+"random", subscriberRequest.getRequestType());
+                                    serviceMessage.setRequestType(RequestType.get_blocks);
+                                    serviceMessage.setEvent(Event.subscribe);
+                                    Data data = new Data();
+                                    data.setAccount(session.getId());
+                                    serviceMessage.setData(data);
+                                    redisMessagePublisherService.publish(new Gson().toJson(serviceMessage));
                                     break;
                                 case ping:
                                     break;
@@ -102,16 +106,15 @@ public class SocketHandlerFrontend extends TextWebSocketHandler implements WebSo
                         case unsubscribe:
                             switch (subscriberRequest.getRequestType()){
                                 case get_actions:
-
                                     serviceMessage = new ServiceMessage();
                                     serviceMessage.setEvent(Event.unsubscribe);
                                     serviceMessage.setRequestType(RequestType.get_actions);
                                     serviceMessage.setData(subscriberRequest.getData());
                                     redisMessagePublisherService.publish(new Gson().toJson(serviceMessage));
                                     subscriberSessionStorage.removeAccount(session.getId(), subscriberRequest.getData().getAccount(), subscriberRequest.getRequestType());
-
                                     break;
                                 case get_blocks:
+                                    subscriberSessionStorage.removeSession(session.getId());
                                     break;
                                 case get_transaction:
                                     break;
@@ -134,16 +137,10 @@ public class SocketHandlerFrontend extends TextWebSocketHandler implements WebSo
             logger.warn(e.toString());
             session.close();
         }
-        }
+    }
 
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
-        unsubscribe(session);
-
-
-    }
-
-    private void unsubscribe(WebSocketSession session) {
         String sessionID = session.getId();
         if (subscriberSessionStorage.getAccounts(sessionID)!=null){
             for (String account:subscriberSessionStorage.getAccounts(sessionID)){

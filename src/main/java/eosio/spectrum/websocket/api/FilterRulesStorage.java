@@ -13,6 +13,8 @@ public class FilterRulesStorage {
 
     private HashMap<String,HashSet<String>> filtersGetActions = new HashMap<>();
     private HashMap<String,HashSet<String>> filtersGetTransaction = new HashMap<>();
+    private HashMap<String,HashSet<String>> filtersGetBlocks = new HashMap<>();
+
 
 
     public void addRule(String account, HashSet<String> actions, RequestType requestType){
@@ -22,6 +24,7 @@ public class FilterRulesStorage {
             case get_transaction:
                 break;
             case get_blocks:
+                filtersGetBlocks.put(account,actions);
                 break;
             case get_actions:
                 if (filtersGetActions.containsKey(account)){
@@ -70,6 +73,7 @@ public class FilterRulesStorage {
             case get_transaction:
                 break;
             case get_blocks:
+                filtersGetBlocks.remove(account);
                 break;
             case get_actions:
                 filtersGetActions.remove(account);
@@ -77,14 +81,14 @@ public class FilterRulesStorage {
         }
     }
 
-        public HashMap<String, HashSet<String>> getRules(RequestType type){
+    public HashMap<String, HashSet<String>> getRules(RequestType type){
         HashMap result;
         switch (type){
             case get_actions:
                 result= filtersGetActions;
                 break;
             case get_blocks:
-                result = null;
+                result = filtersGetBlocks;
                 break;
             case get_transaction:
                 result = null;

@@ -3,6 +3,9 @@ package eosio.spectrum.websocket.api;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import eosio.spectrum.websocket.api.RedisMessagePublisher.RedisMessagePublisherActions;
+import eosio.spectrum.websocket.api.RedisMessagePublisher.RedisMessagePublisherBlocks;
+import eosio.spectrum.websocket.api.RedisMessagePublisher.RedisMessagePublisherTransaction;
 import eosio.spectrum.websocket.api.message.FilteredAction;
 import eosio.spectrum.websocket.api.message.RequestType;
 import eosio.spectrum.websocket.api.message.chronicle.BLOCK;
@@ -36,19 +39,23 @@ public class SocketHandler extends BinaryWebSocketHandler implements WebSocketHa
     private FilterRulesStorage filterRulesStorage;
     private RedisMessagePublisherActions redisMessagePublisherActions;
     private RedisMessagePublisherTransaction redisMessagePublisherTransaction;
+    private RedisMessagePublisherBlocks redisMessagePublisherBlocks;
 
-
+@Autowired
+public void setRedisMessagePublisherBlocks(RedisMessagePublisherBlocks redisMessagePublisherBlocks){
+    this.redisMessagePublisherBlocks = redisMessagePublisherBlocks;
+}
     @Autowired
-    private void setRedisMessagePublisherTransaction(RedisMessagePublisherTransaction redisMessagePublisherTransaction){
+    public void setRedisMessagePublisherTransaction(RedisMessagePublisherTransaction redisMessagePublisherTransaction){
         this.redisMessagePublisherTransaction = redisMessagePublisherTransaction;
     }
     @Autowired
-    private void setFilterRulesStorage(FilterRulesStorage filterRulesStorage){
+    public void setFilterRulesStorage(FilterRulesStorage filterRulesStorage){
         this.filterRulesStorage =filterRulesStorage;
     }
 
     @Autowired
-    private void setRedisMessagePublisherActions(RedisMessagePublisherActions redisMessagePublisherActions) {
+    public void setRedisMessagePublisherActions(RedisMessagePublisherActions redisMessagePublisherActions) {
         this.redisMessagePublisherActions = redisMessagePublisherActions;
     }
 
@@ -79,6 +86,10 @@ public class SocketHandler extends BinaryWebSocketHandler implements WebSocketHa
                     Gson gson = new GsonBuilder().
                             registerTypeAdapter(Transactions.class, new TransactionsDeserializer()).create();
                     BLOCK block = gson.fromJson(stringMessage, BLOCK.class);
+                    if(!filterRulesStorage.getRules(RequestType.get_blocks).isEmpty()){
+                        redisMessagePublisherBlocks.publish(new Gson().toJson(block.getBlockData()));
+
+                    }
                 }catch (Exception exception){
                     logger.info(stringMessage);
                     logger.warn(exception.toString());

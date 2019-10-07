@@ -43,4 +43,7 @@ public class  SessionIdAccounts {
     public boolean containsSessionId(String sessionId){
         return this.records.containsKey(sessionId);
     }
+    public HashSet<String> getSessions(){
+        return (HashSet<String>) this.records.keySet();
+    }
 }

@@ -75,7 +75,6 @@ public class RedisConfig implements ApplicationContextAware {
         container.addMessageListener(messageListenerActionsHandler(), topicActions());
         container.addMessageListener(messageListenerTransactionHandler(), topicTransaction());
         container.addMessageListener(messageListenerBlocksHandler(), topicBlocks());
-
         return container;
     }
 
