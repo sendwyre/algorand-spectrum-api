@@ -63,6 +63,7 @@ public class Transaction {
         }
         return actionTraces;
     }
+
     public List<FilteredAction> getActionsFiltered(HashMap<String,HashSet<String>> filters){
         List<FilteredAction> filteredActions= new ArrayList<>();
         String actAuthorizationActor;

@@ -18,6 +18,26 @@ public class Block {
     private int confirmed;
     private String action_mroot;
     private String timestamp;
+    private int block_num;
+
+    public int getBlock_num() {
+        return block_num;
+    }
+
+    public void setBlock_num(int block_num) {
+        this.block_num = block_num;
+    }
+
+    public int getLas_irreversible() {
+        return las_irreversible;
+    }
+
+    public void setLas_irreversible(int las_irreversible) {
+        this.las_irreversible = las_irreversible;
+    }
+
+    private int las_irreversible;
+
 
     public List<Header_extensions> getHeader_extensions() {
         return header_extensions;

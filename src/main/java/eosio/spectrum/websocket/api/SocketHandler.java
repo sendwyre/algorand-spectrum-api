@@ -7,9 +7,11 @@ import eosio.spectrum.websocket.api.RedisMessagePublisher.RedisMessagePublisherA
 import eosio.spectrum.websocket.api.RedisMessagePublisher.RedisMessagePublisherBlocks;
 import eosio.spectrum.websocket.api.RedisMessagePublisher.RedisMessagePublisherTransaction;
 import eosio.spectrum.websocket.api.message.FilteredAction;
+import eosio.spectrum.websocket.api.message.FilteredBlock;
 import eosio.spectrum.websocket.api.message.RequestType;
 import eosio.spectrum.websocket.api.message.chronicle.BLOCK;
 import eosio.spectrum.websocket.api.message.chronicle.TX_TRACE;
+import eosio.spectrum.websocket.api.message.eosio.Block;
 import eosio.spectrum.websocket.api.message.eosio.Transactions;
 import eosio.spectrum.websocket.api.message.eosio.Transaction;
 import org.json.JSONException;
@@ -83,11 +85,16 @@ public void setRedisMessagePublisherBlocks(RedisMessagePublisherBlocks redisMess
                 break;
             case "BLOCK":
                 try {
-                    Gson gson = new GsonBuilder().
-                            registerTypeAdapter(Transactions.class, new TransactionsDeserializer()).create();
-                    BLOCK block = gson.fromJson(stringMessage, BLOCK.class);
                     if(!filterRulesStorage.getRules(RequestType.get_blocks).isEmpty()){
-                        redisMessagePublisherBlocks.publish(new Gson().toJson(block.getBlockData()));
+                        Gson gson = new GsonBuilder().
+                            registerTypeAdapter(Transactions.class, new TransactionsDeserializer()).create();
+                        BLOCK chronicleBlock = gson.fromJson(stringMessage, BLOCK.class);
+                        Block block = chronicleBlock.getBlockData().getBlock();
+                        block.setBlock_num(chronicleBlock.getBlockData().getBlock_num());
+                        block.setLas_irreversible(chronicleBlock.getBlockData().getLast_irreversible());
+                        FilteredBlock filteredBlock = new FilteredBlock();
+                        filteredBlock.setBlock(block);
+                        redisMessagePublisherBlocks.publish(new Gson().toJson(filteredBlock));
 
                     }
                 }catch (Exception exception){

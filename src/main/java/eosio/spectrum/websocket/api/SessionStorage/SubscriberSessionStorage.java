@@ -6,10 +6,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.WebSocketSession;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 
@@ -170,8 +167,8 @@ public class SubscriberSessionStorage {
         return result;
     }
 
-    public HashSet<String> getSessionsId(RequestType requestType){
-        HashSet<String> result = new HashSet<>();
+    public Set getSessionsId(RequestType requestType){
+        Set result = new HashSet<>();
         switch (requestType){
             case get_blocks:
                 result = sessionIdAccountsGetBlocks.getSessions();

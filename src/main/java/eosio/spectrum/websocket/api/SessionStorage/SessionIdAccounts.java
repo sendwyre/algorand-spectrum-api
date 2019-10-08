@@ -3,6 +3,7 @@ package eosio.spectrum.websocket.api.SessionStorage;
 
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 
@@ -43,7 +44,7 @@ public class  SessionIdAccounts {
     public boolean containsSessionId(String sessionId){
         return this.records.containsKey(sessionId);
     }
-    public HashSet<String> getSessions(){
-        return (HashSet<String>) this.records.keySet();
+    public Set getSessions(){
+        return this.records.keySet();
     }
 }

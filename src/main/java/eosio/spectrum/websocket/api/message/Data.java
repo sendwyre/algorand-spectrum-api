@@ -2,7 +2,7 @@ package eosio.spectrum.websocket.api.message;
 
 import java.util.HashSet;
 
-public class   Data {
+public class  Data {
     private String account;
     private HashSet<String> actions;
 

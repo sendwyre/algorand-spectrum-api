@@ -21,8 +21,8 @@ public class RedisConfig implements ApplicationContextAware {
     private final String ACTIONS_CHANNEL = "actions";
     private final String SERVICE_CHANNEL = "service";
     private final String TRANSACTION_CHANNEL = "transaction";
-    private final String BLOCKS_CHANNEL = "transaction";
-    private final String TBL_DELTAS_CHANNEL = "transaction";
+    private final String BLOCKS_CHANNEL = "blocks";
+    private final String TBL_DELTAS_CHANNEL = "tbl_deltas";
 
     private String redisHostname;
 

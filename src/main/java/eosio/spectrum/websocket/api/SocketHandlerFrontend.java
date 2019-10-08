@@ -45,7 +45,6 @@ public class SocketHandlerFrontend extends TextWebSocketHandler implements WebSo
         logger.debug("Chronicle connected from: "+session.getRemoteAddress());
     }
 
-
     @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
         try {
@@ -74,6 +73,8 @@ public class SocketHandlerFrontend extends TextWebSocketHandler implements WebSo
                                         serviceMessage.setRequestType(subscriberRequest.getRequestType());
                                         serviceMessage.setData(subscriberRequest.getData());
                                         redisMessagePublisherService.publish(new Gson().toJson(serviceMessage));
+                                        logger.info("Received request");
+                                        logger.info(new Gson().toJson(subscriberRequest));
                                     }catch (NullPointerException npe){
                                         if (session.isOpen()) {
                                             String infoMessage = "Unable to proceed request, fill fields according to documentation";
@@ -98,6 +99,8 @@ public class SocketHandlerFrontend extends TextWebSocketHandler implements WebSo
                                     data.setAccount(session.getId());
                                     serviceMessage.setData(data);
                                     redisMessagePublisherService.publish(new Gson().toJson(serviceMessage));
+                                    logger.info("Received request");
+                                    logger.info(new Gson().toJson(subscriberRequest));
                                     break;
                                 case ping:
                                     break;
@@ -151,7 +154,15 @@ public class SocketHandlerFrontend extends TextWebSocketHandler implements WebSo
                 data.setAccount(account);
                 serviceMessage.setData(data);
                 redisMessagePublisherService.publish(new Gson().toJson(serviceMessage));
+
             }
+            serviceMessage = new ServiceMessage();
+            serviceMessage.setEvent(Event.unsubscribe);
+            serviceMessage.setRequestType(RequestType.get_blocks);
+            Data data = new Data();
+            data.setAccount(sessionID);
+            serviceMessage.setData(data);
+            redisMessagePublisherService.publish(new Gson().toJson(serviceMessage));
         }
         subscriberSessionStorage.removeSession(sessionID);
     }

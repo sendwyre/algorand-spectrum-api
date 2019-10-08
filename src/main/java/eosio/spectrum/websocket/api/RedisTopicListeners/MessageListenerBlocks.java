@@ -1,10 +1,19 @@
 package eosio.spectrum.websocket.api.RedisTopicListeners;
 
+import com.google.gson.Gson;
 import eosio.spectrum.websocket.api.SessionStorage.SubscriberSessionStorage;
+import eosio.spectrum.websocket.api.message.RequestType;
+import eosio.spectrum.websocket.api.message.ResponseGetBlocks;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.web.socket.TextMessage;
+import org.springframework.web.socket.WebSocketSession;
+
+import java.io.IOException;
+import java.util.HashSet;
+import java.util.Set;
 
 
 @Component
@@ -20,6 +29,19 @@ public class MessageListenerBlocks {
     }
 
     public void handleMessage(String message) {
+        ResponseGetBlocks responseGetBlocks = new Gson().fromJson(message, ResponseGetBlocks.class);
+        Set sessionsID=subscriberSessionStorage.getSessionsId(RequestType.get_blocks);
+        for (Object  session:sessionsID) {
+            WebSocketSession webSocketSession = subscriberSessionStorage.getSession((String)session);
+            try {
+                synchronized (session) {
+                    if (webSocketSession.isOpen())
+                    webSocketSession.sendMessage(new TextMessage(new Gson().toJson(responseGetBlocks)));
+                }
+            }catch (IOException exception){
+                logger.error(exception.toString());
+            }
+        }
         logger.info(message);
     }
 }
