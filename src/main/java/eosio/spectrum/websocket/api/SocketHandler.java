@@ -14,6 +14,7 @@ import eosio.spectrum.websocket.api.message.chronicle.TX_TRACE;
 import eosio.spectrum.websocket.api.message.eosio.Block;
 import eosio.spectrum.websocket.api.message.eosio.Transactions;
 import eosio.spectrum.websocket.api.message.eosio.Transaction;
+import eosio.spectrum.websocket.api.message.eosio.Trx;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -87,7 +88,7 @@ public void setRedisMessagePublisherBlocks(RedisMessagePublisherBlocks redisMess
                 try {
                     if(!filterRulesStorage.getRules(RequestType.get_blocks).isEmpty()){
                         Gson gson = new GsonBuilder().
-                            registerTypeAdapter(Transactions.class, new TransactionsDeserializer()).create();
+                            registerTypeAdapter(Trx.class, new TrxDeserializer()).create();
                         BLOCK chronicleBlock = gson.fromJson(stringMessage, BLOCK.class);
                         Block block = chronicleBlock.getBlockData().getBlock();
                         block.setBlock_num(chronicleBlock.getBlockData().getBlock_num());
@@ -95,7 +96,6 @@ public void setRedisMessagePublisherBlocks(RedisMessagePublisherBlocks redisMess
                         FilteredBlock filteredBlock = new FilteredBlock();
                         filteredBlock.setBlock(block);
                         redisMessagePublisherBlocks.publish(new Gson().toJson(filteredBlock));
-
                     }
                 }catch (Exception exception){
                     logger.info(stringMessage);

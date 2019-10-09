@@ -1,11 +1,14 @@
 package eosio.spectrum.websocket.api.message.eosio;
 
 
+import com.google.gson.annotations.SerializedName;
+
 public class Transactions {
     private String status;
     private int cpu_usage_us;
     private int net_usage_words;
-    private String trx;
+    @SerializedName("trx")
+    private Trx trx;
 
     public String getStatus() {
         return status;
@@ -31,11 +34,11 @@ public class Transactions {
         this.net_usage_words = net_usage_words;
     }
 
-    public String getTrx() {
+    public Trx getTrx() {
         return trx;
     }
 
-    public void setTrx(String trx) {
+    public void setTrx(Trx trx) {
         this.trx = trx;
     }
 }

@@ -1,6 +1,9 @@
 package eosio.spectrum.websocket.api.message.eosio;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.annotations.SerializedName;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import java.util.List;
 

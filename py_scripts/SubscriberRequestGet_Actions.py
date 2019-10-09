@@ -1,17 +1,27 @@
 import json
 import pprint
+
 from websocket import create_connection
 
 path="streaming"
 url = "wss://testnet.telos.eostribe.io/"+path
 
-messageBody = {
+
+actionsList = ["transfer","buyram"]
+
+data = {"account":"g4ytkobyhage",
+        "actions":actionsList
+        }
+
+messageBody ={
     "apikey":"test-api-key",
               "event":"subscribe",
-               "type":"get_blocks",
+               "type":"get_actions",
+              "data": data
               }
 ws = create_connection(url)
-ws.send(json.dumps(messageBody))
+messageJson = json.dumps(messageBody)
+ws.send(messageJson)
 
 while True:
     pprint.pprint(json.loads(ws.recv()))

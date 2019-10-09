@@ -7,6 +7,15 @@ public class Trx {
     private String compression;
     private String packed_context_free_data;
     private String packed_trx;
+    private String id;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public String getSignatures() {
         return signatures;
