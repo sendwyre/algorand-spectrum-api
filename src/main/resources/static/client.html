@@ -1,18 +1,39 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <script src="http://localhost:8080/webjars/jquery/jquery.min.js"></script>
+<html>
+<head><title>Spectrum Web Sockets</title>
+    <script>
+        // var socket = new WebSocket("ws://testnet.telos.eostribe.io/streaming");
+        var socket = new WebSocket("ws://172.16.10.124:8080/streaming");
+        messageBody = {
+            "apikey":"test-api-key",
+            "event":"subscribe",
+            "type":"get_blocks"
+        };
 
-    <title>Title</title>
+        socket.onopen = function(e) {
+            console.log("[open] Connection established");
+            console.log("Sending to server");
+            socket.send(messageBody);
+        };
+
+        socket.onmessage = function(event) {
+            console.log("[message] Data received from server: ${event.data}");
+        };
+
+        socket.onclose = function(event) {
+            if (event.wasClean) {
+                console.log("[close] Connection closed cleanly, code=${event.code} reason=${event.reason}");
+            } else {
+                console.log("[close] Connection died");
+            }
+        };
+
+        socket.onerror = function(error) {
+            console.log("[error] ${error.message}");
+        };
+
+    </script>
 </head>
 <body>
-<form name="publish">
-    <input type="text" name="message">
-    <input type="submit" value="Отправить">
-</form>
-
-<!-- div с сообщениями -->
-<div id="messages"></div>
+<h2>Spectrum Web Sockets Test</h2>
+<div id="log"></div>
 </body>
-</html>
