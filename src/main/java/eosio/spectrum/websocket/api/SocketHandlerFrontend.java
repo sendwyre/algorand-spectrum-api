@@ -4,6 +4,7 @@ import com.google.gson.*;
 import eosio.spectrum.websocket.api.RedisMessagePublisher.RedisMessagePublisherService;
 import eosio.spectrum.websocket.api.SessionStorage.SubscriberSessionStorage;
 import eosio.spectrum.websocket.api.message.*;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +42,7 @@ public class SocketHandlerFrontend extends TextWebSocketHandler implements WebSo
 
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
+        logger.info(session.getUri().toString());
         subscriberSessionStorage.saveSession(session);
         logger.debug("Chronicle connected from: "+session.getRemoteAddress());
     }
