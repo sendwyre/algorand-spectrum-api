@@ -1,41 +1,45 @@
 <html>
 <head><title>Spectrum Web Sockets</title>
 <script>
-let socket = new WebSocket("ws://127.0.0.1:8080/streaming");
-//new WebSocket("ws://testnet.telos.eostribe.io/streaming");
-//new WebSocket("ws://127.0.0.1:8080/streaming");
+let socket = new WebSocket("wss://testnet.telos.eostribe.io/streaming");
 
-messageBody = {
+
+var messageBody = {
    "apikey":"test-api-key",
    "event":"subscribe",
    "type":"get_blocks"
 };
 
 socket.onopen = function(e) {
-  console.log("[open] Connection established");
-  console.log("Sending to server");
-  socket.send(messageBody);
+  html_log("[open] Connection established");
+  html_log("[subscribe] sending message to server");
+  socket.send(JSON.stringify(messageBody));
 };
 
 socket.onmessage = function(event) {
-  console.log("[message] Data received from server: ${event.data}");
+  html_log("[message] Data received from server: "+event.data);
 };
 
 socket.onclose = function(event) {
   if (event.wasClean) {
-    console.log("[close] Connection closed cleanly, code=${event.code} reason=${event.reason}");
+    html_log("[close] Connection closed cleanly, code=${event.code} reason=${event.reason}");
   } else {
-    console.log("[close] Connection died");
+    html_log("[close] Connection died");
   }
 };
 
 socket.onerror = function(error) {
-  console.log("[error] ${error.message}");
+  html_log("[error] ${error.message}");
 };
+
+function html_log(data) {
+  var divLog = document.getElementById("log");
+  divLog.innerHTML += "<p>"+data+"</p>";
+}
 
 </script>
 </head>
 <body>
-<h2>Spectrum Web Sockets Test</h2>
-<p>See DevTools console for results</p>
+<h2>Spectrum Web Sockets Test: Get Blocks</h2>
+<div id="log"></div>
 </body>
