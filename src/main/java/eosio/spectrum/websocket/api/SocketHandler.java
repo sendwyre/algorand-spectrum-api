@@ -11,10 +11,7 @@ import eosio.spectrum.websocket.api.message.FilteredBlock;
 import eosio.spectrum.websocket.api.message.RequestType;
 import eosio.spectrum.websocket.api.message.chronicle.BLOCK;
 import eosio.spectrum.websocket.api.message.chronicle.TX_TRACE;
-import eosio.spectrum.websocket.api.message.eosio.Block;
-import eosio.spectrum.websocket.api.message.eosio.Transactions;
-import eosio.spectrum.websocket.api.message.eosio.Transaction;
-import eosio.spectrum.websocket.api.message.eosio.Trx;
+import eosio.spectrum.websocket.api.message.eosio.*;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -88,7 +85,7 @@ public void setRedisMessagePublisherBlocks(RedisMessagePublisherBlocks redisMess
                 try {
                     if(!filterRulesStorage.getRules(RequestType.get_blocks).isEmpty()){
                         Gson gson = new GsonBuilder().
-                            registerTypeAdapter(Trx.class, new TrxDeserializer()).create();
+                                registerTypeAdapter(Trx.class, new TrxDeserializer()).create();
                         BLOCK chronicleBlock = gson.fromJson(stringMessage, BLOCK.class);
                         Block block = chronicleBlock.getBlockData().getBlock();
                         block.setBlock_num(chronicleBlock.getBlockData().getBlock_num());
@@ -106,8 +103,8 @@ public void setRedisMessagePublisherBlocks(RedisMessagePublisherBlocks redisMess
                 break;
             case "TX_TRACE":
                 logger.debug("Message type: " + messageType);
-                    TX_TRACE tx_trace = new Gson().fromJson(stringMessage, TX_TRACE.class);
-
+                Gson gson = new GsonBuilder().registerTypeAdapter(Act.class, new ActDeserializer()).create();
+                TX_TRACE tx_trace = gson.fromJson(stringMessage, TX_TRACE.class);
                     Transaction transaction = tx_trace.getTransaction();
                     List<FilteredAction> filteredActions = transaction.getActionsFiltered(filterRulesStorage.getRules(RequestType.get_actions));
                     if ( filteredActions.size() > 0) {
