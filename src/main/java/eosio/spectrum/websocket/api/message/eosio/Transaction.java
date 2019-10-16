@@ -112,4 +112,7 @@ public class Transaction {
         }
         return filteredActions;
     }
+    public void getTransactionFiltered(){
+
+    }
 }

@@ -113,6 +113,7 @@ public void setRedisMessagePublisherBlocks(RedisMessagePublisherBlocks redisMess
                                     new Gson().toJson(filteredAction));
                         }
                     }
+
                 break;
             case "BLOCK_COMPLETED":
                 try {
