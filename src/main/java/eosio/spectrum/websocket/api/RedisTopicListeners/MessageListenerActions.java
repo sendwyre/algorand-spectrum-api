@@ -42,7 +42,7 @@ public class MessageListenerActions {
                     logger.error(exception.toString());
                 }
             }
-            logger.info("Message " + message);
+            logger.debug(message);
         }
     }
 }

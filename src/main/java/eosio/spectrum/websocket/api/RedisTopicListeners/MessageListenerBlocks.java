@@ -42,6 +42,6 @@ public class MessageListenerBlocks {
                 logger.error(exception.toString());
             }
         }
-        logger.info(message);
+        logger.debug(message);
     }
 }
