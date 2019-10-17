@@ -37,11 +37,11 @@ hs_err_pid*
 .*.md.html
 .idea
 .gradle
-#.idea/*
+.idea/*
 .gradle/*
 out/*
 build/*
-#gradle/*
+gradle/*
 docker/consumer/build/*
 docker/chronicle/data/*
 docker/chronicle/data/receiver-state/shared_memory.bin

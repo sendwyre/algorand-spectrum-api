@@ -35,6 +35,7 @@ public class MessageListenerService {
                         filterRulesStorage.addRule(serviceMessage.getData().getAccount(),serviceMessage.getData().getActions(),RequestType.get_actions);
                         break;
                     case get_transaction:
+                        filterRulesStorage.addRule(serviceMessage.getData().getAccount(), serviceMessage.getData().getActions(),RequestType.get_transaction);
                         break;
                     case get_table_deltas:
                         break;
@@ -47,6 +48,9 @@ public class MessageListenerService {
                 switch (serviceMessage.getRequestType()){
                     case get_actions:
                         filterRulesStorage.removeRule(serviceMessage.getData().getAccount(), serviceMessage.getData().getActions(), RequestType.get_actions);
+                        break;
+                    case get_transaction:
+                        filterRulesStorage.removeRule(serviceMessage.getData().getAccount(), serviceMessage.getData().getActions(), RequestType.get_transaction);
                         break;
                     case get_blocks:
                         filterRulesStorage.removeRule(serviceMessage.getData().getAccount(), RequestType.get_blocks);

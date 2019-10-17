@@ -22,6 +22,7 @@ public class FilterRulesStorage {
             case get_table_deltas:
                 break;
             case get_transaction:
+                filtersGetTransaction.put(account,null);
                 break;
             case get_blocks:
                 filtersGetBlocks.put(account,actions);
@@ -46,6 +47,7 @@ public class FilterRulesStorage {
             case get_table_deltas:
                 break;
             case get_transaction:
+                filtersGetTransaction.remove(account);
                 break;
             case get_blocks:
                 break;
@@ -71,6 +73,7 @@ public class FilterRulesStorage {
             case get_table_deltas:
                 break;
             case get_transaction:
+                filtersGetTransaction.remove(account);
                 break;
             case get_blocks:
                 filtersGetBlocks.remove(account);
@@ -91,7 +94,7 @@ public class FilterRulesStorage {
                 result = filtersGetBlocks;
                 break;
             case get_transaction:
-                result = null;
+                result = filtersGetTransaction;
                 break;
             case get_table_deltas:
                 result = null;

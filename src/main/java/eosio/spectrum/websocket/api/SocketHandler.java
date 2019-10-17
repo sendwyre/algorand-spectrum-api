@@ -8,6 +8,7 @@ import eosio.spectrum.websocket.api.RedisMessagePublisher.RedisMessagePublisherB
 import eosio.spectrum.websocket.api.RedisMessagePublisher.RedisMessagePublisherTransaction;
 import eosio.spectrum.websocket.api.message.FilteredAction;
 import eosio.spectrum.websocket.api.message.FilteredBlock;
+import eosio.spectrum.websocket.api.message.FilteredTransaction;
 import eosio.spectrum.websocket.api.message.RequestType;
 import eosio.spectrum.websocket.api.message.chronicle.BLOCK;
 import eosio.spectrum.websocket.api.message.chronicle.TX_TRACE;
@@ -111,6 +112,13 @@ public void setRedisMessagePublisherBlocks(RedisMessagePublisherBlocks redisMess
                         for (FilteredAction filteredAction : filteredActions) {
                             redisMessagePublisherActions.publish(
                                     new Gson().toJson(filteredAction));
+                        }
+                    }
+                    List<FilteredTransaction> filteredTransactions = transaction.getTransactionFiltered(filterRulesStorage.getRules(RequestType.get_transaction));
+                    if (filteredTransactions.size() >0 ){
+                        for (FilteredTransaction filteredTransaction : filteredTransactions) {
+                            redisMessagePublisherTransaction.publish(
+                                    new Gson().toJson(filteredTransaction));
                         }
                     }
 

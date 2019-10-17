@@ -20,6 +20,10 @@ public class Trace {
     private int cpu_usage_us;
     private Partial partial;
     private String status;
+    private int block_num;
+    private String block_timestamp;
+
+
 
     public Boolean getScheduled() {
         return scheduled;
@@ -123,5 +127,21 @@ public class Trace {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public int getBlock_num() {
+        return block_num;
+    }
+
+    public void setBlock_num(int block_num) {
+        this.block_num = block_num;
+    }
+
+    public String getBlock_timestamp() {
+        return block_timestamp;
+    }
+
+    public void setBlock_timestamp(String block_timestamp) {
+        this.block_timestamp = block_timestamp;
     }
 }

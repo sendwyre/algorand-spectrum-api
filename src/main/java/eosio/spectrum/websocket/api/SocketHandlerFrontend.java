@@ -89,6 +89,24 @@ public class SocketHandlerFrontend extends TextWebSocketHandler implements WebSo
 
                                     break;
                                 case get_transaction:
+                                    try {
+                                        serviceMessage = new ServiceMessage();
+                                        subscriberSessionStorage.addAccount(session.getId(), subscriberRequest.getData().getAccount(),subscriberRequest.getRequestType());
+                                        serviceMessage.setEvent(subscriberRequest.getEvent());
+                                        serviceMessage.setRequestType(subscriberRequest.getRequestType());
+                                        serviceMessage.setData(subscriberRequest.getData());
+                                        redisMessagePublisherService.publish(new Gson().toJson(serviceMessage));
+                                        logger.info("Received request");
+                                        logger.info(new Gson().toJson(subscriberRequest));
+                                    }catch (NullPointerException npe){
+                                        if (session.isOpen()) {
+                                            String infoMessage = "Unable to proceed request, fill fields according to documentation";
+                                            session.sendMessage(new TextMessage(infoMessage));
+                                            logger.warn("Request from "+session.getRemoteAddress()+" has unknown format");
+                                            logger.warn("message body : "+message.getPayload());
+                                            session.close();
+                                        }
+                                    }
                                     break;
                                 case get_table_deltas:
                                     break;
@@ -122,6 +140,7 @@ public class SocketHandlerFrontend extends TextWebSocketHandler implements WebSo
                                     subscriberSessionStorage.removeSession(session.getId());
                                     break;
                                 case get_transaction:
+
                                     break;
                                 case get_table_deltas:
                                     break;
@@ -157,7 +176,16 @@ public class SocketHandlerFrontend extends TextWebSocketHandler implements WebSo
                 serviceMessage.setData(data);
                 redisMessagePublisherService.publish(new Gson().toJson(serviceMessage));
 
+                serviceMessage = new ServiceMessage();
+                serviceMessage.setEvent(Event.unsubscribe);
+                serviceMessage.setRequestType(RequestType.get_transaction);
+                data = new Data();
+                data.setAccount(account);
+                serviceMessage.setData(data);
+                redisMessagePublisherService.publish(new Gson().toJson(serviceMessage));
             }
+
+
             serviceMessage = new ServiceMessage();
             serviceMessage.setEvent(Event.unsubscribe);
             serviceMessage.setRequestType(RequestType.get_blocks);
@@ -165,6 +193,7 @@ public class SocketHandlerFrontend extends TextWebSocketHandler implements WebSo
             data.setAccount(sessionID);
             serviceMessage.setData(data);
             redisMessagePublisherService.publish(new Gson().toJson(serviceMessage));
+
         }
         subscriberSessionStorage.removeSession(sessionID);
     }
