@@ -41,6 +41,7 @@ hs_err_pid*
 .gradle/*
 out/*
 build/*
+gradle/*
 docker/consumer/build/*
 docker/chronicle/data/*
 docker/chronicle/data/receiver-state/shared_memory.bin

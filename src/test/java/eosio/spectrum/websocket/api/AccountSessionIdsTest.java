@@ -4,7 +4,6 @@ import eosio.spectrum.websocket.api.SessionStorage.AccountSessionIds;
 import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
-
 import java.util.UUID;
 
 public class AccountSessionIdsTest {

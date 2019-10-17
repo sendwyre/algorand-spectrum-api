@@ -1,14 +1,13 @@
 buildscript {
-
     ext {
-        springBootVersion = '2.1.8.RELEASE'
+        springBootVersion = '2.1.9.RELEASE'
         redisVersion = '2.9.0'
     }
     repositories {
         mavenCentral()
     }
     dependencies {
-        classpath("org.springframework.boot:spring-boot-gradle-plugin:2.1.8.RELEASE")
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:2.1.9.RELEASE")
     }
 }
 
@@ -20,7 +19,7 @@ apply plugin: 'io.spring.dependency-management'
 
 bootJar {
     baseName = 'spectrum'
-    version = '0.1.0'
+    version = '0.1.1'
 }
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
@@ -33,18 +32,19 @@ repositories {
 
 dependencies {
     compile group: 'org.json', name: 'json', version: '20180813'
-    compile group: 'org.elasticsearch.gradle', name: 'build-tools', version: '7.2.1'
-    compile group: 'org.elasticsearch', name: 'elasticsearch', version: '7.2.1'
-    compile group: 'org.elasticsearch.client', name: 'transport', version: '7.2.1'
-    compile group: 'org.elasticsearch.client', name: 'elasticsearch-rest-high-level-client', version: '7.2.1'
-    compile group: 'org.elasticsearch.client', name: 'elasticsearch-rest-client', version: '7.2.1'
-    compile group: 'org.elasticsearch.plugin', name: 'transport-netty4-client', version: '7.2.1'
+    compile group: 'org.elasticsearch.gradle', name: 'build-tools', version: '7.4.0'
+    compile group: 'org.elasticsearch', name: 'elasticsearch', version: '7.4.0'
+    compile group: 'org.elasticsearch.client', name: 'transport', version: '7.4.0'
+    compile group: 'org.elasticsearch.client', name: 'elasticsearch-rest-high-level-client', version: '7.4.0'
+    compile group: 'org.elasticsearch.client', name: 'elasticsearch-rest-client', version: '7.4.0'
+    compile group: 'org.elasticsearch.plugin', name: 'transport-netty4-client', version: '7.4.0'
     compile 'ch.qos.logback:logback-classic:1.2.2'
     compile("org.springframework.boot:spring-boot-starter-websocket")
     compile "org.springframework.boot:spring-boot-configuration-processor"
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-data-redis', version: "${springBootVersion}"
     compile group: 'redis.clients', name: 'jedis', version: "${redisVersion}"
-
+    implementation 'org.apache.logging.log4j:log4j-api:2.11.1'
+    annotationProcessor 'org.apache.logging.log4j:log4j-core:2.11.1'
     annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
     compile("org.webjars:webjars-locator-core")
     compile("org.webjars:sockjs-client:1.0.2")

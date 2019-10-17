@@ -116,15 +116,17 @@ public class SubscriberSessionStorage {
 
     public HashSet<String> getAccounts(String sessionId){
         HashSet<String> result = new HashSet<>();
-        try {
+
             for (SessionIdAccounts sessionIdAccounts:sessionIdAccountsList){
+                try {
                 for (String account:sessionIdAccounts.getAccounts(sessionId)){
                     if (account != null) result.add(account);
                 }
+            }catch (NullPointerException npe){
+                logger.error(npe.toString());
             }
-        }catch (NullPointerException npe){
-            logger.error(npe.toString());
-    }
+            }
+
 
         return result;
     }

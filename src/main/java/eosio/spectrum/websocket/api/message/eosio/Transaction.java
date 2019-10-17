@@ -2,6 +2,7 @@ package eosio.spectrum.websocket.api.message.eosio;
 
 import com.google.gson.Gson;
 import eosio.spectrum.websocket.api.message.FilteredAction;
+import eosio.spectrum.websocket.api.message.FilteredTransaction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -111,5 +112,31 @@ public class Transaction {
             }
         }
         return filteredActions;
+    }
+    public List<FilteredTransaction> getTransactionFiltered(HashMap<String,HashSet<String>> filters){
+        List filteredTransactions = new ArrayList();
+        HashSet<String> accounts = new HashSet<>();
+        for (ActionTraces action:this.getTrace().getAction_traces()) {
+            try {
+                accounts.add(action.getAct().getAuthorization().get(0).getActor());
+            } catch (NullPointerException npe) {
+                logger.debug(new Gson().toJson(action));
+            } catch (IndexOutOfBoundsException except) {
+                logger.debug(new Gson().toJson(action));
+            }
+            try {
+                accounts.add(action.getReceipt().getReceiver());
+            } catch (NullPointerException npe) {
+                logger.warn(new Gson().toJson(action));
+            }
+        }
+        for (String account:filters.keySet()) {
+            if (accounts.contains(account)){
+                this.trace.setBlock_num(this.block_num);
+                this.trace.setBlock_timestamp(this.block_timestamp);
+                filteredTransactions.add(new FilteredTransaction(account,this.trace));
+            }
+        }
+        return filteredTransactions;
     }
 }

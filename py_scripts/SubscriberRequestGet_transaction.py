@@ -1,17 +1,27 @@
 import json
 import pprint
+
 from websocket import create_connection
 
 path="streaming"
 url = "ws://localhost:8080/"+path
 
-messageBody = {
+
+actionsList = ["transfer","buyram"]
+
+data = {"account":"eosio",
+        "actions":actionsList
+        }
+
+messageBody ={
     "apikey":"test-api-key",
               "event":"subscribe",
-               "type":"get_blocks",
+               "type":"get_transaction",
+              "data": data
               }
 ws = create_connection(url)
-ws.send(json.dumps(messageBody))
+messageJson = json.dumps(messageBody)
+ws.send(messageJson)
 
 while True:
     pprint.pprint(json.loads(ws.recv()))

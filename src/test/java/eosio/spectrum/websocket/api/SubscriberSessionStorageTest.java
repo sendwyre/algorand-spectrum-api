@@ -4,14 +4,12 @@ import eosio.spectrum.websocket.api.SessionStorage.SubscriberSessionStorage;
 import eosio.spectrum.websocket.api.message.RequestType;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.web.socket.WebSocketSession;
+
 
 import java.util.HashSet;
 import java.util.UUID;
 
 import static org.junit.Assert.*;
-import static org.mockito.Mockito.mock;
 
 public class SubscriberSessionStorageTest {
     public SubscriberSessionStorage subscriberSessionStorage;

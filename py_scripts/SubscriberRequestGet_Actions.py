@@ -4,12 +4,12 @@ import pprint
 from websocket import create_connection
 
 path="streaming"
-url = "wss://testnet.telos.eostribe.io/"+path
+url = "ws://localhost:8080/"+path
 
 
 actionsList = ["transfer","buyram"]
 
-data = {"account":"g4ytkobyhage",
+data = {"account":"eosio",
         "actions":actionsList
         }
 
