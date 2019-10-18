@@ -79,8 +79,8 @@ public void setRedisMessagePublisherBlocks(RedisMessagePublisherBlocks redisMess
             case "FORK":
                 logger.debug("Message type: " + messageType);
                 break;
-            case "TABLE_DELTAS":
-                logger.debug("Message type: " + messageType);
+            case "TABLE_ROW":
+                logger.info("Message type: " + messageType);
                 break;
             case "BLOCK":
                 try {
