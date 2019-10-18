@@ -3,7 +3,7 @@ package eosio.spectrum.websocket.api.message.eosio.TBL_ROW;
 public class Kvo {
     private String code;
     private String scope;
-    private int primary_key;
+    private String primary_key;
     private String payer;
     private Value value;
     private String table;
@@ -24,11 +24,11 @@ public class Kvo {
         this.scope = scope;
     }
 
-    public int getPrimary_key() {
+    public String getPrimary_key() {
         return primary_key;
     }
 
-    public void setPrimary_key(int primary_key) {
+    public void setPrimary_key(String primary_key) {
         this.primary_key = primary_key;
     }
 
