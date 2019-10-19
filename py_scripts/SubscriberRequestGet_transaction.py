@@ -6,12 +6,7 @@ from websocket import create_connection
 path="streaming"
 url = "ws://localhost:8080/"+path
 
-
-actionsList = ["transfer","buyram"]
-
-data = {"account":"eosio",
-        "actions":actionsList
-        }
+data = {"account":"eosio"}
 
 messageBody ={
     "apikey":"test-api-key",

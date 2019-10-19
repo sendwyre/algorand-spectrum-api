@@ -3,7 +3,7 @@ package eosio.spectrum.websocket.api.message.chronicle;
 public enum ChronicleMessageType {
     ABI_UPDATED,
     FORK,
-    TABLE_DELTAS,
+    TBL_ROW,
     BLOCK,
     TX_TRACE,
     BLOCK_COMPLETED

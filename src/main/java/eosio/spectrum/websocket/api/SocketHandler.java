@@ -11,6 +11,7 @@ import eosio.spectrum.websocket.api.message.FilteredBlock;
 import eosio.spectrum.websocket.api.message.FilteredTransaction;
 import eosio.spectrum.websocket.api.message.RequestType;
 import eosio.spectrum.websocket.api.message.chronicle.BLOCK;
+import eosio.spectrum.websocket.api.message.chronicle.TBL_ROW;
 import eosio.spectrum.websocket.api.message.chronicle.TX_TRACE;
 import eosio.spectrum.websocket.api.message.eosio.*;
 import org.json.JSONException;
@@ -79,8 +80,11 @@ public void setRedisMessagePublisherBlocks(RedisMessagePublisherBlocks redisMess
             case "FORK":
                 logger.debug("Message type: " + messageType);
                 break;
-            case "TABLE_DELTAS":
-                logger.debug("Message type: " + messageType);
+            case "TBL_ROW":
+                TBL_ROW tbl_row = new Gson().fromJson(stringMessage, TBL_ROW.class);
+
+
+                logger.info("Message type: " + messageType);
                 break;
             case "BLOCK":
                 try {
