@@ -1,6 +1,6 @@
 package eosio.spectrum.websocket.api;
 
-import eosio.spectrum.websocket.api.SessionStorage.SubscriberSessionStorage;
+import eosio.spectrum.websocket.api.session.SubscriberSessionStorage;
 import eosio.spectrum.websocket.api.message.RequestType;
 import org.junit.Before;
 import org.junit.Test;
@@ -49,14 +49,14 @@ public class SubscriberSessionStorageTest {
         subscriberSessionStorage.addAccount(userFirstSessionId,userFirstAccount1, RequestType.get_blocks);
         subscriberSessionStorage.addAccount(userFirstSessionId,userFirstAccount2, RequestType.get_blocks);
 
-        subscriberSessionStorage.addAccount(userFirstSessionId,userFirstAccount1, RequestType.get_table_deltas);
-        subscriberSessionStorage.addAccount(userFirstSessionId,userFirstAccount2, RequestType.get_table_deltas);
+        subscriberSessionStorage.addAccount(userFirstSessionId,userFirstAccount1, RequestType.get_table_rows);
+        subscriberSessionStorage.addAccount(userFirstSessionId,userFirstAccount2, RequestType.get_table_rows);
 
         subscriberSessionStorage.addAccount(userSecondSessionId,userSecondAccount1, RequestType.get_actions);
         subscriberSessionStorage.addAccount(userSecondSessionId,userSecondAccount2,RequestType.get_actions);
 
-        subscriberSessionStorage.addAccount(userSecondSessionId,userSecondAccount1, RequestType.get_table_deltas);
-        subscriberSessionStorage.addAccount(userSecondSessionId,userSecondAccount2,RequestType.get_table_deltas);
+        subscriberSessionStorage.addAccount(userSecondSessionId,userSecondAccount1, RequestType.get_table_rows);
+        subscriberSessionStorage.addAccount(userSecondSessionId,userSecondAccount2,RequestType.get_table_rows);
 
         subscriberSessionStorage.addAccount(userSecondSessionId,userSecondAccount1, RequestType.get_blocks);
         subscriberSessionStorage.addAccount(userSecondSessionId,userSecondAccount2,RequestType.get_blocks);
@@ -75,8 +75,8 @@ public class SubscriberSessionStorageTest {
         assertTrue(subscriberSessionStorage.getSessionsId(userFirstAccount1, RequestType.get_transaction).contains(userFirstSessionId));
         assertTrue(subscriberSessionStorage.getSessionsId(userFirstAccount2, RequestType.get_transaction).contains(userFirstSessionId));
 
-        assertTrue(subscriberSessionStorage.getSessionsId(userFirstAccount1, RequestType.get_table_deltas).contains(userFirstSessionId));
-        assertTrue(subscriberSessionStorage.getSessionsId(userFirstAccount2, RequestType.get_table_deltas).contains(userFirstSessionId));
+        assertTrue(subscriberSessionStorage.getSessionsId(userFirstAccount1, RequestType.get_table_rows).contains(userFirstSessionId));
+        assertTrue(subscriberSessionStorage.getSessionsId(userFirstAccount2, RequestType.get_table_rows).contains(userFirstSessionId));
 
         assertTrue(subscriberSessionStorage.getSessionsId(userFirstAccount1, RequestType.get_blocks).contains(userFirstSessionId));
         assertTrue(subscriberSessionStorage.getSessionsId(userFirstAccount2, RequestType.get_blocks).contains(userFirstSessionId));
@@ -91,8 +91,8 @@ public class SubscriberSessionStorageTest {
         assertTrue(subscriberSessionStorage.getAccounts(userFirstSessionId, RequestType.get_transaction).contains(userFirstAccount2));
         assertTrue(subscriberSessionStorage.getAccounts(userFirstSessionId, RequestType.get_blocks).contains(userFirstAccount1));
         assertTrue(subscriberSessionStorage.getAccounts(userFirstSessionId, RequestType.get_blocks).contains(userFirstAccount2));
-        assertTrue(subscriberSessionStorage.getAccounts(userFirstSessionId, RequestType.get_table_deltas).contains(userFirstAccount1));
-        assertTrue(subscriberSessionStorage.getAccounts(userFirstSessionId, RequestType.get_table_deltas).contains(userFirstAccount2));
+        assertTrue(subscriberSessionStorage.getAccounts(userFirstSessionId, RequestType.get_table_rows).contains(userFirstAccount1));
+        assertTrue(subscriberSessionStorage.getAccounts(userFirstSessionId, RequestType.get_table_rows).contains(userFirstAccount2));
     }
 
 

@@ -1,17 +1,24 @@
 import json
 import pprint
+
 from websocket import create_connection
 
 path="streaming"
-url = "wss://api.telos.eostribe.io/"+path
+url = "ws://localhost:8080/"+path
 
-messageBody = {
+data = {"code":"eosio",
+        "scope":"eostribe",
+        "table":"test"}
+
+messageBody ={
     "apikey":"test-api-key",
               "event":"subscribe",
-               "type":"get_blocks",
+               "type":"get_table_rows",
+              "data": data
               }
 ws = create_connection(url)
-ws.send(json.dumps(messageBody))
+messageJson = json.dumps(messageBody)
+ws.send(messageJson)
 
 while True:
     pprint.pprint(json.loads(ws.recv()))

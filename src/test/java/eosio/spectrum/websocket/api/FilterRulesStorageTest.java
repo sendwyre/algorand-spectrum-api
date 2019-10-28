@@ -9,6 +9,7 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 
+import java.util.HashMap;
 import java.util.HashSet;
 
 public class FilterRulesStorageTest {
@@ -68,10 +69,10 @@ public class FilterRulesStorageTest {
     public void addRuleGetActions(){
         filterRulesStorage.addRule(serviceMessageFirst.getData().getAccount(), serviceMessageFirst.getData().getActions(), serviceMessageFirst.getRequestType());
         filterRulesStorage.addRule(serviceMessageSecond.getData().getAccount(), serviceMessageSecond.getData().getActions(), serviceMessageSecond.getRequestType());
-
+        HashSet<String> firstAccountRules = (HashSet<String>)filterRulesStorage.getRules(RequestType.get_actions).get(firstAccount);
         assertTrue(filterRulesStorage.getRules(RequestType.get_actions).containsKey(firstAccount));
-        assertTrue(filterRulesStorage.getRules(RequestType.get_actions).get(firstAccount).contains(firstAccountAction_1));
-        assertTrue(filterRulesStorage.getRules(RequestType.get_actions).get(firstAccount).contains(firstAccountAction_2));
+        assertTrue(firstAccountRules.contains(firstAccountAction_1));
+        assertTrue(firstAccountRules.contains(firstAccountAction_2));
         assertEquals(firstAccountActions, filterRulesStorage.getRules(RequestType.get_actions).get(firstAccount));
         assertEquals(secondAccountActions, filterRulesStorage.getRules(RequestType.get_actions).get(secondAccount));
     }

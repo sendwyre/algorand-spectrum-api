@@ -7,21 +7,20 @@ import org.springframework.data.redis.listener.ChannelTopic;
 import org.springframework.stereotype.Component;
 
 @Component
-public class RedisMessagePublisherTransaction implements MessagePublisher {
-
+public class RedisMessagePublisherTableRows implements MessagePublisher {
 
     private final StringRedisTemplate stringRedisTemplate;
-    private final ChannelTopic topicTransaction;
+    private final ChannelTopic topicTableRows;
 
     @Autowired
-    public RedisMessagePublisherTransaction(StringRedisTemplate stringRedisTemplate,
-                                            ChannelTopic topicTransaction) {
+    public RedisMessagePublisherTableRows(StringRedisTemplate stringRedisTemplate,
+                                          ChannelTopic topicTableRows) {
         this.stringRedisTemplate = stringRedisTemplate;
-        this.topicTransaction = topicTransaction;
+        this.topicTableRows = topicTableRows;
     }
 
     @Override
     public void publish(String message) {
-        stringRedisTemplate.convertAndSend(topicTransaction.getTopic(), message);
+        stringRedisTemplate.convertAndSend(topicTableRows.getTopic(), message);
     }
 }

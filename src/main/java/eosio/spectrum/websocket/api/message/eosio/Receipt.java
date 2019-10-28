@@ -9,7 +9,7 @@ public class Receipt {
     private int recv_sequence;
     private List<Auth_sequence> auth_sequence;
     private String act_digest;
-    private int global_sequence;
+    private long global_sequence;
 
     public String getReceiver() {
         return receiver;
@@ -59,7 +59,7 @@ public class Receipt {
         this.act_digest = act_digest;
     }
 
-    public int getGlobal_sequence() {
+    public long getGlobal_sequence() {
         return global_sequence;
     }
 

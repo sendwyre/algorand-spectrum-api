@@ -5,6 +5,33 @@ import java.util.HashSet;
 public class  Data {
     private String account;
     private HashSet<String> actions;
+    private String table;
+    private String code;
+    private String scope;
+
+    public String getTable() {
+        return table;
+    }
+
+    public void setTable(String table) {
+        this.table = table;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
+
+    public String getScope() {
+        return scope;
+    }
+
+    public void setScope(String scope) {
+        this.scope = scope;
+    }
 
     public String getAccount() {
         return account;
@@ -20,7 +47,6 @@ public class  Data {
 
     public void setActions(HashSet actions) {
             this.actions = actions;
-
     }
 
     @Override

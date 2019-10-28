@@ -3,9 +3,10 @@ package eosio.spectrum.websocket.api;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import eosio.spectrum.websocket.api.RedisMessagePublisher.RedisMessagePublisherActions;
-import eosio.spectrum.websocket.api.RedisMessagePublisher.RedisMessagePublisherBlocks;
-import eosio.spectrum.websocket.api.RedisMessagePublisher.RedisMessagePublisherTransaction;
+import com.google.gson.JsonSyntaxException;
+import eosio.spectrum.websocket.api.redis.publishers.RedisMessagePublisherActions;
+import eosio.spectrum.websocket.api.redis.publishers.RedisMessagePublisherBlocks;
+import eosio.spectrum.websocket.api.redis.publishers.RedisMessagePublisherTransaction;
 import eosio.spectrum.websocket.api.message.FilteredAction;
 import eosio.spectrum.websocket.api.message.FilteredBlock;
 import eosio.spectrum.websocket.api.message.FilteredTransaction;
@@ -81,10 +82,25 @@ public void setRedisMessagePublisherBlocks(RedisMessagePublisherBlocks redisMess
                 logger.debug("Message type: " + messageType);
                 break;
             case "TBL_ROW":
-                TBL_ROW tbl_row = new Gson().fromJson(stringMessage, TBL_ROW.class);
+                try {
+                    String code = jsonMessage.getJSONObject("data").getJSONObject("kvo").getString("code");
+                    String scope = jsonMessage.getJSONObject("data").getJSONObject("kvo").getString("scope");
+                    String table =  jsonMessage.getJSONObject("data").getJSONObject("kvo").getString("table");
+                    GetTableRowsRule getTableRowsRule = new GetTableRowsRule();
+                    getTableRowsRule.setCode(code);
+                    getTableRowsRule.setScope(scope);
+                    getTableRowsRule.setTable(table);
+                    if (filterRulesStorage.getRules(RequestType.get_table_rows).containsKey(getTableRowsRule)){
 
 
-                logger.info("Message type: " + messageType);
+                    }
+
+
+                    TBL_ROW tbl_row = new Gson().fromJson(stringMessage, TBL_ROW.class);
+
+                }catch (JsonSyntaxException jse){
+                    logger.warn(stringMessage);
+                }
                 break;
             case "BLOCK":
                 try {

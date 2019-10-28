@@ -1,8 +1,9 @@
-package eosio.spectrum.websocket.api.RedisTopicListeners;
+package eosio.spectrum.websocket.api.redis.listeners;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import eosio.spectrum.websocket.api.FilterRulesStorage;
+import eosio.spectrum.websocket.api.GetTableRowsRule;
 import eosio.spectrum.websocket.api.message.RequestType;
 import eosio.spectrum.websocket.api.message.ServiceMessage;
 import org.slf4j.Logger;
@@ -37,7 +38,12 @@ public class MessageListenerService {
                     case get_transaction:
                         filterRulesStorage.addRule(serviceMessage.getData().getAccount(), serviceMessage.getData().getActions(),RequestType.get_transaction);
                         break;
-                    case get_table_deltas:
+                    case get_table_rows:
+                        GetTableRowsRule getTableRowsRule = new GetTableRowsRule();
+                        getTableRowsRule.setTable(serviceMessage.getData().getTable());
+                        getTableRowsRule.setScope(serviceMessage.getData().getScope());
+                        getTableRowsRule.setTable(serviceMessage.getData().getTable());
+                        filterRulesStorage.addRule(getTableRowsRule,serviceMessage.getRequestType());
                         break;
                     case get_blocks:
                         filterRulesStorage.addRule(serviceMessage.getData().getAccount(),serviceMessage.getData().getActions(),RequestType.get_blocks);

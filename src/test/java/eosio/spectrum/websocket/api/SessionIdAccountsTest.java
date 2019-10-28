@@ -1,6 +1,6 @@
 package eosio.spectrum.websocket.api;
 
-import eosio.spectrum.websocket.api.SessionStorage.SessionIdAccounts;
+import eosio.spectrum.websocket.api.session.SessionIdAccounts;
 import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;

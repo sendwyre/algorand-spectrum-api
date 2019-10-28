@@ -1,7 +1,7 @@
-package eosio.spectrum.websocket.api.RedisTopicListeners;
+package eosio.spectrum.websocket.api.redis.listeners;
 
 import com.google.gson.Gson;
-import eosio.spectrum.websocket.api.SessionStorage.SubscriberSessionStorage;
+import eosio.spectrum.websocket.api.session.SubscriberSessionStorage;
 import eosio.spectrum.websocket.api.message.RequestType;
 import eosio.spectrum.websocket.api.message.ResponseGetBlocks;
 import org.slf4j.Logger;

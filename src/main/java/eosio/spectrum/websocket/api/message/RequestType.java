@@ -7,8 +7,8 @@ public enum RequestType {
     get_actions,
     @SerializedName("get_transaction")
     get_transaction,
-    @SerializedName("get_table_deltas")
-    get_table_deltas,
+    @SerializedName("get_table_rows")
+    get_table_rows,
     @SerializedName("get_blocks")
     get_blocks,
     @SerializedName("ping")

@@ -22,7 +22,7 @@ public class RedisConfig implements ApplicationContextAware {
     private final String SERVICE_CHANNEL = "service";
     private final String TRANSACTION_CHANNEL = "transaction";
     private final String BLOCKS_CHANNEL = "blocks";
-    private final String TBL_DELTAS_CHANNEL = "tbl_deltas";
+    private final String TABLE_ROWS = "tbl_rows";
 
     private String redisHostname;
 
@@ -67,6 +67,11 @@ public class RedisConfig implements ApplicationContextAware {
     }
 
     @Bean
+    public MessageListenerAdapter messageListenerTableRowsHandler() {
+        return new MessageListenerAdapter(applicationContext.getBean("messageListenerTableRows"));
+    }
+
+    @Bean
     public RedisMessageListenerContainer redisContainer() {
         RedisMessageListenerContainer container
                 = new RedisMessageListenerContainer();
@@ -75,6 +80,7 @@ public class RedisConfig implements ApplicationContextAware {
         container.addMessageListener(messageListenerActionsHandler(), topicActions());
         container.addMessageListener(messageListenerTransactionHandler(), topicTransaction());
         container.addMessageListener(messageListenerBlocksHandler(), topicBlocks());
+        container.addMessageListener(messageListenerTableRowsHandler(), topicTableRows());
         return container;
     }
 
@@ -82,19 +88,26 @@ public class RedisConfig implements ApplicationContextAware {
     public ChannelTopic topicActions() {
         return new ChannelTopic(ACTIONS_CHANNEL);
     }
+
     @Bean
     public ChannelTopic topicService() {
         return new ChannelTopic(SERVICE_CHANNEL);
     }
+
     @Bean
     public ChannelTopic topicTransaction() {
         return new ChannelTopic(TRANSACTION_CHANNEL);
     }
+
     @Bean
     public ChannelTopic topicBlocks(){
         return new ChannelTopic(BLOCKS_CHANNEL);
     }
 
+    @Bean
+    public ChannelTopic topicTableRows(){
+        return new ChannelTopic(TABLE_ROWS);
+    }
 
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {

@@ -1,4 +1,4 @@
-package eosio.spectrum.websocket.api.RedisMessagePublisher;
+package eosio.spectrum.websocket.api.redis.publishers;
 
 import eosio.spectrum.websocket.api.MessagePublisher;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,8 +1,10 @@
 package eosio.spectrum.websocket.api.redis.listeners;
 
 import com.google.gson.Gson;
+import eosio.spectrum.websocket.api.message.FilteredAction;
+import eosio.spectrum.websocket.api.message.RequestType;
+import eosio.spectrum.websocket.api.message.ResponseGetActions;
 import eosio.spectrum.websocket.api.session.SubscriberSessionStorage;
-import eosio.spectrum.websocket.api.message.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,9 +16,9 @@ import java.io.IOException;
 
 
 @Component
-public class MessageListenerTransaction {
+public class MessageListenerTableRows {
 
-    private static final transient Logger logger = LoggerFactory.getLogger(MessageListenerTransaction.class);
+    private static final transient Logger logger = LoggerFactory.getLogger(MessageListenerTableRows.class);
 
     private SubscriberSessionStorage subscriberSessionStorage;
 
@@ -24,23 +26,23 @@ public class MessageListenerTransaction {
     private void setSubscriberSessionStorage(SubscriberSessionStorage subscriberSessionStorage){
         this.subscriberSessionStorage = subscriberSessionStorage;
     }
+
     public void handleMessage(String message) {
-        FilteredTransaction filteredTransaction = new Gson().fromJson(message, FilteredTransaction.class);
-        ResponseGetTransaction responseGetTransaction = new ResponseGetTransaction();
-        responseGetTransaction.setRequestType(RequestType.get_transaction);
-        responseGetTransaction.setTransaction(filteredTransaction.getTrace());
-        for (String sessionId : subscriberSessionStorage.getSessionsId(filteredTransaction.getAccountName(),RequestType.get_transaction)) {
+        FilteredAction filteredAction = new Gson().fromJson(message, FilteredAction.class);
+        ResponseGetActions responseGetActions = new ResponseGetActions();
+        responseGetActions.setRequestType(RequestType.get_actions);
+        responseGetActions.setAction(filteredAction.getAction());
+        for (String sessionId : subscriberSessionStorage.getSessionsId(filteredAction.getAccountName(),RequestType.get_actions)) {
             WebSocketSession session = subscriberSessionStorage.getSession(sessionId);
             synchronized (session) {
                 if (session.isOpen()) try {
-                    session.sendMessage(new TextMessage(new Gson().toJson(responseGetTransaction)));
+                    session.sendMessage(new TextMessage(new Gson().toJson(responseGetActions)));
                 } catch (IOException exception){
                     logger.error(session.getRemoteAddress().toString());
                     logger.error(exception.toString());
                 }
             }
+            logger.debug(message);
         }
-        logger.debug(message);
-
     }
 }

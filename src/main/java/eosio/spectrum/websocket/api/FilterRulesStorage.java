@@ -3,23 +3,24 @@ package eosio.spectrum.websocket.api;
 import eosio.spectrum.websocket.api.message.RequestType;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-
-import static eosio.spectrum.websocket.api.message.RequestType.get_actions;
+import java.util.List;
 
 @Component
 public class FilterRulesStorage {
-
     private HashMap<String,HashSet<String>> filtersGetActions = new HashMap<>();
     private HashMap<String,HashSet<String>> filtersGetTransaction = new HashMap<>();
     private HashMap<String,HashSet<String>> filtersGetBlocks = new HashMap<>();
+    private HashMap<GetTableRowsRule,String> filtersGetTableRows = new HashMap<>();
 
 
 
     public void addRule(String account, HashSet<String> actions, RequestType requestType){
         switch (requestType){
-            case get_table_deltas:
+            case get_table_rows:
+
                 break;
             case get_transaction:
                 filtersGetTransaction.put(account,null);
@@ -42,9 +43,16 @@ public class FilterRulesStorage {
 
     }
 
+    public void addRule(GetTableRowsRule getTableRowsRule, RequestType requestType){
+        switch (requestType){
+            case get_table_rows:
+                this.filtersGetTableRows.put(getTableRowsRule,null);
+        }
+    }
+
     public void removeRule(String account, HashSet<String> actions, RequestType requestType){
         switch (requestType){
-            case get_table_deltas:
+            case get_table_rows:
                 break;
             case get_transaction:
                 filtersGetTransaction.remove(account);
@@ -70,7 +78,7 @@ public class FilterRulesStorage {
 
     public void removeRule(String account, RequestType requestType){
         switch (requestType){
-            case get_table_deltas:
+            case get_table_rows:
                 break;
             case get_transaction:
                 filtersGetTransaction.remove(account);
@@ -84,7 +92,15 @@ public class FilterRulesStorage {
         }
     }
 
-    public HashMap<String, HashSet<String>> getRules(RequestType type){
+    public void removeRule(GetTableRowsRule getTableRowsRule, RequestType requestType){
+        switch (requestType){
+            case get_table_rows:
+                filtersGetTableRows.remove(getTableRowsRule);
+                break;
+        }
+    }
+
+    public HashMap getRules(RequestType type){
         HashMap result;
         switch (type){
             case get_actions:
@@ -96,8 +112,8 @@ public class FilterRulesStorage {
             case get_transaction:
                 result = filtersGetTransaction;
                 break;
-            case get_table_deltas:
-                result = null;
+            case get_table_rows:
+                result = filtersGetTableRows;
                 break;
             default:
                 result = null;
@@ -105,4 +121,6 @@ public class FilterRulesStorage {
         }
         return result;
     }
+
+
 }

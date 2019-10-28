@@ -1,7 +1,7 @@
 package eosio.spectrum.websocket.api;
 
 import com.google.gson.Gson;
-import eosio.spectrum.websocket.api.RedisTopicListeners.MessageListenerService;
+import eosio.spectrum.websocket.api.redis.listeners.MessageListenerService;
 import eosio.spectrum.websocket.api.message.Data;
 import eosio.spectrum.websocket.api.message.Event;
 import eosio.spectrum.websocket.api.message.RequestType;

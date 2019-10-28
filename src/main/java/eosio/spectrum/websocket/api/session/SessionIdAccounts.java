@@ -1,4 +1,4 @@
-package eosio.spectrum.websocket.api.SessionStorage;
+package eosio.spectrum.websocket.api.session;
 
 
 import java.util.HashSet;

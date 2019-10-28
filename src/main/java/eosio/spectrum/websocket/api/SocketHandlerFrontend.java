@@ -1,10 +1,9 @@
 package eosio.spectrum.websocket.api;
 
 import com.google.gson.*;
-import eosio.spectrum.websocket.api.RedisMessagePublisher.RedisMessagePublisherService;
-import eosio.spectrum.websocket.api.SessionStorage.SubscriberSessionStorage;
+import eosio.spectrum.websocket.api.redis.publishers.RedisMessagePublisherService;
+import eosio.spectrum.websocket.api.session.SubscriberSessionStorage;
 import eosio.spectrum.websocket.api.message.*;
-import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,6 +48,7 @@ public class SocketHandlerFrontend extends TextWebSocketHandler implements WebSo
 
     @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
+        Data data;
         try {
             subscriberRequest = new Gson().fromJson(message.getPayload(), SubscriberRequest.class);
 
@@ -108,14 +108,23 @@ public class SocketHandlerFrontend extends TextWebSocketHandler implements WebSo
                                         }
                                     }
                                     break;
-                                case get_table_deltas:
+                                case get_table_rows:
+                                    data = new Data();
+                                    assert subscriberRequest.getData().getCode()!=null && subscriberRequest.getData().getScope()!=null;
+                                    subscriberSessionStorage.addAccount(session.getId(), subscriberRequest.getData().getCode(), subscriberRequest.getRequestType());
+                                    serviceMessage = new ServiceMessage();
+                                    serviceMessage.setEvent(subscriberRequest.getEvent());
+                                    serviceMessage.setRequestType(subscriberRequest.getRequestType());
+                                    serviceMessage.setData(subscriberRequest.getData());
+                                    redisMessagePublisherService.publish(new Gson().toJson(serviceMessage));
+
                                     break;
                                 case get_blocks:
                                     serviceMessage = new ServiceMessage();
                                     subscriberSessionStorage.addAccount(session.getId(), session.getId()+"random", subscriberRequest.getRequestType());
                                     serviceMessage.setRequestType(RequestType.get_blocks);
                                     serviceMessage.setEvent(Event.subscribe);
-                                    Data data = new Data();
+                                    data = new Data();
                                     data.setAccount(session.getId());
                                     serviceMessage.setData(data);
                                     redisMessagePublisherService.publish(new Gson().toJson(serviceMessage));
@@ -142,7 +151,7 @@ public class SocketHandlerFrontend extends TextWebSocketHandler implements WebSo
                                 case get_transaction:
 
                                     break;
-                                case get_table_deltas:
+                                case get_table_rows:
                                     break;
                             }
                     break;

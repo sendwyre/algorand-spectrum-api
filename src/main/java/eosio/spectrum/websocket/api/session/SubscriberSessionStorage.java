@@ -1,5 +1,4 @@
-package eosio.spectrum.websocket.api.SessionStorage;
-import eosio.spectrum.websocket.api.SocketHandler;
+package eosio.spectrum.websocket.api.session;
 import eosio.spectrum.websocket.api.message.RequestType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -85,7 +84,7 @@ public class SubscriberSessionStorage {
                 this.sessionIdAccountsGetTransaction.addAccount(sessionId,account);
                 this.accountSessionIdsGetTransaction.addSession(account,sessionId);
                 break;
-            case get_table_deltas:
+            case get_table_rows:
                 this.sessionIdAccountsGetTblDeltas.addAccount(sessionId,account);
                 this.accountSessionIdsGetTblDeltas.addSession(account,sessionId);
                 break;
@@ -95,7 +94,7 @@ public class SubscriberSessionStorage {
 
     public void removeAccount(String sessionId, String account, RequestType requestType) {
         switch (requestType){
-            case get_table_deltas:
+            case get_table_rows:
                 this.accountSessionIdsGetTblDeltas.removeAccount(account);
                 this.sessionIdAccountsGetTblDeltas.removeAccount(sessionId,account);
                 break;
@@ -143,7 +142,7 @@ public class SubscriberSessionStorage {
             case get_transaction:
                 result = this.sessionIdAccountsGetTransaction.getAccounts(sessionId);
                 break;
-            case get_table_deltas:
+            case get_table_rows:
                 result = this.sessionIdAccountsGetTblDeltas.getAccounts(sessionId);
                 break;
         }
@@ -159,7 +158,7 @@ public class SubscriberSessionStorage {
             case get_transaction:
                 result = this.accountSessionIdsGetTransaction.getSessionIds(account);
                 break;
-            case get_table_deltas:
+            case get_table_rows:
                 result = this.accountSessionIdsGetTblDeltas.getSessionIds(account);
                 break;
             case get_blocks:
