@@ -6,6 +6,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
 import eosio.spectrum.websocket.api.redis.publishers.RedisMessagePublisherActions;
 import eosio.spectrum.websocket.api.redis.publishers.RedisMessagePublisherBlocks;
+import eosio.spectrum.websocket.api.redis.publishers.RedisMessagePublisherTableRows;
 import eosio.spectrum.websocket.api.redis.publishers.RedisMessagePublisherTransaction;
 import eosio.spectrum.websocket.api.message.FilteredAction;
 import eosio.spectrum.websocket.api.message.FilteredBlock;
@@ -43,11 +44,17 @@ public class SocketHandler extends BinaryWebSocketHandler implements WebSocketHa
     private RedisMessagePublisherActions redisMessagePublisherActions;
     private RedisMessagePublisherTransaction redisMessagePublisherTransaction;
     private RedisMessagePublisherBlocks redisMessagePublisherBlocks;
+    private RedisMessagePublisherTableRows redisMessagePublisherTableRows;
+
 
 @Autowired
 public void setRedisMessagePublisherBlocks(RedisMessagePublisherBlocks redisMessagePublisherBlocks){
     this.redisMessagePublisherBlocks = redisMessagePublisherBlocks;
 }
+    @Autowired
+    public void setRedisMessagePublisherTableRows(RedisMessagePublisherTableRows redisMessagePublisherTableRows){
+        this.redisMessagePublisherTableRows = redisMessagePublisherTableRows;
+    }
     @Autowired
     public void setRedisMessagePublisherTransaction(RedisMessagePublisherTransaction redisMessagePublisherTransaction){
         this.redisMessagePublisherTransaction = redisMessagePublisherTransaction;
@@ -92,12 +99,8 @@ public void setRedisMessagePublisherBlocks(RedisMessagePublisherBlocks redisMess
                     getTableRowsRule.setTable(table);
                     if (filterRulesStorage.getRules(RequestType.get_table_rows).containsKey(getTableRowsRule)){
 
-
+                        redisMessagePublisherTableRows.publish(jsonMessage.getJSONObject("data").toString());
                     }
-
-
-                    TBL_ROW tbl_row = new Gson().fromJson(stringMessage, TBL_ROW.class);
-
                 }catch (JsonSyntaxException jse){
                     logger.warn(stringMessage);
                 }

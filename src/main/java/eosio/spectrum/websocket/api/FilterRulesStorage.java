@@ -3,10 +3,7 @@ package eosio.spectrum.websocket.api;
 import eosio.spectrum.websocket.api.message.RequestType;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 
 @Component
 public class FilterRulesStorage {
@@ -46,7 +43,7 @@ public class FilterRulesStorage {
     public void addRule(GetTableRowsRule getTableRowsRule, RequestType requestType){
         switch (requestType){
             case get_table_rows:
-                this.filtersGetTableRows.put(getTableRowsRule,null);
+                this.filtersGetTableRows.put(getTableRowsRule,getTableRowsRule.getCode());
         }
     }
 
@@ -79,6 +76,11 @@ public class FilterRulesStorage {
     public void removeRule(String account, RequestType requestType){
         switch (requestType){
             case get_table_rows:
+                for (Map.Entry<GetTableRowsRule,String> entry:filtersGetTableRows.entrySet()) {
+                    if (entry.getValue().equals(account)){
+                          filtersGetTableRows.remove(entry.getKey());
+                    }
+                }
                 break;
             case get_transaction:
                 filtersGetTransaction.remove(account);

@@ -17,6 +17,7 @@ public class FilterRulesStorageTest {
     private FilterRulesStorage filterRulesStorage;
     private ServiceMessage serviceMessageFirst;
     private ServiceMessage serviceMessageSecond;
+    private ServiceMessage serviceMessageGetTableRows;
     private String firstAccount;
     private String firstAccountAction_1;
     private String firstAccountAction_2;
@@ -26,6 +27,10 @@ public class FilterRulesStorageTest {
     private String secondAccountActions_1;
     private String secondAccountActions_2;
     private HashSet<String> secondAccountActions;
+
+    private String code;
+    private String scope;
+    private String table;
 
 
     @Before
@@ -60,9 +65,19 @@ public class FilterRulesStorageTest {
         serviceMessageSecond.setRequestType(RequestType.get_actions);
         serviceMessageSecond.setData(secondAccountData);
 
+        serviceMessageGetTableRows = new ServiceMessage();
+        Data dataGetTableRows = new Data();
 
+        code = "code";
+        scope = "scope";
+        table = "table";
 
-
+        dataGetTableRows.setCode(code);
+        dataGetTableRows.setScope(scope);
+        dataGetTableRows.setTable(table);
+        serviceMessageGetTableRows.setEvent(Event.subscribe);
+        serviceMessageGetTableRows.setRequestType(RequestType.get_table_rows);
+        serviceMessageGetTableRows.setData(dataGetTableRows);
 
     }
     @Test
@@ -77,6 +92,17 @@ public class FilterRulesStorageTest {
         assertEquals(secondAccountActions, filterRulesStorage.getRules(RequestType.get_actions).get(secondAccount));
     }
     @Test
+    public void addRuleGetTableRows(){
+        GetTableRowsRule getTableRowsRule = new GetTableRowsRule();
+        getTableRowsRule.setTable(serviceMessageGetTableRows.getData().getTable());
+        getTableRowsRule.setScope(serviceMessageGetTableRows.getData().getScope());
+        getTableRowsRule.setCode(serviceMessageGetTableRows.getData().getCode());
+        filterRulesStorage.addRule(getTableRowsRule, serviceMessageGetTableRows.getRequestType());
+        assertTrue(filterRulesStorage.getRules(RequestType.get_table_rows).containsKey(getTableRowsRule));
+    }
+
+
+    @Test
     public void removeRuleGetActions(){
         filterRulesStorage.addRule(serviceMessageFirst.getData().getAccount(), serviceMessageFirst.getData().getActions(), serviceMessageFirst.getRequestType());
         filterRulesStorage.addRule(serviceMessageSecond.getData().getAccount(), serviceMessageSecond.getData().getActions(), serviceMessageSecond.getRequestType());
@@ -84,5 +110,16 @@ public class FilterRulesStorageTest {
         assertEquals(secondAccountActions, filterRulesStorage.getRules(RequestType.get_actions).get(secondAccount));
         assertFalse(filterRulesStorage.getRules(RequestType.get_actions).containsKey(firstAccount));
     }
+    @Test
+    public void removeRuleGetTableRows(){
+        GetTableRowsRule getTableRowsRule = new GetTableRowsRule();
+        getTableRowsRule.setTable(serviceMessageGetTableRows.getData().getTable());
+        getTableRowsRule.setScope(serviceMessageGetTableRows.getData().getScope());
+        getTableRowsRule.setCode(serviceMessageGetTableRows.getData().getCode());
+        filterRulesStorage.addRule(getTableRowsRule, serviceMessageGetTableRows.getRequestType());
+        filterRulesStorage.removeRule(serviceMessageGetTableRows.getData().getCode(),RequestType.get_table_rows);
+        assertTrue(filterRulesStorage.getRules(RequestType.get_table_rows).isEmpty());
+    }
+
 
 }

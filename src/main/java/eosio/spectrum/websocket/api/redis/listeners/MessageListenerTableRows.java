@@ -5,6 +5,7 @@ import eosio.spectrum.websocket.api.message.FilteredAction;
 import eosio.spectrum.websocket.api.message.RequestType;
 import eosio.spectrum.websocket.api.message.ResponseGetActions;
 import eosio.spectrum.websocket.api.session.SubscriberSessionStorage;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,15 +29,13 @@ public class MessageListenerTableRows {
     }
 
     public void handleMessage(String message) {
-        FilteredAction filteredAction = new Gson().fromJson(message, FilteredAction.class);
-        ResponseGetActions responseGetActions = new ResponseGetActions();
-        responseGetActions.setRequestType(RequestType.get_actions);
-        responseGetActions.setAction(filteredAction.getAction());
-        for (String sessionId : subscriberSessionStorage.getSessionsId(filteredAction.getAccountName(),RequestType.get_actions)) {
+        JSONObject jsonMessage = new JSONObject(message);
+
+        for (String sessionId : subscriberSessionStorage.getSessionsId(jsonMessage.getJSONObject("kvo").getString("code"),RequestType.get_table_rows)) {
             WebSocketSession session = subscriberSessionStorage.getSession(sessionId);
             synchronized (session) {
                 if (session.isOpen()) try {
-                    session.sendMessage(new TextMessage(new Gson().toJson(responseGetActions)));
+                    session.sendMessage(new TextMessage(jsonMessage.put("response",RequestType.get_table_rows.toString()).toString()));
                 } catch (IOException exception){
                     logger.error(session.getRemoteAddress().toString());
                     logger.error(exception.toString());

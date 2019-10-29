@@ -7,8 +7,8 @@ path="streaming"
 url = "ws://localhost:8080/"+path
 
 data = {"code":"eosio",
-        "scope":"eostribe",
-        "table":"test"}
+        "scope":"eosio",
+        "table":"global"}
 
 messageBody ={
     "apikey":"test-api-key",
