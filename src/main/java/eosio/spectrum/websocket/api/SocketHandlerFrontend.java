@@ -203,6 +203,15 @@ public class SocketHandlerFrontend extends TextWebSocketHandler implements WebSo
             serviceMessage.setData(data);
             redisMessagePublisherService.publish(new Gson().toJson(serviceMessage));
 
+            serviceMessage = new ServiceMessage();
+            serviceMessage.setEvent(Event.unsubscribe);
+            serviceMessage.setRequestType(RequestType.get_table_rows);
+            data = new Data();
+            for(String account:subscriberSessionStorage.getAccounts(sessionID)){
+                data.setCode(account);
+                serviceMessage.setData(data);
+                redisMessagePublisherService.publish(new Gson().toJson(serviceMessage));
+            }
         }
         subscriberSessionStorage.removeSession(sessionID);
     }

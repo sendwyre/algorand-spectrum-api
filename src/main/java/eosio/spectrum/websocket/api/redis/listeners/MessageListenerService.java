@@ -62,11 +62,8 @@ public class MessageListenerService {
                         filterRulesStorage.removeRule(serviceMessage.getData().getAccount(), RequestType.get_blocks);
                         break;
                     case get_table_rows:
-                        GetTableRowsRule getTableRowsRule = new GetTableRowsRule();
-                        getTableRowsRule.setTable(serviceMessage.getData().getTable());
-                        getTableRowsRule.setScope(serviceMessage.getData().getScope());
-                        getTableRowsRule.setTable(serviceMessage.getData().getTable());
-                        filterRulesStorage.removeRule(getTableRowsRule,serviceMessage.getRequestType());
+
+                        filterRulesStorage.removeRule(serviceMessage.getData().getCode(),serviceMessage.getRequestType());
                 }
                 break;
         }

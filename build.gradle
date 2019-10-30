@@ -19,7 +19,7 @@ apply plugin: 'io.spring.dependency-management'
 
 bootJar {
     baseName = 'spectrum'
-    version = '0.1.3'
+    version = '0.1.4'
 }
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
