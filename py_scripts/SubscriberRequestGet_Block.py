@@ -3,7 +3,8 @@ import pprint
 from websocket import create_connection
 
 path="streaming"
-url = "wss://api.telos.eostribe.io/"+path
+#url = "wss://bos.spectrumeos.io/"+path
+url = "wss://bos.eostribe.io/"+path
 
 messageBody = {
     "apikey":"test-api-key",

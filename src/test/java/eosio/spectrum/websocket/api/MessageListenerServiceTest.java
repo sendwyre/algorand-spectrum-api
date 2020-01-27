@@ -24,10 +24,11 @@ import static org.junit.Assert.*;
 @WebAppConfiguration
 public class MessageListenerServiceTest {
 
+
    @Autowired
    MessageListenerService messageListenerService;
-    @Autowired
-    FilterRulesStorage filterRulesStorage;
+   @Autowired
+   FilterRulesStorage filterRulesStorage;
 
     ServiceMessage serviceMessage = new ServiceMessage();
 

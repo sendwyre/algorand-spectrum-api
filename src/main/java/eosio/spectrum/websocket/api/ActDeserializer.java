@@ -14,7 +14,7 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ActDeserializer implements JsonDeserializer<Act> {
+public class ActDeserializer implements com.google.gson.JsonDeserializer<Act> {
     private Act act;
     private List<Authorization> authorizations;
     private Authorization authorization;
