@@ -4,7 +4,7 @@ import pprint
 from websocket import create_connection
 
 path="streaming"
-url = "ws://localhost:8080/"+path
+url = "wss://api.telos.spectrumeos.io/"+path
 
 data = {"account":"eosio"}
 
