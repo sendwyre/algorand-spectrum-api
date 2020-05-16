@@ -15,9 +15,19 @@ public class Properties {
     private String redisHostname;
     @Value("${REDIS_TRANSACTIONS_CHANNEL}")
     private String redisTransactionsChannel;
+    @Value("${UPSTREAM}")
+    private String upstream;
 
     @Value("${REDIS_BLOCKS_CHANNEL}")
     private String redisBlocksChannel;
+
+    public String getUpstream() {
+        return upstream;
+    }
+
+    public void setUpstream(String upstream) {
+        this.upstream = upstream;
+    }
 
     public String getRedisBlocksChannel() {
         return redisBlocksChannel;
