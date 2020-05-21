@@ -1,4 +1,4 @@
-package algorand.spectrum.websocket.api;
+package algorand.spectrum.websocket.api.publishers;
 
 public interface MessagePublisher {
 

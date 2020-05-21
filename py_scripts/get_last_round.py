@@ -32,4 +32,6 @@ def getTransactions(lastRound):
 
 while 1:
     redis_client.publish('lastblock', getLastRound())
+    if timeSleep+delta < 0:
+        delta = 0
     time.sleep(timeSleep+delta)
