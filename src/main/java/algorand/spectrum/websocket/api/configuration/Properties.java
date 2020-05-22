@@ -17,9 +17,18 @@ public class Properties {
     private String redisTransactionsChannel;
     @Value("${UPSTREAM}")
     private String upstream;
-
     @Value("${REDIS_BLOCKS_CHANNEL}")
     private String redisBlocksChannel;
+    @Value("${FRONTEND_WEBSOCKET_PATH}")
+    private String frontendWebsocketPath;
+
+    public String getFrontendWebsocketPath() {
+        return frontendWebsocketPath;
+    }
+
+    public void setFrontendWebsocketPath(String frontendWebsocketPath) {
+        this.frontendWebsocketPath = frontendWebsocketPath;
+    }
 
     public String getUpstream() {
         return upstream;

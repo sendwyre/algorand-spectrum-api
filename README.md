@@ -1,4 +1,4 @@
-# websocket-endpoint
+# algorand.spectrum.websocket.api.ws-endpoint
 WebSocket Endpoint
 
 # Redis

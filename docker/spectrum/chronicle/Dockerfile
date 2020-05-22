@@ -17,4 +17,4 @@ COPY entrypoint.sh /usr/local/bin/
 RUN chmod +x /usr/local/bin/entrypoint.sh
 WORKDIR  /opt/data
 ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
-#ENTRYPOINT /opt/chronicle-receiver --data-dir=${DATA_DIR} --config-dir=${DATA_DIR} --mode=${MODE} --host=${HOST} --port=${PORT} --exp-ws-host=${WS_HOST} --exp-ws-port=${WS_PORT} --exp-ws-bin-header=false --plugin=exp_ws_plugin --skip-block-events=${SKIP_BLOCK_EVENTS} --skip-table-deltas=${SKIP_TABLE_DELTAS}
+#ENTRYPOINT /opt/chronicle-receiver --data-dir=${DATA_DIR} --config-dir=${DATA_DIR} --mode=${MODE} --host=${HOST} --port=${PORT} --exp-algorand.spectrum.websocket.api.ws-host=${WS_HOST} --exp-algorand.spectrum.websocket.api.ws-port=${WS_PORT} --exp-algorand.spectrum.websocket.api.ws-bin-header=false --plugin=exp_ws_plugin --skip-block-events=${SKIP_BLOCK_EVENTS} --skip-table-deltas=${SKIP_TABLE_DELTAS}

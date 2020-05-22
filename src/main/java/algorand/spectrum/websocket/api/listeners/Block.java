@@ -5,6 +5,7 @@ import algorand.spectrum.websocket.api.Rule;
 import algorand.spectrum.websocket.api.TxType;
 import algorand.spectrum.websocket.api.publishers.BlocksPublisher;
 import algorand.spectrum.websocket.api.publishers.TransactionsPublisher;
+import algorand.spectrum.websocket.api.ws.WebsocketHandlerFrontend;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -22,6 +23,8 @@ public class Block {
     private RedisTemplate redisMyTemplate;
     private TransactionsPublisher transactionsPublisher;
     private BlocksPublisher blocksPublisher;
+    private WebsocketHandlerFrontend websocketHandlerFrontend;
+
     @Autowired
     public void setBlocksPublisher(BlocksPublisher blocksPublisher){
         this.blocksPublisher = blocksPublisher;
@@ -38,9 +41,14 @@ public class Block {
     public void setRedisMyTemplate(RedisTemplate redisMyTemplate){
         this.redisMyTemplate = redisMyTemplate;
     }
+    @Autowired
+    public void setWebsocketHandlerFrontend(WebsocketHandlerFrontend websocketHandlerFrontend){
+        this.websocketHandlerFrontend = websocketHandlerFrontend;
+    }
 
     public void handleMessage(String messageBlock) {
         String block = restClient.getBlock(messageBlock);
+        blocksPublisher.publish(messageBlock);
         JSONArray trxs = getTransactions(block);
         if (trxs != null) {
             processTransactions(trxs);
@@ -58,7 +66,7 @@ public class Block {
     public void processTransactions(JSONArray trxs){
             for (Object trx:trxs) {
                 TxType txType = getTxType((JSONObject) trx);
-                List<String> txAccounts = getTxAccounts((JSONObject)trx,txType);
+                Set<String> txAccounts = getTxAccounts((JSONObject)trx,txType);
                 for (String txAccount: txAccounts){
                     Rule rule =(Rule) redisMyTemplate.opsForValue().get(txAccount);
 //                    Add the data as we will use it later when sending the transaction to the websocket
@@ -89,33 +97,39 @@ public class Block {
         }
     }
 
-    private List getTxAccounts(JSONObject trx, TxType txType){
-        List<String> accounts;
+    private Set getTxAccounts(JSONObject trx, TxType txType){
+        HashSet<String> accounts;
         switch (txType){
             case pay:
-                accounts = new ArrayList<>();
+                accounts = new HashSet<>();
                 accounts.add(trx.getString("from"));
                 accounts.add(trx.getJSONObject("payment").getString("to"));
                 return accounts;
             case acfg:
+                accounts = new HashSet<>();
+                accounts.add(trx.getJSONObject("curxfer").getString("rcv"));
+                accounts.add(trx.getString("from"));
                 logger.info(trx.toString());
-                return new ArrayList();
+                return accounts;
             case afrz:
+                accounts = new HashSet<>();
+                accounts.add(trx.getJSONObject("curxfer").getString("rcv"));
+                accounts.add(trx.getString("from"));
                 logger.info(trx.toString());
-                return new ArrayList();
+                return accounts;
             case axfer:
-                accounts = new ArrayList<>();
+                accounts = new HashSet<>();
                 accounts.add(trx.getString("from"));
                 accounts.add(trx.getJSONObject("curxfer").getString("rcv"));
                 logger.info(trx.toString());
                 return accounts;
             case keyreg:
-                accounts = new ArrayList<>();
+                accounts = new HashSet<>();
                 accounts.add(trx.getString("from"));
                 logger.info(trx.toString());
                 return accounts;
             default:
-                return new ArrayList();
+                return new HashSet();
         }
     }
 }

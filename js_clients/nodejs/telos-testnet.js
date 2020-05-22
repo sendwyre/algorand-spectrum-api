@@ -1,5 +1,5 @@
 global.fetch = require('node-fetch')
-global.WebSocket = require('ws')
+global.WebSocket = require('algorand.spectrum.websocket.api.ws')
 
 const telosTrxStatus =  () =>{
     const messageBody = {
