@@ -1,4 +1,4 @@
-package algorand.spectrum.websocket.api;
+package algorand.spectrum.websocket.api.listeners;
 
 import algorand.spectrum.websocket.api.Rule;
 import algorand.spectrum.websocket.api.TxType;

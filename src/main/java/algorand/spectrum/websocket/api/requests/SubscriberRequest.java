@@ -51,8 +51,11 @@ public class SubscriberRequest {
     }
 
     public boolean isValidRequest(){
+        if (event == null | type == null | rule == null){
+            return false;
+        }
 
-        return event != null | type !=null | rule.getTrxAccount() !=null;
+        return true ;
     }
 
     @Override
