@@ -22,23 +22,28 @@ public class WebsocketHandlerFrontend extends TextWebSocketHandler implements We
 
     private SubscriberRequest subscriberRequest;
     private RedisTemplate redisMyTemplate;
+    private Rule rule;
+    private WebsocketSessionStorage websocketSessionStorage;
     @Autowired
     public void setRedisMyTemplate(RedisTemplate redisMyTemplate){
         this.redisMyTemplate = redisMyTemplate;
     }
-
-
+    @Autowired
+    public void setWebsocketSessionStorage(WebsocketSessionStorage websocketSessionStorage){
+        this.websocketSessionStorage = websocketSessionStorage;
+    }
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
+        websocketSessionStorage.addSession(session);
         logger.info(session.getUri().toString());
         logger.debug("Connected from: "+session.getRemoteAddress());
     }
 
     @Override
-    protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
+    public void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
         try {
             subscriberRequest = new Gson().fromJson(message.getPayload(), SubscriberRequest.class);
-            if (subscriberRequest.isValidRequest() != true) {
+            if (!subscriberRequest.isValidRequest()) {
                 String infoMessage = "Unable to proceed request, fill fields according to documentation";
                 session.sendMessage(new TextMessage(infoMessage));
                 logger.warn("Request from " + session.getRemoteAddress() + " has unknown format");
@@ -48,10 +53,13 @@ public class WebsocketHandlerFrontend extends TextWebSocketHandler implements We
         } catch (Exception e) {
             logger.info(e.toString());
         }
+        subscriberRequest.processRequest(session);
+
+
     }
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
-
+        websocketSessionStorage.delSession(session.getId());
     }
 
     public void addRule(Rule rule){

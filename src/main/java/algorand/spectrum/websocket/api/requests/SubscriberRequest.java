@@ -1,9 +1,19 @@
 package algorand.spectrum.websocket.api.requests;
 
+import algorand.spectrum.websocket.api.ApplicationContextProvider;
 import algorand.spectrum.websocket.api.Rule;
+import algorand.spectrum.websocket.api.configuration.RedisConfiguration;
+import algorand.spectrum.websocket.api.ws.WebsocketSessionStorage;
 import com.google.gson.annotations.SerializedName;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.stereotype.Component;
+import org.springframework.web.context.ContextLoader;
+import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.socket.WebSocketSession;
 
 public class SubscriberRequest {
     @SerializedName("api-key")
@@ -16,7 +26,15 @@ public class SubscriberRequest {
     private Event event;
 
     @SerializedName("data")
+    private Data data;
+
     private Rule rule;
+
+    private WebsocketSessionStorage websocketSessionStorage = (WebsocketSessionStorage) ApplicationContextProvider.
+            getApplicationContext().getBean("websocketSessionStorage");
+    private RedisTemplate redisMyTemplate = (RedisTemplate) ApplicationContextProvider.
+            getApplicationContext().
+            getBean("redisMyTemplate");
 
     public String getApiKey() {
         return apikey;
@@ -42,56 +60,51 @@ public class SubscriberRequest {
         this.event = event;
     }
 
-    public Rule getRule() {
-        return rule;
+    public Data getData() {
+        return data;
     }
 
-    public void setRule(Rule rule) {
-        this.rule = rule;
+    public void setData(Data data) {
+        this.data = data;
     }
 
     public boolean isValidRequest(){
-        if (event == null | type == null | rule == null){
+        if (event == null | type == null){
             return false;
         }
-
+        if (type.equals(RequestType.get_transactions) & data == null){
+            return false;
+        }
         return true ;
     }
+    public void processRequest(WebSocketSession session){
+        switch (event){
+            case subscribe:
+                switch (type){
+                    case get_blocks:
+                        Get_Blocks get_blocks = (Get_Blocks) redisMyTemplate.opsForValue().get("get_blocks");
+                        if (get_blocks == null){
+                            get_blocks = new Get_Blocks();
+                        }
+                        get_blocks.addSession(session.getId());
+                        redisMyTemplate.opsForValue().set("get_blocks", get_blocks);
+                        break;
+                    case get_transactions:
+                        break;
+                }
+                break;
+            case unsubscribe:
+                switch (type){
+                    case get_blocks:
+                        Get_Blocks get_blocks = (Get_Blocks) redisMyTemplate.opsForValue().get("get_blocks");
+                        get_blocks.delSession(session.getId());
+                        break;
+                    case get_transactions:
+                        break;
+                }
+                break;
+        }
 
-    @Override
-    public String toString() {
-        return "SubscriberRequest{" +
-                "apikey='" + apikey + '\'' +
-                ", type=" + type +
-                ", event=" + event +
-                ", rule=" + rule +
-                '}';
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-
-        if (o == null || getClass() != o.getClass()) return false;
-
-        SubscriberRequest that = (SubscriberRequest) o;
-
-        return new EqualsBuilder()
-                .append(apikey, that.apikey)
-                .append(type, that.type)
-                .append(event, that.event)
-                .append(rule, that.rule)
-                .isEquals();
-    }
-
-    @Override
-    public int hashCode() {
-        return new HashCodeBuilder(17, 37)
-                .append(apikey)
-                .append(type)
-                .append(event)
-                .append(rule)
-                .toHashCode();
     }
 }
 

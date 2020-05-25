@@ -1,19 +1,19 @@
-package algorand.spectrum.websocket.api;
+package algorand.spectrum.websocket.api.requests;
 
+import algorand.spectrum.websocket.api.TxType;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
-public class Rule implements Serializable {
+public class Data implements Serializable {
     private String trxAccount;
     private TxType txType;
     private List<String> websocketSessionId;
 
-    public Rule(){
+    public Data(){
         websocketSessionId = new ArrayList<>();
     }
 
@@ -34,7 +34,7 @@ public class Rule implements Serializable {
     }
 
     public boolean addWebsocketSessionId(String sessionId){
-        return this.websocketSessionId.add(sessionId);
+        return websocketSessionId.add(sessionId);
     }
 
     public Boolean delWebsocketSessionId(String sessionId){
@@ -63,7 +63,7 @@ public class Rule implements Serializable {
 
         if (o == null || getClass() != o.getClass()) return false;
 
-        Rule rule = (Rule) o;
+        Data rule = (Data) o;
 
         return new EqualsBuilder()
                 .append(trxAccount, rule.trxAccount)
